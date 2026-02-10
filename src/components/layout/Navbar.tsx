@@ -27,7 +27,7 @@ export const Navbar = () => {
     <>
       <nav className={styles.navbar}>
         <Link href="/" className={styles.logo}>
-          StudentPortal
+          SkillTurn
         </Link>
 
         <div className={styles.navLinks}>
@@ -220,9 +220,8 @@ export const Navbar = () => {
       </nav>
 
       <div
-        className={`${styles.mobileMenu} ${
-          isMobileMenuOpen ? styles.open : ""
-        }`}
+        className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.open : ""
+          }`}
       >
         {user?.role == "student" && (
           <Link

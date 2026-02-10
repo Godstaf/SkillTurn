@@ -7,7 +7,7 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Student Portal - Projects & Internships",
+  title: "SkillTurn - Projects & Internships",
   description: "Find and track academic projects and internships.",
 };
 

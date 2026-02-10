@@ -89,7 +89,7 @@ export default function Home() {
             marginBottom: '3rem',
             color: 'var(--md-sys-color-on-surface)'
           }}>
-            Why use Student Portal?
+            Why use SkillTurn?
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             <Card variant="elevated">
