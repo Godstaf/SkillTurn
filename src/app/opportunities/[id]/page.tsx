@@ -8,7 +8,33 @@ import { notFound } from "next/navigation";
 // This is a server component
 export default async function OpportunityDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const opportunity = opportunities.find((opp) => opp.id === id);
+
+    // Attempt to fetch from backend
+    let opportunity: any = null;
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/opportunities/${id}`, { cache: 'no-store' });
+        if (response.ok) {
+            const data = await response.json();
+            opportunity = {
+                id: data.id || data._id,
+                title: data.title,
+                type: data.type === 'Job' ? 'Internship' : data.type,
+                organization: data.organization,
+                description: data.description,
+                skills: data.skills || [],
+                postedDate: new Date(data.posted_date).toISOString().split('T')[0],
+                deadline: data.deadline || 'No deadline'
+            };
+        }
+    } catch (e) {
+        console.error("Failed to fetch opportunity", e);
+    }
+
+    // Fallback to static data if not found in backend (for demo/legacy items)
+    if (!opportunity) {
+        opportunity = opportunities.find((opp) => opp.id === id);
+    }
+
 
     if (!opportunity) {
         notFound();
