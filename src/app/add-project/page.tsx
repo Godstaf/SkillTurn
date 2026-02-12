@@ -34,10 +34,13 @@ export default function AddProjectPage() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    user_id: "",  // Will be set by backend
                     title: formData.title,
-                    description: formData.description + (formData.technologies ? `\nTechnologies: ${formData.technologies}` : ""),
-                    project_link: formData.link,
-                    category: "Project"
+                    description: formData.description,
+                    project_link: formData.link || null,
+                    technologies: formData.technologies
+                        ? formData.technologies.split(',').map(t => t.trim()).filter(t => t)
+                        : []
                 })
             });
 

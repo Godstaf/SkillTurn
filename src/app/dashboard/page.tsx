@@ -92,26 +92,11 @@ export default function DashboardPage() {
                             id: p.id,
                             title: p.title,
                             description: p.description,
-                            verified: p.verification_status === 'Verified',
-                            verification_status: p.verification_status,
-                            technologies: [] // Not stored in backend yet
+                            verified: p.is_verified || p.verification_status === 'Verified',
+                            verification_status: p.verification_status || (p.is_verified ? 'Verified' : 'Pending'),
+                            technologies: p.technologies || []
                         }));
                         setProjects(mappedProjects);
-                    }
-
-                    // Fetch Projects
-                    const projResp = await fetch('http://127.0.0.1:8000/student/projects', {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    if (projResp.ok) {
-                        const data = await projResp.json();
-                        setProjects(data.projects.map((p: any, idx: number) => ({
-                            id: p.id || `p-${idx}`,
-                            title: p.title,
-                            description: p.description,
-                            verified: !!p.verified,
-                            technologies: p.project_link ? ['Link Available'] : [] // Mapping for display
-                        })));
                     }
 
                     // Fetch Full Profile

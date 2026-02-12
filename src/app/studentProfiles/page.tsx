@@ -9,6 +9,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 // --- Mock Data ---
 
+interface StudentProject {
+    id: string;
+    title: string;
+    description: string;
+    project_link: string;
+    technologies: string[];
+    is_verified: boolean;
+    verification_status: 'Pending' | 'Verified' | 'Rejected';
+    verified_by: string | null;
+}
+
 interface StudentProfile {
     id: string;
     name: string;
@@ -17,6 +28,7 @@ interface StudentProfile {
     year: string;
     cgpa: number;
     skills: string[];
+    projects?: StudentProject[];
     email: string;
     phone: string;
     location: string;
@@ -517,15 +529,94 @@ export default function StudentProfilesPage() {
                                             </a>
                                         </div>
 
+                                        {/* Projects Section */}
+                                        {selectedStudent.projects && selectedStudent.projects.length > 0 && (
+                                            <div style={{ marginTop: '0.5rem' }}>
+                                                <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.75rem', color: 'var(--md-sys-color-secondary)' }}>PROJECTS</h3>
+                                                <div style={{ display: 'grid', gap: '0.75rem' }}>
+                                                    {selectedStudent.projects.map(project => (
+                                                        <div key={project.id} style={{
+                                                            padding: '1rem 1.25rem',
+                                                            borderRadius: '12px',
+                                                            border: '1px solid var(--md-sys-color-outline-variant)',
+                                                            background: 'var(--md-sys-color-surface-container-low)',
+                                                        }}>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                                <h4 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>{project.title}</h4>
+                                                                {project.is_verified ? (
+                                                                    <span style={{
+                                                                        fontSize: '0.75rem',
+                                                                        padding: '3px 10px',
+                                                                        borderRadius: '12px',
+                                                                        fontWeight: 600,
+                                                                        background: 'rgba(76, 175, 80, 0.15)',
+                                                                        color: '#2E7D32',
+                                                                        border: '1px solid #4CAF50',
+                                                                    }}>
+                                                                        ✓ Verified by {project.verified_by || 'Faculty'}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span style={{
+                                                                        fontSize: '0.75rem',
+                                                                        padding: '3px 10px',
+                                                                        borderRadius: '12px',
+                                                                        fontWeight: 600,
+                                                                        background: 'rgba(158, 158, 158, 0.15)',
+                                                                        color: '#757575',
+                                                                        border: '1px solid #BDBDBD',
+                                                                    }}>
+                                                                        Pending Verification
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            {
+                                                                project.description && (
+                                                                    <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-on-surface-variant)', margin: '0 0 0.5rem 0', lineHeight: 1.4 }}>
+                                                                        {project.description}
+                                                                    </p>
+                                                                )
+                                                            }
+                                                            {
+                                                                project.technologies && project.technologies.length > 0 && (
+                                                                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+                                                                        {project.technologies.map(tech => (
+                                                                            <span key={tech} style={{
+                                                                                fontSize: '0.75rem',
+                                                                                color: 'var(--md-sys-color-outline)',
+                                                                                background: 'var(--md-sys-color-surface-variant)',
+                                                                                padding: '2px 8px',
+                                                                                borderRadius: '6px'
+                                                                            }}>
+                                                                                {tech}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
+                                                                )
+                                                            }
+                                                            {
+                                                                project.project_link && (
+                                                                    <a href={project.project_link} target="_blank" rel="noopener noreferrer"
+                                                                        style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-primary)', textDecoration: 'none' }}>
+                                                                        🔗 View Project ↗
+                                                                    </a>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
                                     </div>
                                 </div>
                             </motion.div>
                         </div>
                     </>
-                )}
-            </AnimatePresence>
+                )
+                }
+            </AnimatePresence >
 
-        </main>
+        </main >
     );
 }
 
