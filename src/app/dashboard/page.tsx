@@ -183,10 +183,11 @@ export default function DashboardPage() {
                 } finally {
                     setLoading(false);
                 }
-            };
+            }
+        };
 
-            fetchData();
-        }, []);
+        fetchData();
+    }, []);
 
     const updateSkills = async (newSkillNames: string[]) => {
         const token = localStorage.getItem('token');
