@@ -21,6 +21,7 @@ interface JobPosition {
     postedString: string;
     applicantsCount: number;
     status: 'Active' | 'Closed' | 'Draft';
+    skills?: string[];
 }
 
 interface Candidate {
@@ -44,19 +45,23 @@ interface Candidate {
 const INITIAL_JOBS: JobPosition[] = [
     {
         id: 'j1', title: 'Senior Frontend Engineer', department: 'Engineering', location: 'Remote',
-        type: 'Full-time', postedString: '2 days ago', applicantsCount: 45, status: 'Active'
+        type: 'Full-time', postedString: '2 days ago', applicantsCount: 45, status: 'Active',
+        skills: ['React', 'TypeScript', 'Next.js']
     },
     {
         id: 'j2', title: 'UX Designer Intern', department: 'Design', location: 'New York, NY',
-        type: 'Internship', postedString: '1 week ago', applicantsCount: 128, status: 'Active'
+        type: 'Internship', postedString: '1 week ago', applicantsCount: 128, status: 'Active',
+        skills: ['Figma', 'Prototyping']
     },
     {
         id: 'j3', title: 'Product Manager', department: 'Product', location: 'San Francisco, CA',
-        type: 'Full-time', postedString: '3 days ago', applicantsCount: 32, status: 'Active'
+        type: 'Full-time', postedString: '3 days ago', applicantsCount: 32, status: 'Active',
+        skills: ['Agile', 'Roadmapping']
     },
     {
         id: 'j4', title: 'Backend Developer', department: 'Engineering', location: 'Remote',
-        type: 'Contract', postedString: '5 days ago', applicantsCount: 18, status: 'Active'
+        type: 'Contract', postedString: '5 days ago', applicantsCount: 18, status: 'Active',
+        skills: ['Node.js', 'PostgreSQL']
     },
 ];
 
