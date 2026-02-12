@@ -8,9 +8,9 @@ import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [state, setState] = useState<string>("login");
-  const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
+    const [state, setState] = useState<string>("login");
+    const router = useRouter();
 
     const { login, register } = useAuth();
     const [error, setError] = useState<string | null>(null);
@@ -36,9 +36,9 @@ export default function LoginPage() {
         try {
             if (state === "login") {
                 const user = await login(formData.username, formData.password);
-                
+
                 if (!user.is_verified) {
-                    switch(user.role) {
+                    switch (user.role) {
                         case "student":
                             router.push("/studentForm");
                             break;
@@ -48,9 +48,9 @@ export default function LoginPage() {
                         case "recruiter":
                             router.push("/forms/recruiter");
                             break;
-                    } 
+                    }
                 } else {
-                    switch(user.role){
+                    switch (user.role) {
                         case "student":
                             router.push("/dashboard");
                             break;
@@ -70,10 +70,10 @@ export default function LoginPage() {
                     password: formData.password,
                     role: formData.role,
                 });
-                
+
                 // Assuming new registration always starts as unverified
                 if (!user.is_verified) {
-                    switch(user.role) {
+                    switch (user.role) {
                         case "student":
                             router.push("/studentForm");
                             break;
@@ -83,9 +83,9 @@ export default function LoginPage() {
                         case "recruiter":
                             router.push("/forms/recruiter");
                             break;
-                    } 
+                    }
                 } else {
-                     switch(user.role){
+                    switch (user.role) {
                         case "student":
                             router.push("/dashboard");
                             break;
@@ -429,6 +429,28 @@ export default function LoginPage() {
                             click here
                         </span>
                     </p>
+                </div>
+
+                <div
+                    style={{
+                        marginTop: "1rem",
+                        textAlign: "center",
+                        fontSize: "0.875rem",
+                        borderTop: "1px solid var(--input-border)",
+                        paddingTop: "1rem",
+                    }}
+                >
+                    <p style={{ color: "var(--md-sys-color-secondary)", marginBottom: "0.5rem" }}>
+                        Representing a company?
+                    </p>
+                    <Link href="/org-sign-up">
+                        <Button
+                            variant="outlined"
+                            style={{ width: "100%" }}
+                        >
+                            Sign up as Organisation
+                        </Button>
+                    </Link>
                 </div>
             </GlassContainer>
         </main>
