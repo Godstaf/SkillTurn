@@ -98,12 +98,33 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/Button.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$GlassContainer$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/GlassContainer.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$ScrollReveal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/ScrollReveal.tsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/AuthContext.tsx [app-ssr] (ecmascript)");
 "use client";
 ;
 ;
 ;
 ;
+;
 function FacultyProfilePage() {
+    // Mock user for display if not logged in or just for demo, satisfying the strict Faculty interface
+    const mockFaculty = {
+        id: "fac123",
+        username: "aditiverma",
+        email: "aditi.verma@pict.edu",
+        full_name: "Dr. Aditi Verma",
+        role: "faculty",
+        is_verified: true,
+        is_active: true,
+        created_at: "2023-01-01",
+        institution: "Pune Institute of Computer Technology",
+        department: "Computer Engineering",
+        designation: "Senior Professor",
+        profileLink: "https://pict.edu/faculty/aditi-verma",
+        experience: 15
+    };
+    const { user } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$AuthContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
+    // In a real app we'd fetch the profile. For now using mock.
+    const faculty = mockFaculty;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
         style: {
             padding: '2rem 24px',
@@ -146,10 +167,10 @@ function FacultyProfilePage() {
                                         fontWeight: 'bold',
                                         boxShadow: '0 10px 30px -10px var(--md-sys-color-primary)'
                                     },
-                                    children: "AV"
+                                    children: faculty.full_name.charAt(0)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                    lineNumber: 18,
+                                    lineNumber: 41,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -160,10 +181,10 @@ function FacultyProfilePage() {
                                                 fontSize: '2.5rem',
                                                 lineHeight: '1.2'
                                             },
-                                            children: "Dr. Aditi Verma"
+                                            children: faculty.full_name
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 27,
+                                            lineNumber: 50,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -172,10 +193,10 @@ function FacultyProfilePage() {
                                                 color: 'var(--md-sys-color-primary)',
                                                 fontWeight: 500
                                             },
-                                            children: "Senior Professor"
+                                            children: faculty.designation
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 28,
+                                            lineNumber: 51,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -183,263 +204,19 @@ function FacultyProfilePage() {
                                                 fontSize: '0.95rem',
                                                 color: 'var(--md-sys-color-secondary)'
                                             },
-                                            children: "Department of Computer Engineering"
+                                            children: faculty.department
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 29,
-                                            columnNumber: 29
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                    lineNumber: 26,
-                                    columnNumber: 25
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                            lineNumber: 17,
-                            columnNumber: 21
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                            variant: "filled",
-                            children: "Edit Profile"
-                        }, void 0, false, {
-                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                            lineNumber: 32,
-                            columnNumber: 21
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                    lineNumber: 14,
-                    columnNumber: 17
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/src/app/facultyprofile/page.tsx",
-                lineNumber: 13,
-                columnNumber: 13
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-                    gap: '1.5rem',
-                    alignItems: 'start'
-                },
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        style: {
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '1.5rem'
-                        },
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$ScrollReveal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                width: "100%",
-                                delay: 0.1,
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$GlassContainer$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassContainer"], {
-                                    style: {
-                                        padding: '2rem'
-                                    },
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            style: {
-                                                fontSize: '1.25rem',
-                                                fontWeight: 'bold',
-                                                marginBottom: '1.5rem',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '10px'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    style: {
-                                                        fontSize: '1.5rem'
-                                                    },
-                                                    children: "🎓"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 51,
-                                                    columnNumber: 33
-                                                }, this),
-                                                " Education"
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 50,
+                                            lineNumber: 52,
                                             columnNumber: 29
                                         }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             style: {
-                                                display: 'grid',
-                                                gap: '1.5rem'
+                                                fontSize: '0.85rem',
+                                                color: 'var(--md-sys-color-secondary)'
                                             },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        position: 'relative',
-                                                        paddingLeft: '1.5rem',
-                                                        borderLeft: '2px solid var(--md-sys-color-outline-variant)'
-                                                    },
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            style: {
-                                                                position: 'absolute',
-                                                                left: '-5px',
-                                                                top: '0',
-                                                                width: '8px',
-                                                                height: '8px',
-                                                                borderRadius: '50%',
-                                                                background: 'var(--md-sys-color-primary)'
-                                                            }
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 55,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                                            style: {
-                                                                fontWeight: 'bold',
-                                                                fontSize: '1rem'
-                                                            },
-                                                            children: "PhD in Computer Science"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 56,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            style: {
-                                                                fontSize: '0.9rem',
-                                                                color: 'var(--md-sys-color-secondary)'
-                                                            },
-                                                            children: "IIT Bombay • 2015"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 57,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            style: {
-                                                                fontSize: '0.85rem',
-                                                                marginTop: '0.25rem',
-                                                                opacity: 0.8
-                                                            },
-                                                            children: "Thesis: Advanced Machine Learning"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 58,
-                                                            columnNumber: 37
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 54,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        position: 'relative',
-                                                        paddingLeft: '1.5rem',
-                                                        borderLeft: '2px solid var(--md-sys-color-outline-variant)'
-                                                    },
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            style: {
-                                                                position: 'absolute',
-                                                                left: '-5px',
-                                                                top: '0',
-                                                                width: '8px',
-                                                                height: '8px',
-                                                                borderRadius: '50%',
-                                                                background: 'var(--md-sys-color-primary)'
-                                                            }
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 61,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                                            style: {
-                                                                fontWeight: 'bold',
-                                                                fontSize: '1rem'
-                                                            },
-                                                            children: "M.Tech in CSE"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 62,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            style: {
-                                                                fontSize: '0.9rem',
-                                                                color: 'var(--md-sys-color-secondary)'
-                                                            },
-                                                            children: "COEP, Pune • 2010"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 63,
-                                                            columnNumber: 37
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 60,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        position: 'relative',
-                                                        paddingLeft: '1.5rem',
-                                                        borderLeft: '2px solid var(--md-sys-color-outline-variant)'
-                                                    },
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            style: {
-                                                                position: 'absolute',
-                                                                left: '-5px',
-                                                                top: '0',
-                                                                width: '8px',
-                                                                height: '8px',
-                                                                borderRadius: '50%',
-                                                                background: 'var(--md-sys-color-primary)'
-                                                            }
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 66,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                                            style: {
-                                                                fontWeight: 'bold',
-                                                                fontSize: '1rem'
-                                                            },
-                                                            children: "B.E. in Computer Engineering"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 67,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            style: {
-                                                                fontSize: '0.9rem',
-                                                                color: 'var(--md-sys-color-secondary)'
-                                                            },
-                                                            children: "PICT, Pune • 2008"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 68,
-                                                            columnNumber: 37
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 65,
-                                                    columnNumber: 33
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
+                                            children: faculty.institution
+                                        }, void 0, false, {
                                             fileName: "[project]/src/app/facultyprofile/page.tsx",
                                             lineNumber: 53,
                                             columnNumber: 29
@@ -450,679 +227,202 @@ function FacultyProfilePage() {
                                     lineNumber: 49,
                                     columnNumber: 25
                                 }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                lineNumber: 48,
-                                columnNumber: 21
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$ScrollReveal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                width: "100%",
-                                delay: 0.15,
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$GlassContainer$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassContainer"], {
-                                    style: {
-                                        padding: '2rem'
-                                    },
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            style: {
-                                                fontSize: '1.25rem',
-                                                fontWeight: 'bold',
-                                                marginBottom: '1.5rem',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '10px'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    style: {
-                                                        fontSize: '1.5rem'
-                                                    },
-                                                    children: "👤"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 78,
-                                                    columnNumber: 33
-                                                }, this),
-                                                " Personal Details"
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 77,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            style: {
-                                                marginBottom: '1.5rem'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    style: {
-                                                        display: 'block',
-                                                        fontSize: '0.85rem',
-                                                        color: 'var(--md-sys-color-secondary)',
-                                                        marginBottom: '0.2rem'
-                                                    },
-                                                    children: "Email"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 82,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        fontWeight: 500
-                                                    },
-                                                    children: "aditi.verma@pict.edu"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 83,
-                                                    columnNumber: 33
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 81,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            style: {
-                                                marginBottom: '1.5rem'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    style: {
-                                                        display: 'block',
-                                                        fontSize: '0.85rem',
-                                                        color: 'var(--md-sys-color-secondary)',
-                                                        marginBottom: '0.2rem'
-                                                    },
-                                                    children: "Phone"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 86,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        fontWeight: 500
-                                                    },
-                                                    children: "+91 98220 12345"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 87,
-                                                    columnNumber: 33
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 85,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            style: {
-                                                marginBottom: '1.5rem'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    style: {
-                                                        display: 'block',
-                                                        fontSize: '0.85rem',
-                                                        color: 'var(--md-sys-color-secondary)',
-                                                        marginBottom: '0.2rem'
-                                                    },
-                                                    children: "Office Location"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 90,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        fontWeight: 500
-                                                    },
-                                                    children: "Room 304, F-Building, PICT"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 91,
-                                                    columnNumber: 33
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 89,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            style: {
-                                                borderTop: '1px solid rgba(0,0,0,0.1)',
-                                                paddingTop: '1.5rem'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                                    style: {
-                                                        fontSize: '1rem',
-                                                        fontWeight: 'bold',
-                                                        marginBottom: '0.5rem'
-                                                    },
-                                                    children: "Bio"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 95,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                    style: {
-                                                        fontSize: '0.95rem',
-                                                        lineHeight: '1.6',
-                                                        color: 'var(--md-sys-color-on-surface-variant)'
-                                                    },
-                                                    children: "Dr. Aditi Verma is a dedicated educator and researcher with 15+ years of experience. Passionate about AI and student mentoring."
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 96,
-                                                    columnNumber: 33
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 94,
-                                            columnNumber: 29
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                    lineNumber: 76,
-                                    columnNumber: 25
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                lineNumber: 75,
-                                columnNumber: 21
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/src/app/facultyprofile/page.tsx",
-                        lineNumber: 45,
-                        columnNumber: 17
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/app/facultyprofile/page.tsx",
+                            lineNumber: 40,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                            variant: "filled",
+                            children: "Edit Profile"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/facultyprofile/page.tsx",
+                            lineNumber: 56,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/app/facultyprofile/page.tsx",
+                    lineNumber: 37,
+                    columnNumber: 17
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/src/app/facultyprofile/page.tsx",
+                lineNumber: 36,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                style: {
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+                    gap: '1.5rem',
+                    alignItems: 'start'
+                },
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$ScrollReveal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                    width: "100%",
+                    delay: 0.1,
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$GlassContainer$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassContainer"], {
                         style: {
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '1.5rem'
+                            padding: '2rem'
                         },
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$ScrollReveal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                width: "100%",
-                                delay: 0.2,
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$GlassContainer$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassContainer"], {
-                                    style: {
-                                        padding: '2rem'
-                                    },
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            style: {
-                                                fontSize: '1.25rem',
-                                                fontWeight: 'bold',
-                                                marginBottom: '1.5rem',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '10px'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    style: {
-                                                        fontSize: '1.5rem'
-                                                    },
-                                                    children: "📅"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 112,
-                                                    columnNumber: 33
-                                                }, this),
-                                                " Attendance & Schedule"
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 111,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            style: {
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                marginBottom: '2rem',
-                                                gap: '3rem'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        textAlign: 'center'
-                                                    },
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            style: {
-                                                                width: '80px',
-                                                                height: '80px',
-                                                                borderRadius: '50%',
-                                                                border: '6px solid var(--md-sys-color-primary)',
-                                                                display: 'flex',
-                                                                alignItems: 'center',
-                                                                justifyContent: 'center',
-                                                                fontSize: '1.5rem',
-                                                                fontWeight: 'bold'
-                                                            },
-                                                            children: "92%"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 117,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            style: {
-                                                                fontSize: '0.8rem',
-                                                                marginTop: '0.5rem',
-                                                                fontWeight: 600
-                                                            },
-                                                            children: "Attendance"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 123,
-                                                            columnNumber: 37
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 116,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        flex: 1
-                                                    },
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            style: {
-                                                                fontSize: '0.9rem',
-                                                                marginBottom: '0.5rem'
-                                                            },
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    style: {
-                                                                        fontWeight: 'bold'
-                                                                    },
-                                                                    children: "Current Status:"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                                    lineNumber: 126,
-                                                                    columnNumber: 95
-                                                                }, this),
-                                                                " ✅ Active"
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 126,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            style: {
-                                                                fontSize: '0.9rem',
-                                                                marginBottom: '0.5rem'
-                                                            },
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    style: {
-                                                                        fontWeight: 'bold'
-                                                                    },
-                                                                    children: "Last Leave:"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                                    lineNumber: 127,
-                                                                    columnNumber: 95
-                                                                }, this),
-                                                                " 12th Aug"
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 127,
-                                                            columnNumber: 37
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            style: {
-                                                                fontSize: '0.9rem'
-                                                            },
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    style: {
-                                                                        fontWeight: 'bold'
-                                                                    },
-                                                                    children: "Next Leave:"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                                    lineNumber: 128,
-                                                                    columnNumber: 71
-                                                                }, this),
-                                                                " None"
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 128,
-                                                            columnNumber: 37
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 125,
-                                                    columnNumber: 33
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 115,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                            style: {
-                                                fontSize: '1rem',
-                                                fontWeight: 'bold',
-                                                marginBottom: '1rem'
-                                            },
-                                            children: "Today's Schedule"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 132,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            style: {
-                                                display: 'grid',
-                                                gap: '0.75rem'
-                                            },
-                                            children: [
-                                                {
-                                                    time: '10:00 AM',
-                                                    event: 'Lecture: Data Structures (TE-A)',
-                                                    type: 'Lecture'
-                                                },
-                                                {
-                                                    time: '11:00 AM',
-                                                    event: 'Lab: ML Lab (BE-B)',
-                                                    type: 'Lab'
-                                                },
-                                                {
-                                                    time: '02:00 PM',
-                                                    event: 'Meeting: Dept Staff',
-                                                    type: 'Meeting'
-                                                }
-                                            ].map((item, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        display: 'flex',
-                                                        gap: '1rem',
-                                                        alignItems: 'center',
-                                                        padding: '0.75rem',
-                                                        background: 'rgba(0,0,0,0.03)',
-                                                        borderRadius: '12px'
-                                                    },
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            style: {
-                                                                fontWeight: 'bold',
-                                                                color: 'var(--md-sys-color-primary)',
-                                                                fontSize: '0.9rem',
-                                                                minWidth: '70px'
-                                                            },
-                                                            children: item.time
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 140,
-                                                            columnNumber: 41
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            style: {
-                                                                flex: 1
-                                                            },
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    style: {
-                                                                        fontWeight: 600,
-                                                                        fontSize: '0.95rem'
-                                                                    },
-                                                                    children: item.event
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                                    lineNumber: 142,
-                                                                    columnNumber: 45
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    style: {
-                                                                        fontSize: '0.75rem',
-                                                                        padding: '2px 6px',
-                                                                        borderRadius: '4px',
-                                                                        verticalAlign: 'middle',
-                                                                        background: item.type === 'Lecture' ? 'rgba(0,0,255,0.1)' : item.type === 'Lab' ? 'rgba(0,128,0,0.1)' : 'rgba(128,0,128,0.1)',
-                                                                        color: item.type === 'Lecture' ? 'blue' : item.type === 'Lab' ? 'green' : 'purple'
-                                                                    },
-                                                                    children: item.type
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                                    lineNumber: 143,
-                                                                    columnNumber: 45
-                                                                }, this)
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                            lineNumber: 141,
-                                                            columnNumber: 41
-                                                        }, this)
-                                                    ]
-                                                }, i, true, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 139,
-                                                    columnNumber: 37
-                                                }, this))
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 133,
-                                            columnNumber: 29
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                    lineNumber: 110,
-                                    columnNumber: 25
-                                }, this)
-                            }, void 0, false, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                style: {
+                                    fontSize: '1.25rem',
+                                    fontWeight: 'bold',
+                                    marginBottom: '1.5rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px'
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        style: {
+                                            fontSize: '1.5rem'
+                                        },
+                                        children: "👤"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/facultyprofile/page.tsx",
+                                        lineNumber: 70,
+                                        columnNumber: 29
+                                    }, this),
+                                    " Contact & Details"
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                lineNumber: 109,
-                                columnNumber: 21
+                                lineNumber: 69,
+                                columnNumber: 25
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$ScrollReveal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                width: "100%",
-                                delay: 0.25,
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    style: {
-                                        display: 'grid',
-                                        gridTemplateColumns: '1fr 1fr',
-                                        gap: '1rem'
-                                    },
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$GlassContainer$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassContainer"], {
-                                            style: {
-                                                padding: '1.5rem',
-                                                textAlign: 'center'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        fontSize: '2rem',
-                                                        fontWeight: 'bold',
-                                                        color: 'var(--md-sys-color-primary)'
-                                                    },
-                                                    children: "15+"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 159,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        fontSize: '0.8rem',
-                                                        color: 'var(--md-sys-color-secondary)'
-                                                    },
-                                                    children: "Years Exp."
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 160,
-                                                    columnNumber: 33
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 158,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$GlassContainer$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassContainer"], {
-                                            style: {
-                                                padding: '1.5rem',
-                                                textAlign: 'center'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        fontSize: '2rem',
-                                                        fontWeight: 'bold',
-                                                        color: 'var(--md-sys-color-tertiary)'
-                                                    },
-                                                    children: "45"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 163,
-                                                    columnNumber: 33
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        fontSize: '0.8rem',
-                                                        color: 'var(--md-sys-color-secondary)'
-                                                    },
-                                                    children: "Publications"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 164,
-                                                    columnNumber: 33
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 162,
-                                            columnNumber: 29
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                    lineNumber: 157,
-                                    columnNumber: 25
-                                }, this)
-                            }, void 0, false, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    marginBottom: '1.5rem'
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        style: {
+                                            display: 'block',
+                                            fontSize: '0.85rem',
+                                            color: 'var(--md-sys-color-secondary)',
+                                            marginBottom: '0.2rem'
+                                        },
+                                        children: "Email"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/facultyprofile/page.tsx",
+                                        lineNumber: 74,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            fontWeight: 500
+                                        },
+                                        children: faculty.email
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/facultyprofile/page.tsx",
+                                        lineNumber: 75,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                lineNumber: 156,
-                                columnNumber: 21
+                                lineNumber: 73,
+                                columnNumber: 25
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$ScrollReveal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                width: "100%",
-                                delay: 0.3,
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$GlassContainer$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GlassContainer"], {
-                                    style: {
-                                        padding: '2rem'
-                                    },
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            style: {
-                                                fontSize: '1.25rem',
-                                                fontWeight: 'bold',
-                                                marginBottom: '1rem',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '10px'
-                                            },
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    style: {
-                                                        fontSize: '1.5rem'
-                                                    },
-                                                    children: "🔬"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 173,
-                                                    columnNumber: 33
-                                                }, this),
-                                                " Research Interests"
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 172,
-                                            columnNumber: 29
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            style: {
-                                                display: 'flex',
-                                                flexWrap: 'wrap',
-                                                gap: '0.75rem'
-                                            },
-                                            children: [
-                                                'Artificial Intelligence',
-                                                'Machine Learning',
-                                                'Data Science',
-                                                'Neural Networks',
-                                                'Computer Vision',
-                                                'Educational Tech'
-                                            ].map((tag, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    style: {
-                                                        padding: '6px 14px',
-                                                        borderRadius: '20px',
-                                                        fontSize: '0.9rem',
-                                                        fontWeight: 500,
-                                                        background: 'var(--md-sys-color-secondary-container)',
-                                                        color: 'var(--md-sys-color-on-secondary-container)'
-                                                    },
-                                                    children: tag
-                                                }, i, false, {
-                                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                                    lineNumber: 177,
-                                                    columnNumber: 37
-                                                }, this))
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                            lineNumber: 175,
-                                            columnNumber: 29
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                    lineNumber: 171,
-                                    columnNumber: 25
-                                }, this)
-                            }, void 0, false, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    marginBottom: '1.5rem'
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        style: {
+                                            display: 'block',
+                                            fontSize: '0.85rem',
+                                            color: 'var(--md-sys-color-secondary)',
+                                            marginBottom: '0.2rem'
+                                        },
+                                        children: "Experience"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/facultyprofile/page.tsx",
+                                        lineNumber: 79,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            fontWeight: 500
+                                        },
+                                        children: [
+                                            faculty.experience,
+                                            " Years"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/facultyprofile/page.tsx",
+                                        lineNumber: 80,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/src/app/facultyprofile/page.tsx",
-                                lineNumber: 170,
-                                columnNumber: 21
+                                lineNumber: 78,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    marginBottom: '1.5rem'
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        style: {
+                                            display: 'block',
+                                            fontSize: '0.85rem',
+                                            color: 'var(--md-sys-color-secondary)',
+                                            marginBottom: '0.2rem'
+                                        },
+                                        children: "Profile Link"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/facultyprofile/page.tsx",
+                                        lineNumber: 84,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: faculty.profileLink,
+                                        target: "_blank",
+                                        rel: "noopener noreferrer",
+                                        style: {
+                                            color: 'var(--md-sys-color-primary)',
+                                            textDecoration: 'underline'
+                                        },
+                                        children: faculty.profileLink
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/facultyprofile/page.tsx",
+                                        lineNumber: 85,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/app/facultyprofile/page.tsx",
+                                lineNumber: 83,
+                                columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/facultyprofile/page.tsx",
-                        lineNumber: 106,
-                        columnNumber: 17
+                        lineNumber: 68,
+                        columnNumber: 21
                     }, this)
-                ]
-            }, void 0, true, {
+                }, void 0, false, {
+                    fileName: "[project]/src/app/facultyprofile/page.tsx",
+                    lineNumber: 67,
+                    columnNumber: 17
+                }, this)
+            }, void 0, false, {
                 fileName: "[project]/src/app/facultyprofile/page.tsx",
-                lineNumber: 37,
+                lineNumber: 61,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/facultyprofile/page.tsx",
-        lineNumber: 10,
+        lineNumber: 33,
         columnNumber: 9
     }, this);
 }
