@@ -162,66 +162,72 @@ export default function PostedJobsPage() {
                 style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.5rem' }}
             >
                 <AnimatePresence mode="popLayout">
-                    {filteredJobs.map(job => (
-                        <motion.div
-                            key={job.id}
-                            layout
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <GlassContainer style={{ padding: '1.5rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                                    <div>
-                                        <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.25rem' }}>{job.title}</h3>
-                                        <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-primary)' }}>{job.company}</p>
+                    {filteredJobs.map((job, index) => {
+                        if (!job.id) {
+                            console.warn(`Job at index ${index} is missing an ID!`, job);
+                        }
+                        const jobKey = job.id || `fallback-job-${index}`;
+                        return (
+                            <motion.div
+                                key={jobKey}
+                                layout
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <GlassContainer style={{ padding: '1.5rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                                        <div>
+                                            <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.25rem' }}>{job.title}</h3>
+                                            <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-primary)' }}>{job.company}</p>
+                                        </div>
+                                        <span style={{
+                                            fontSize: '0.75rem', padding: '4px 12px', borderRadius: '12px',
+                                            background: job.status === 'Active' ? 'rgba(76, 175, 80, 0.1)' : 'rgba(158, 158, 158, 0.1)',
+                                            color: job.status === 'Active' ? 'green' : 'grey',
+                                            fontWeight: 600
+                                        }}>
+                                            {job.status}
+                                        </span>
                                     </div>
-                                    <span style={{
-                                        fontSize: '0.75rem', padding: '4px 12px', borderRadius: '12px',
-                                        background: job.status === 'Active' ? 'rgba(76, 175, 80, 0.1)' : 'rgba(158, 158, 158, 0.1)',
-                                        color: job.status === 'Active' ? 'green' : 'grey',
-                                        fontWeight: 600
-                                    }}>
-                                        {job.status}
-                                    </span>
-                                </div>
 
-                                <div style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-secondary)', marginBottom: '1.5rem', flexGrow: 1 }}>
-                                    <p>📍 {job.location}</p>
-                                    <p>💼 {job.type}</p>
-                                    <p>🕒 Posted {job.postedDate}</p>
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '12px' }}>
-                                        {job.skills?.length > 0 ? job.skills.map((skill, idx) => (
-                                            <span key={idx} style={{
-                                                fontSize: '0.75rem', padding: '2px 8px', borderRadius: '4px',
-                                                background: 'rgba(var(--md-sys-color-primary-rgb), 0.1)',
-                                                color: 'var(--md-sys-color-primary)', border: '1px solid rgba(var(--md-sys-color-primary-rgb), 0.2)'
-                                            }}>
-                                                {skill}
-                                            </span>
-                                        )) : (
-                                            <span style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)' }}>No specific skills listed</span>
-                                        )}
+                                    <div style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-secondary)', marginBottom: '1.5rem', flexGrow: 1 }}>
+                                        <p>📍 {job.location}</p>
+                                        <p>💼 {job.type}</p>
+                                        <p>🕒 Posted {job.postedDate}</p>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '12px' }}>
+                                            {job.skills?.length > 0 ? job.skills.map((skill, idx) => (
+                                                <span key={idx} style={{
+                                                    fontSize: '0.75rem', padding: '2px 8px', borderRadius: '4px',
+                                                    background: 'rgba(var(--md-sys-color-primary-rgb), 0.1)',
+                                                    color: 'var(--md-sys-color-primary)', border: '1px solid rgba(var(--md-sys-color-primary-rgb), 0.2)'
+                                                }}>
+                                                    {skill}
+                                                </span>
+                                            )) : (
+                                                <span style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)' }}>No specific skills listed</span>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid var(--glass-border)' }}>
-                                    <div style={{ display: 'flex', gap: '1rem', fontSize: '0.85rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
-                                        <span title="Applicants">👥 <b>{job.applicants}</b></span>
-                                        <span title="Views">👁️ <b>{job.views}</b></span>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid var(--glass-border)' }}>
+                                        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.85rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
+                                            <span title="Applicants">👥 <b>{job.applicants}</b></span>
+                                            <span title="Views">👁️ <b>{job.views}</b></span>
+                                        </div>
+                                        <Button
+                                            variant="text"
+                                            style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}
+                                            onClick={() => handleManageClick(job)}
+                                        >
+                                            Manage
+                                        </Button>
                                     </div>
-                                    <Button
-                                        variant="text"
-                                        style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}
-                                        onClick={() => handleManageClick(job)}
-                                    >
-                                        Manage
-                                    </Button>
-                                </div>
-                            </GlassContainer>
-                        </motion.div>
-                    ))}
+                                </GlassContainer>
+                            </motion.div>
+                        );
+                    })}
                 </AnimatePresence>
             </motion.div>
 

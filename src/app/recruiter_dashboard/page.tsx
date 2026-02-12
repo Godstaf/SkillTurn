@@ -159,9 +159,9 @@ export default function RecruiterDashboardPage() {
                 },
                 body: JSON.stringify({
                     title: data.position,
-                    type: data.tenure, // Assuming JobData tenure maps to type
+                    type: data.tenure,
                     description: data.description,
-                    skills: [], // JobData doesn't seem to have skills array exposed in form yet
+                    skills: data.skills || [], // Use skills from form data
                     location: data.location,
                     salary: data.salary,
                     deadline: "2026-12-31" // Placeholder
