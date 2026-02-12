@@ -18,7 +18,8 @@ from database import (
     courses_collection, 
     enrollments_collection, 
     assignments_collection, 
-    submissions_collection
+    submissions_collection,
+    opportunities_collection
 ) 
 from bson import ObjectId
 
@@ -159,6 +160,21 @@ class SavedJob(BaseModel):
     user_id: str
     job_id: str
     saved_at: datetime = Field(default_factory=datetime.utcnow)
+
+class Opportunity(BaseModel):
+    id: Optional[str] = Field(None, alias="_id")
+    title: str
+    type: Literal["Project", "Internship", "Job"]
+    organization: str # Company Name or Faculty Name
+    company_id: Optional[str] = None # Optional for Faculty projects
+    description: str
+    skills: List[str] = []
+    location: Optional[str] = "Remote"
+    salary: Optional[str] = "Unpaid"
+    posted_date: datetime = Field(default_factory=datetime.utcnow)
+    deadline: Optional[str] = None # Keeping as string to match frontend "2025-12-15"
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 # --- Legacy/Course Models ---
 class Course(BaseModel):
@@ -354,3 +370,13 @@ def get_job_applications(job_id: str):
 # Enrollment
 def enroll_student(enrollment_data: Enrollment):
     return create_item(enrollments_collection, enrollment_data)
+
+# Opportunities
+def create_opportunity(opportunity: Opportunity):
+    return create_item(opportunities_collection, opportunity)
+
+def get_all_opportunities():
+    return retrieve_all_items(opportunities_collection, Opportunity)
+
+def get_opportunity(opportunity_id: str):
+    return retrieve_item(opportunities_collection, opportunity_id, Opportunity)
