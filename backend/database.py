@@ -32,5 +32,10 @@ recruiter_profiles_collection = recruiter_db.get_collection("recruiter_profiles"
 companies_collection = recruiter_db.get_collection("companies") # NEW: Company entities
 jobs_collection = recruiter_db.get_collection("jobs")
 applications_collection = recruiter_db.get_collection("applications")
+
+# 5. Opportunities DB: Centralized Opportunities (Internships, Projects, Jobs)
+opportunities_db = client.opportunities_db
+opportunities_collection = opportunities_db.get_collection("opportunities")
+
 assignments_collection = faculty_db.get_collection("assignments") # Assignments belong to courses (faculty domain)
 submissions_collection = faculty_db.get_collection("submissions") # Submissions belong to assignments
