@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from login import router as auth_router
 from register import router as register_router
 from student import router as student_router
+from faculty import router as faculty_router
+from recruiter import router as recruiter_router
 
 app = FastAPI()
 
@@ -22,6 +24,8 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(register_router)
 app.include_router(student_router)
+app.include_router(faculty_router)
+app.include_router(recruiter_router)
 
 @app.get("/")
 def read_root():

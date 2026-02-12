@@ -72,10 +72,12 @@ class FacultyProfile(BaseModel):
 class RecruiterProfile(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
     user_id: str   # ref users._id
+    full_name: str
     company_name: str
     designation: Optional[str] = None
     work_email: Optional[str] = None
     company_website: Optional[str] = None
+    company_size: Optional[str] = None
     hiring_domain: Optional[str] = None
     linkedin_profile: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
