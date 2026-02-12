@@ -83,6 +83,7 @@ class Company(BaseModel):
     company_size: Optional[str] = None
     description: Optional[str] = None
     logo_url: Optional[str] = None
+    company_id: Optional[str] = None # Added for explicit ID (different from _id)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -328,19 +329,39 @@ def retrieve_courses():
 
 def create_company(company: Company):
     # Check if company exists by name (simple check)
-    existing = companies_collection.find_one({"name": company.name})
+    existing = companies_collection.find_one({"name": {"$regex": f"^{company.name}$", "$options": "i"}})
     if existing:
-        return fix_mongo_id(existing)
+        return Company(**fix_mongo_id(existing))
+    
+    # Generate ID if missing
+    if not company.company_id:
+        company.company_id = str(uuid.uuid4())[:8]
+        
     return create_item(companies_collection, company)
 
 def get_company_by_name(name: str):
-    company = companies_collection.find_one({"name": name})
+    # Case-insensitive search
+    company = companies_collection.find_one({"name": {"$regex": f"^{name}$", "$options": "i"}})
     if company:
         return Company(**fix_mongo_id(company))
     return None
 
 def get_company_by_id(company_id: str):
-    return retrieve_item(companies_collection, company_id, Company)
+    # Search by explicit company_id first
+    company = companies_collection.find_one({"company_id": company_id})
+    if company:
+        return Company(**fix_mongo_id(company))
+        
+    # Fallback to _id for legacy support? Or strictly use company_id?
+    # Let's support _id too if company_id fails, just in case
+    try:
+        company = companies_collection.find_one({"_id": ObjectId(company_id)})
+        if company:
+             return Company(**fix_mongo_id(company))
+    except:
+        pass
+        
+    return None
 
 def create_recruiter_profile(profile: RecruiterProfile):
     return create_item(recruiter_profiles_collection, profile)

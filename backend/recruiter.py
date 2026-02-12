@@ -55,27 +55,45 @@ async def create_profile(request: RecruiterRegistrationRequest, current_user: Us
     company = None
     
     # A. Check by ID if provided
+    # A. Check by ID if provided
     if request.company_id:
         company = get_company_by_id(request.company_id)
+        if not company:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid Company ID"
+            )
+        # Strict Verification: Name must match (Case Insensitive)
+        if company.name.lower() != request.company_name.strip().lower():
+             raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Company Name '{request.company_name}' does not match the provided Company ID."
+            )
         
-    # B. Check by Name if ID failed or not provided
-    if not company:
-        company = get_company_by_name(request.company_name)
-    
-    # C. If still no company, return error (Unregistered Company)
-    if not company:
-         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Unregistered Company"
-        )
+    # B. Check by Name if ID not provided
+    else:
+        # Case-insensitive search handled by helper
+        company = get_company_by_name(request.company_name.strip())
+        
+        # C. If NOT found, Auto-Create it
+        if not company:
+            new_company_data = Company(
+                name=request.company_name.strip(),
+                website=request.company_website,
+                company_size=request.company_size,
+                industry=request.hiring_domain, # Mapping hiring_domain to industry
+                description="Auto-generated during recruiter registration"
+            )
+            company = create_company(new_company_data)
             
     # Standardize ID access
-    company_id = str(company.id) if isinstance(company, Company) else str(company["id"])
+    # Use the explicit company_id if available, otherwise fallback to _id
+    final_company_id = company.company_id if company.company_id else str(company.id)
 
     # 2. Create Recruiter Profile
     profile = RecruiterProfile(
         user_id=str(current_user.id),
-        company_id=company_id,
+        company_id=final_company_id, # Store explicit ID
         full_name=request.full_name,
         designation=request.designation,
         work_email=request.work_email,
