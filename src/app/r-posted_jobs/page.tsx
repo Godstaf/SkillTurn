@@ -3,14 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { GlassContainer } from "@/components/ui/GlassContainer";
 import { motion, AnimatePresence } from "framer-motion";
 import { JobFormModal, JobData } from "@/components/JobFormModal";
-
 import styles from "./PostedJobs.module.css";
-
-// --- Mock Data ---
 
 interface Job extends JobData {
     id: string;
@@ -19,39 +15,15 @@ interface Job extends JobData {
     status: 'Active' | 'Expired';
     applicants: number;
     views: number;
-    // Map existing fields for display if needed, but JobData covers most
-    title: string; // Synced with position
-    type: string;  // Synced with tenure
+    title: string;
+    type: string;
+    skills: string[];
 }
 
-const INITIAL_JOBS: Job[] = [
-    {
-        id: '1', title: 'Senior Frontend Engineer', position: 'Senior Frontend Engineer', company: 'TechFlow Industries', location: 'Remote',
-        type: 'Full-time', tenure: 'Full-time', salary: '$120k - $160k', description: 'Great role...', skills: ['React', 'TypeScript', 'Next.js'], postedDate: '2 days ago', expirationDate: 'In 28 days', status: 'Active', applicants: 45, views: 1200
-    },
-    {
-        id: '2', title: 'Product Designer', position: 'Product Designer', company: 'TechFlow Industries', location: 'New York, NY',
-        type: 'Full-time', tenure: 'Full-time', salary: '$100k - $140k', description: 'Design things...', skills: ['Figma', 'Prototyping'], postedDate: '5 days ago', expirationDate: 'In 25 days', status: 'Active', applicants: 23, views: 850
-    },
-    {
-        id: '3', title: 'Backend Developer (Go)', position: 'Backend Developer (Go)', company: 'TechFlow Industries', location: 'Remote',
-        type: 'Contract', tenure: 'Contract', salary: '$80/hr', description: 'Go code...', skills: ['Go', 'PostgreSQL', 'Docker'], postedDate: '1 week ago', expirationDate: 'In 20 days', status: 'Active', applicants: 12, views: 500
-    },
-    {
-        id: '4', title: 'Marketing Intern', position: 'Marketing Intern', company: 'TechFlow Industries', location: 'San Francisco, CA',
-        type: 'Internship', tenure: 'Internship', salary: '$25/hr', description: 'Internship...', skills: ['Social Media', 'Content Creation'], postedDate: '2 months ago', expirationDate: 'Expired', status: 'Expired', applicants: 156, views: 3200
-    },
-    {
-        id: '5', title: 'Data Scientist', position: 'Data Scientist', company: 'TechFlow Industries', location: 'Boston, MA',
-        type: 'Full-time', tenure: 'Full-time', salary: '$130k - $170k', description: 'Data analysis...', skills: ['Python', 'SQL', 'Machine Learning'], postedDate: '3 months ago', expirationDate: 'Expired', status: 'Expired', applicants: 89, views: 2400
-    }
-];
-
 export default function PostedJobsPage() {
-    const [jobs, setJobs] = useState<Job[]>(INITIAL_JOBS);
+    const [jobs, setJobs] = useState<Job[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'All' | 'Active' | 'Expired'>('All');
-
-    // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingJob, setEditingJob] = useState<Job | null>(null);
 
@@ -60,34 +32,39 @@ export default function PostedJobsPage() {
         return job.status === activeTab;
     });
 
-    // Load posted interns from localStorage on mount
-    useEffect(() => {
+    const fetchJobs = async () => {
         try {
-            const stored = JSON.parse(localStorage.getItem('postedInterns') || '[]');
-            if (stored.length > 0) {
-                const newJobs: Job[] = stored.map((item: Record<string, string | number>) => ({
-                    id: item.id as string,
-                    title: item.title as string || item.position as string,
-                    position: item.position as string,
-                    company: item.company as string,
-                    location: item.location as string,
-                    type: item.type as string || item.tenure as string,
-                    tenure: item.tenure as string,
-                    salary: item.salary as string || '',
-                    description: item.description as string || '',
-                    postedDate: item.postedDate as string || 'Just now',
-                    expirationDate: item.expirationDate as string || 'In 30 days',
-                    status: (item.status as 'Active' | 'Expired') || 'Active',
-                    applicants: (item.applicants as number) || 0,
-                    views: (item.views as number) || 0,
+            const response = await fetch('http://localhost:8000/opportunities');
+            if (response.ok) {
+                const data = await response.json();
+                const dbJobs: Job[] = data.map((j: any) => ({
+                    id: j.id,
+                    title: j.title,
+                    position: j.title,
+                    company: j.organization,
+                    location: j.location || 'Remote',
+                    type: j.type === 'Job' ? 'Full-time' : j.type,
+                    tenure: j.type === 'Job' ? 'Full-time' : j.type,
+                    salary: j.salary || 'Unpaid',
+                    description: j.description,
+                    postedDate: new Date(j.posted_date).toLocaleDateString(),
+                    expirationDate: j.deadline ? `Until ${j.deadline}` : 'No deadline',
+                    status: 'Active',
+                    applicants: 0,
+                    views: 0,
+                    skills: j.skills || []
                 }));
-                setJobs(prev => {
-                    const existingIds = new Set(prev.map(j => j.id));
-                    const unique = newJobs.filter(j => !existingIds.has(j.id));
-                    return [...prev, ...unique];
-                });
+                setJobs(dbJobs);
             }
-        } catch { /* ignore parse errors */ }
+        } catch (error) {
+            console.error("Failed to fetch jobs:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchJobs();
     }, []);
 
     const handleManageClick = (job: Job) => {
@@ -95,36 +72,62 @@ export default function PostedJobsPage() {
         setIsModalOpen(true);
     };
 
-    const handleJobSave = (data: JobData) => {
-        if (!editingJob) return;
+    const handleJobSave = async (data: JobData) => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
 
-        // Update the job list
-        setJobs(prev => prev.map(j => j.id === editingJob.id ? {
-            ...j,
-            ...data,
-            title: data.position, // Keep title synced
-            type: data.tenure    // Keep type synced
-        } : j));
+        try {
+            const payload = {
+                title: data.position,
+                type: data.tenure === 'Full-time' ? 'Job' : (data.tenure as any),
+                organization: data.company,
+                description: data.description,
+                skills: [], // Could be expanded in modal
+                location: data.location,
+                salary: data.salary,
+                deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+            };
 
-        setIsModalOpen(false);
-        setEditingJob(null);
-        // Optional: Add toast notification here
-        alert("Intern Updated Successfully!");
+            const response = await fetch('http://localhost:8000/opportunities', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                await fetchJobs(); // Refresh all
+                setIsModalOpen(false);
+                setEditingJob(null);
+            }
+        } catch (error) {
+            console.error("Failed to save job:", error);
+        }
     };
 
     const handleJobDelete = () => {
+        // Not implemented on backend yet, but would go here
         if (!editingJob) return;
-        setJobs(prev => prev.filter(j => j.id !== editingJob.id));
+        alert("Delete functionality coming soon!");
         setIsModalOpen(false);
         setEditingJob(null);
     };
+
+    if (isLoading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--md-sys-color-surface)' }}>
+                <p>Loading Jobs...</p>
+            </div>
+        );
+    }
 
     return (
         <main style={{ padding: '2rem 24px', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh' }}>
 
             {/* Header */}
             <header style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2rem' }}>
-
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
                         <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>Posted Interns</h1>
@@ -189,7 +192,7 @@ export default function PostedJobsPage() {
                                     <p>💼 {job.type}</p>
                                     <p>🕒 Posted {job.postedDate}</p>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '12px' }}>
-                                        {job.skills?.map((skill, idx) => (
+                                        {job.skills?.length > 0 ? job.skills.map((skill, idx) => (
                                             <span key={idx} style={{
                                                 fontSize: '0.75rem', padding: '2px 8px', borderRadius: '4px',
                                                 background: 'rgba(var(--md-sys-color-primary-rgb), 0.1)',
@@ -197,7 +200,9 @@ export default function PostedJobsPage() {
                                             }}>
                                                 {skill}
                                             </span>
-                                        ))}
+                                        )) : (
+                                            <span style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)' }}>No specific skills listed</span>
+                                        )}
                                     </div>
                                 </div>
 
@@ -226,7 +231,6 @@ export default function PostedJobsPage() {
                 </div>
             )}
 
-            {/* Edit Intern Modal */}
             <JobFormModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}

@@ -379,6 +379,12 @@ def get_job_applications(job_id: str):
         items.append(AppliedJob(**fix_mongo_id(item)))
     return items
 
+def update_application_status(app_id: str, new_status: str):
+    applications_collection.update_one(
+        {"_id": ObjectId(app_id)},
+        {"$set": {"status": new_status, "updated_at": datetime.utcnow()}}
+    )
+
 # Enrollment
 def enroll_student(enrollment_data: Enrollment):
     return create_item(enrollments_collection, enrollment_data)
