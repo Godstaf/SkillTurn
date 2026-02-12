@@ -121,7 +121,7 @@ export default function RecruiterDashboardPage() {
     const fetchDashboardData = async (isInitial = false) => {
         if (isInitial) setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:8000/recruiter/dashboard-data');
+            const response = await fetch('http://127.0.0.1:8000/recruiter/dashboard-data');
             const data = await response.json();
 
             // Map backend opportunities to JobPosition
@@ -207,7 +207,7 @@ export default function RecruiterDashboardPage() {
         if (!token) return;
 
         try {
-            const response = await fetch(`http://localhost:8000/recruiter/applications/${id}/status?new_status=${newStatus}`, {
+            const response = await fetch(`http://127.0.0.1:8000/recruiter/applications/${id}/status?new_status=${newStatus}`, {
                 method: 'PATCH',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -238,7 +238,7 @@ export default function RecruiterDashboardPage() {
                 deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
             };
 
-            const response = await fetch('http://localhost:8000/opportunities', {
+            const response = await fetch('http://127.0.0.1:8000/opportunities', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -638,10 +638,10 @@ export default function RecruiterDashboardPage() {
 
                                     <div style={{ padding: '1.5rem', border: '1px solid var(--glass-border)', borderRadius: '16px' }}>
                                         <h4 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Resume</h4>
-                                        <a href={selectedCandidate.resumeLink} target="_blank" rel="noopener noreferrer"
+                                        <a href={`/resume/${selectedCandidate.id}`} target="_blank" rel="noopener noreferrer"
                                             style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--md-sys-color-primary)', textDecoration: 'none' }}>
                                             <span>📄</span>
-                                            <span style={{ textDecoration: 'underline' }}>View on Drive ↗</span>
+                                            <span style={{ textDecoration: 'underline' }}>View Resume ↗</span>
                                         </a>
                                     </div>
                                 </div>

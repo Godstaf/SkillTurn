@@ -170,3 +170,44 @@ async def update_app_status(app_id: str, new_status: str, current_user: User = D
     
     update_application_status(app_id, db_status)
     return {"message": "Status updated successfully"}
+
+@router.get("/recruiter/applications/{app_id}/resume-data")
+async def get_app_resume_data(app_id: str, current_user: User = Depends(get_current_active_user)):
+    print(f"--- Resume Data Request for AppID: {app_id} ---")
+    if current_user.role not in ["recruiter", "admin"]:
+         print(f"Access Denied: User role is {current_user.role}")
+         raise HTTPException(status_code=403, detail="Unauthorized")
+    
+    try:
+        app_obj_id = ObjectId(app_id)
+    except Exception as e:
+        print(f"Invalid App ID format: {app_id}")
+        raise HTTPException(status_code=400, detail="Invalid application ID format")
+
+    app = applications_collection.find_one({"_id": app_obj_id})
+    if not app:
+        print(f"Application not found in DB: {app_id}")
+        raise HTTPException(status_code=404, detail="Application not found")
+        
+    user_id = app.get("user_id")
+    print(f"Found Application. Student UserID: {user_id}")
+    
+    if not user_id:
+        raise HTTPException(status_code=404, detail="User ID not found in application")
+
+    user = users_collection.find_one({"_id": ObjectId(user_id)})
+    profile = student_profiles_collection.find_one({"user_id": str(user_id)})
+    skills_doc = student_skills_collection.find_one({"user_id": str(user_id)})
+    projects_doc = student_projects_collection.find_one({"user_id": str(user_id)})
+    
+    print(f"Data retrieved: User={'Yes' if user else 'No'}, Profile={'Yes' if profile else 'No'}, Skills={'Yes' if skills_doc else 'No'}, Projects={'Yes' if projects_doc else 'No'}")
+
+    return {
+        "name": user.get("full_name", "Unknown") if user else "Unknown",
+        "email": user.get("email", "") if user else "",
+        "college": profile.get("college", "") if profile else "",
+        "degree": profile.get("degree", "") if profile else "",
+        "branch": profile.get("branch", "") if profile else "",
+        "skills": [s.get("name") for s in skills_doc.get("skills", [])] if skills_doc else [],
+        "projects": projects_doc.get("projects", []) if projects_doc else []
+    }
