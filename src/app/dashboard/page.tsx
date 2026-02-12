@@ -129,7 +129,7 @@ export default function DashboardPage() {
                     });
                     if (appsResp.ok) {
                         const apps = await appsResp.json();
-                        const active = apps.filter((a: any) => ['Applied', 'Shortlisted'].includes(a.status));
+                        const active = apps.filter((a: any) => ['Applied', 'Shortlisted', 'Screening', 'Interview', 'Offer'].includes(a.status));
                         const past = apps.filter((a: any) => ['Rejected', 'Selected', 'Completed'].includes(a.status));
                         setAppliedOpportunities(active);
                         setPastOpportunities(past);
@@ -384,7 +384,11 @@ export default function DashboardPage() {
                                             <span style={{ display: 'block', fontSize: '0.875rem', color: 'var(--md-sys-color-secondary)' }}>Status</span>
                                             <span style={{
                                                 fontWeight: 600,
-                                                color: (opp.status === 'Shortlisted' || opp.status === 'Selected') ? '#4CAF50' : 'var(--md-sys-color-primary)'
+                                                color: (opp.status === 'Shortlisted' || opp.status === 'Selected' || opp.status === 'Offer')
+                                                    ? '#4CAF50'
+                                                    : (opp.status === 'Screening' || opp.status === 'Interview')
+                                                        ? 'var(--md-sys-color-tertiary)'
+                                                        : 'var(--md-sys-color-primary)'
                                             }}>
                                                 {opp.status}
                                             </span>
@@ -545,7 +549,11 @@ export default function DashboardPage() {
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                                 <span style={{
                                                     fontWeight: 600,
-                                                    color: (opp.status === 'Completed' || opp.status === 'Selected') ? '#2E7D32' : opp.status === 'Rejected' ? '#C62828' : '#374151'
+                                                    color: (opp.status === 'Completed' || opp.status === 'Selected' || opp.status === 'Offer' || opp.status === 'Shortlisted')
+                                                        ? '#2E7D32'
+                                                        : (opp.status === 'Screening' || opp.status === 'Interview')
+                                                            ? 'var(--md-sys-color-tertiary)'
+                                                            : opp.status === 'Rejected' ? '#C62828' : '#374151'
                                                 }}>
                                                     {opp.status}
                                                 </span>
