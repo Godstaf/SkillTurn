@@ -2,8 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Opportunity } from "@/data/opportunities";
-import { INITIAL_PROJECTS, FacultyProject } from "@/data/faculty_projects";
+import { Opportunity, opportunities } from "@/data/opportunities";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
@@ -14,68 +13,20 @@ export default function OpportunitiesPage() {
   const [selectedType, setSelectedType] = useState<"All" | "Project" | "Internship">("All");
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
-  const [facultyProjects, setFacultyProjects] = useState<FacultyProject[]>(INITIAL_PROJECTS);
 
-  // Load updated faculty projects from localStorage and listen for changes
-  useEffect(() => {
-    const loadProjects = () => {
-      try {
-        const stored = localStorage.getItem('facultyProjects');
-        if (stored) {
-          setFacultyProjects(JSON.parse(stored));
-        }
-      } catch (e) {
-        console.error("Failed to load projects", e);
-      }
-    };
-
-    loadProjects();
-
-    // Listen for storage events (cross-tab) and custom events (same-tab)
-    window.addEventListener('storage', loadProjects);
-    window.addEventListener('facultyProjectsUpdated', loadProjects);
-
-    return () => {
-      window.removeEventListener('storage', loadProjects);
-      window.removeEventListener('facultyProjectsUpdated', loadProjects);
-    };
-  }, []);
-
-  // Merge static opportunities with faculty projects (ALL projects, regardless of team size)
-  const allOpportunities = useMemo(() => {
-    const facultyOpportunities: Opportunity[] = facultyProjects
-      .filter(fp => !fp.teamMembers || fp.teamMembers.length === 0)
-      .map(fp => {
-        const currentMembers = fp.teamMembers ? fp.teamMembers.length : 0;
-        const needed = Math.max(0, fp.teamSize - currentMembers);
-        const hiringStatus = needed > 0 ? `Looking for ${needed} team members.` : 'Team is full.';
-
-        return {
-          id: `faculty-${fp.id}`,
-          title: fp.title,
-          type: 'Project' as const,
-          organization: `Dr. Aditi Verma (${fp.domain || 'CS Dept'})`,
-          description: `${fp.description} ${hiringStatus}`,
-          skills: fp.techStack || [],
-          postedDate: fp.startDate || 'Recently',
-          deadline: fp.endDate || 'Open until filled',
-        };
-      });
-    return facultyOpportunities;
-  }, [facultyProjects]);
 
   // Extract all unique skills from opportunities
   const allSkills = useMemo(() => {
     const skillsSet = new Set<string>();
-    allOpportunities.forEach(opp => {
+    opportunities.forEach(opp => {
       opp.skills.forEach(skill => skillsSet.add(skill));
     });
     return Array.from(skillsSet).sort();
-  }, [allOpportunities]);
+  }, []);
 
   // Filter opportunities based on search and filters
   const filteredOpportunities = useMemo(() => {
-    return allOpportunities.filter(opp => {
+    return opportunities.filter(opp => {
       // Filter by search query
       const matchesSearch = searchQuery === "" ||
         opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -91,7 +42,7 @@ export default function OpportunitiesPage() {
 
       return matchesSearch && matchesType && matchesSkills;
     });
-  }, [searchQuery, selectedType, selectedSkills, allOpportunities]);
+  }, [searchQuery, selectedType, selectedSkills]);
 
   const toggleSkill = (skill: string) => {
     setSelectedSkills(prev =>
@@ -660,7 +611,7 @@ export default function OpportunitiesPage() {
                 pointerEvents: "none",
               }}
             >
-              {allOpportunities
+              {opportunities
                 .filter((item) => item.id === selectedId)
                 .map((opp) => (
                   <motion.div

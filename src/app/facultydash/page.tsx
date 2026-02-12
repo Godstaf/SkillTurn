@@ -11,9 +11,8 @@ import { Student } from "@/context/AuthContext";
 
 // Extended type for Dashboard purposes (Student + Application Request Info)
 interface StudentApplication extends Student {
-  // Application specific fields (allowed as they are not "User" fields but "Request" fields)
   requestId: string;
-  category: 'Internship' | 'Fees' | 'Assignment' | 'Other';
+  category: 'Internship' | 'Project' | 'Skills';
   shortDescription: string;
   detailedDescription: string;
   documents: string[];
@@ -23,6 +22,16 @@ interface StudentApplication extends Student {
   internshipDomain?: string;
   companyName?: string;
   duration?: string;
+
+  // Specific to Project category
+  projectTitle?: string;
+  projectDomain?: string;
+  teamSize?: number;
+
+  // Specific to Skills category
+  skillName?: string;
+  proficiencyLevel?: string;
+  certificationUrl?: string;
 }
 
 const INITIAL_APPLICATIONS: StudentApplication[] = [
@@ -34,7 +43,7 @@ const INITIAL_APPLICATIONS: StudentApplication[] = [
     category: 'Internship',
     shortDescription: 'Internship verification',
     detailedDescription: 'Requesting verification for 6-month web development internship at TechCorp.',
-    documents: ['internship_cert.pdf'],
+    documents: ['https://drive.google.com/file/d/abc123/view'],
     internshipDomain: 'Web Development', companyName: 'TechCorp', duration: '6 Months',
     approvalStatus: 'Pending'
   },
@@ -43,10 +52,11 @@ const INITIAL_APPLICATIONS: StudentApplication[] = [
     collegeName: 'PICT', degree: 'B.E.', branch: 'Information Technology', yearsOfStudy: 4, expectedGraduationYear: 2025, rollNumber: '31102', collegeEmail: 'ishita.s@pict.edu',
 
     requestId: 'req2',
-    category: 'Fees',
-    shortDescription: 'Fee installment request',
-    detailedDescription: 'Requesting approval to pay remaining fees in installments.',
-    documents: ['income_cert.pdf'],
+    category: 'Project',
+    shortDescription: 'Project completion approval',
+    detailedDescription: 'Requesting approval for completion of Smart Attendance System project using IoT and ML.',
+    documents: ['https://drive.google.com/file/d/def456/view'],
+    projectTitle: 'Smart Attendance System', projectDomain: 'IoT & Machine Learning', teamSize: 4,
     approvalStatus: 'Approved'
   },
   {
@@ -54,10 +64,11 @@ const INITIAL_APPLICATIONS: StudentApplication[] = [
     collegeName: 'PICT', degree: 'B.E.', branch: 'EnTC', yearsOfStudy: 3, expectedGraduationYear: 2026, rollNumber: '31103', collegeEmail: 'rohan.g@pict.edu',
 
     requestId: 'req3',
-    category: 'Assignment',
-    shortDescription: 'Late submission for CNS',
-    detailedDescription: 'Late submission due to Hackathon participation.',
-    documents: ['hackathon_cert.pdf'],
+    category: 'Skills',
+    shortDescription: 'AWS Cloud Practitioner certification',
+    detailedDescription: 'Requesting verification for AWS Cloud Practitioner certification completed via Coursera.',
+    documents: ['https://drive.google.com/file/d/ghi789/view'],
+    skillName: 'AWS Cloud Practitioner', proficiencyLevel: 'Intermediate', certificationUrl: 'https://www.credly.com/badges/example',
     approvalStatus: 'Pending'
   },
 ];
@@ -72,7 +83,7 @@ export default function FacultyDashboardPage() {
 
   const totalApplications = applications.length;
   const pendingApprovals = applications.filter(s => s.approvalStatus === 'Pending').length;
-  const verifiedInternships = applications.filter(s => s.approvalStatus === 'Approved' && s.category === 'Internship').length;
+  const approvedCount = applications.filter(s => s.approvalStatus === 'Approved').length;
 
   const filteredDirectory = applications.filter(s =>
     s.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -95,11 +106,11 @@ export default function FacultyDashboardPage() {
           <div>
             <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem', fontWeight: 'bold' }}>Faculty Dashboard</h2>
             <p style={{ fontSize: '1.0rem', color: 'var(--md-sys-color-secondary)' }}>
-              Verify student requests and internships.
+              Verify student internships, projects, and skills.
             </p>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <Button variant="filled" onClick={() => router.push('/facultyprojects')}>Projects</Button>
+
             <Button variant="outlined" onClick={() => router.push('/facultyprofile')}>My Profile</Button>
           </div>
         </header>
@@ -117,8 +128,8 @@ export default function FacultyDashboardPage() {
             <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--md-sys-color-error)' }}>{pendingApprovals}</div>
           </Card>
           <Card variant="elevated">
-            <h3 style={{ fontSize: '1rem', color: 'var(--md-sys-color-secondary)', marginBottom: '0.5rem' }}>Verified Internships</h3>
-            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--md-sys-color-primary)' }}>{verifiedInternships}</div>
+            <h3 style={{ fontSize: '1rem', color: 'var(--md-sys-color-secondary)', marginBottom: '0.5rem' }}>Approved</h3>
+            <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--md-sys-color-primary)' }}>{approvedCount}</div>
           </Card>
         </section>
       </ScrollReveal>
@@ -205,9 +216,28 @@ export default function FacultyDashboardPage() {
                   <h3 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Request Details</h3>
                   <p><strong>Category:</strong> {selectedApp.category}</p>
                   <p><strong>Description:</strong> {selectedApp.detailedDescription}</p>
+
+                  {/* Internship-specific fields */}
                   {selectedApp.internshipDomain && <p><strong>Domain:</strong> {selectedApp.internshipDomain}</p>}
                   {selectedApp.companyName && <p><strong>Company:</strong> {selectedApp.companyName}</p>}
                   {selectedApp.duration && <p><strong>Duration:</strong> {selectedApp.duration}</p>}
+
+                  {/* Project-specific fields */}
+                  {selectedApp.projectTitle && <p><strong>Project Title:</strong> {selectedApp.projectTitle}</p>}
+                  {selectedApp.projectDomain && <p><strong>Project Domain:</strong> {selectedApp.projectDomain}</p>}
+                  {selectedApp.teamSize && <p><strong>Team Size:</strong> {selectedApp.teamSize}</p>}
+
+                  {/* Skills-specific fields */}
+                  {selectedApp.skillName && <p><strong>Skill:</strong> {selectedApp.skillName}</p>}
+                  {selectedApp.proficiencyLevel && <p><strong>Proficiency:</strong> {selectedApp.proficiencyLevel}</p>}
+                  {selectedApp.certificationUrl && (
+                    <p><strong>Certification:</strong>{' '}
+                      <a href={selectedApp.certificationUrl} target="_blank" rel="noopener noreferrer"
+                        style={{ color: 'var(--md-sys-color-primary)', textDecoration: 'underline' }}>
+                        View Certificate ↗
+                      </a>
+                    </p>
+                  )}
                 </div>
 
                 <div style={{ marginBottom: '1.5rem' }}>
@@ -220,9 +250,29 @@ export default function FacultyDashboardPage() {
                   <h3 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Documents</h3>
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     {selectedApp.documents.map((doc, i) => (
-                      <span key={i} style={{ padding: '4px 8px', background: 'var(--md-sys-color-secondary-container)', borderRadius: '4px', fontSize: '0.9rem' }}>
-                        📄 {doc}
-                      </span>
+                      <a
+                        key={i}
+                        href={doc}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          padding: '6px 12px',
+                          background: 'var(--md-sys-color-secondary-container)',
+                          borderRadius: '8px',
+                          fontSize: '0.9rem',
+                          textDecoration: 'none',
+                          color: 'var(--md-sys-color-on-secondary-container)',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          transition: 'opacity 0.2s',
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
+                        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                      >
+                        📁 <span style={{ textDecoration: 'underline' }}>Drive Document {i + 1}</span> ↗
+                      </a>
                     ))}
                   </div>
                 </div>
