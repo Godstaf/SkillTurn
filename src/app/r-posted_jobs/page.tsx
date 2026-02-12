@@ -132,6 +132,9 @@ export default function PostedJobsPage() {
                             Manage your active listings and view past history.
                         </p>
                     </div>
+                    <Link href="/recruiter_dashboard">
+                        <Button variant="glass">← Back to Dashboard</Button>
+                    </Link>
                 </div>
             </header>
 

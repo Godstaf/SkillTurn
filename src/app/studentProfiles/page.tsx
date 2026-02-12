@@ -9,17 +9,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 // --- Mock Data ---
 
-interface Internship {
-    company: string;
-    role: string;
-    duration: string;
-}
-
 interface StudentProfile {
     id: string;
     name: string;
     college: string;
-    branch: string; // Department
+    branch: string;
     year: string;
     cgpa: number;
     skills: string[];
@@ -30,14 +24,14 @@ interface StudentProfile {
     linkedIn?: string;
     github?: string;
     avatarInitials: string;
-    internships?: Internship[];
+    resumeLink: string;
 }
 
 const COLLEGES = [
-    "IIIT Pune",
-    "COEP",
-    "PICT",
-    "VIT Pune"
+    "TechFlow Institute of Technology",
+    "Global Engineering College",
+    "City University",
+    "State Technical Institute"
 ];
 
 const BRANCHES = [
@@ -48,8 +42,7 @@ const BRANCHES = [
     "Civil Engineering"
 ];
 
-const YEARS = ["First Year", "Second Year", "Third Year", "Final Year"];
-
+const YEARS = ["FE", "SE", "TE", "BE"];
 
 const SKILLS_BY_BRANCH: Record<string, string[]> = {
     "Computer Engineering": ["React", "Node.js", "Python", "Java", "C++", "Machine Learning", "Cloud Computing", "AWS", "Docker"],
@@ -61,73 +54,52 @@ const SKILLS_BY_BRANCH: Record<string, string[]> = {
 
 const MOCK_STUDENTS: StudentProfile[] = [
     {
-        id: '1', name: 'Aarav Patel', college: 'IIIT Pune', branch: 'Computer Engineering', year: 'Third Year',
+        id: '1', name: 'Aarav Patel', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'TE',
         cgpa: 9.2, skills: ['React', 'Node.js', 'Python'], email: 'aarav.p@example.com', phone: '+91 98765 43210',
         location: 'Pune, India', bio: 'Passionate full-stack developer looking for internship opportunities.',
-        avatarInitials: 'AP',
-        internships: [
-            { company: 'Google', role: 'SWE Intern', duration: 'May 2025 – Jul 2025' },
-            { company: 'Flipkart', role: 'Frontend Intern', duration: 'Dec 2024 – Feb 2025' }
-        ]
+        avatarInitials: 'AP', resumeLink: 'https://drive.google.com/file/d/aarav_resume/view'
     },
     {
-        id: '2', name: 'Ishita Sharma', college: 'COEP', branch: 'Information Technology', year: 'Final Year',
+        id: '2', name: 'Ishita Sharma', college: 'Global Engineering College', branch: 'Information Technology', year: 'BE',
         cgpa: 8.9, skills: ['Java', 'Spring Boot', 'SQL'], email: 'ishita.s@example.com', phone: '+91 98765 43211',
         location: 'Mumbai, India', bio: 'Aspiring software engineer with a strong foundation in backend systems.',
-        avatarInitials: 'IS',
-        internships: [
-            { company: 'Infosys', role: 'Backend Developer Intern', duration: 'Jun 2025 – Aug 2025' }
-        ]
+        avatarInitials: 'IS', resumeLink: 'https://drive.google.com/file/d/ishita_resume/view'
     },
     {
-        id: '3', name: 'Rohan Gupta', college: 'PICT', branch: 'Electronics & Telecommunication', year: 'Third Year',
+        id: '3', name: 'Rohan Gupta', college: 'City University', branch: 'Electronics & Telecommunication', year: 'TE',
         cgpa: 7.8, skills: ['Embedded C', 'IoT', 'Arduino'], email: 'rohan.g@example.com', phone: '+91 98765 43212',
         location: 'Bangalore, India', bio: 'IoT enthusiast working on smart home automation projects.',
-        avatarInitials: 'RG',
-        internships: [
-            { company: 'Bosch', role: 'Embedded Systems Intern', duration: 'Jan 2025 – Mar 2025' }
-        ]
+        avatarInitials: 'RG', resumeLink: 'https://drive.google.com/file/d/rohan_resume/view'
     },
     {
-        id: '4', name: 'Meera Singh', college: 'IIIT Pune', branch: 'Computer Engineering', year: 'Second Year',
+        id: '4', name: 'Meera Singh', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'SE',
         cgpa: 8.5, skills: ['C++', 'Data Structures', 'Algorithms'], email: 'meera.s@example.com', phone: '+91 98765 43213',
         location: 'Pune, India', bio: 'Competitive programmer and algorithm lover.',
-        avatarInitials: 'MS'
+        avatarInitials: 'MS', resumeLink: 'https://drive.google.com/file/d/meera_resume/view'
     },
     {
-        id: '5', name: 'Vikram Malhotra', college: 'VIT Pune', branch: 'Mechanical Engineering', year: 'Final Year',
+        id: '5', name: 'Vikram Malhotra', college: 'State Technical Institute', branch: 'Mechanical Engineering', year: 'BE',
         cgpa: 7.2, skills: ['AutoCAD', 'SolidWorks', 'Thermodynamics'], email: 'vikram.m@example.com', phone: '+91 98765 43214',
         location: 'Delhi, India', bio: 'Mechanical engineer interested in automotive design.',
-        avatarInitials: 'VM',
-        internships: [
-            { company: 'Tata Motors', role: 'Design Engineering Intern', duration: 'Jun 2025 – Aug 2025' },
-            { company: 'Mahindra & Mahindra', role: 'Manufacturing Intern', duration: 'Dec 2024 – Jan 2025' }
-        ]
+        avatarInitials: 'VM', resumeLink: 'https://drive.google.com/file/d/vikram_resume/view'
     },
     {
-        id: '6', name: 'Ananya Desai', college: 'COEP', branch: 'Information Technology', year: 'Third Year',
+        id: '6', name: 'Ananya Desai', college: 'Global Engineering College', branch: 'Information Technology', year: 'TE',
         cgpa: 9.5, skills: ['Machine Learning', 'Python', 'TensorFlow'], email: 'ananya.d@example.com', phone: '+91 98765 43215',
         location: 'Hyderabad, India', bio: 'AI/ML researcher working on NLP projects.',
-        avatarInitials: 'AD',
-        internships: [
-            { company: 'Microsoft Research', role: 'ML Research Intern', duration: 'May 2025 – Jul 2025' }
-        ]
+        avatarInitials: 'AD', resumeLink: 'https://drive.google.com/file/d/ananya_resume/view'
     },
     {
-        id: '7', name: 'Kabir Joshi', college: 'PICT', branch: 'Civil Engineering', year: 'Second Year',
+        id: '7', name: 'Kabir Joshi', college: 'City University', branch: 'Civil Engineering', year: 'SE',
         cgpa: 6.8, skills: ['AutoCAD', 'Structural Analysis'], email: 'kabir.j@example.com', phone: '+91 98765 43216',
         location: 'Chennai, India', bio: 'Future civil engineer.',
-        avatarInitials: 'KJ'
+        avatarInitials: 'KJ', resumeLink: 'https://drive.google.com/file/d/kabir_resume/view'
     },
     {
-        id: '8', name: 'Sana Khan', college: 'IIIT Pune', branch: 'Computer Engineering', year: 'Final Year',
+        id: '8', name: 'Sana Khan', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'BE',
         cgpa: 9.8, skills: ['Cloud Computing', 'AWS', 'Docker'], email: 'sana.k@example.com', phone: '+91 98765 43217',
         location: 'Pune, India', bio: 'Cloud native developer.',
-        avatarInitials: 'SK',
-        internships: [
-            { company: 'Amazon Web Services', role: 'Cloud Engineering Intern', duration: 'Jun 2025 – Sep 2025' },
-            { company: 'Razorpay', role: 'DevOps Intern', duration: 'Jan 2025 – Mar 2025' }
-        ]
+        avatarInitials: 'SK', resumeLink: 'https://drive.google.com/file/d/sana_resume/view'
     }
 ];
 
@@ -462,22 +434,6 @@ export default function StudentProfilesPage() {
                                         )}
                                     </div>
 
-                                    {/* Internship Badges */}
-                                    {student.internships && student.internships.length > 0 && (
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                                            {student.internships.map((intern, idx) => (
-                                                <span key={idx} style={{
-                                                    fontSize: '0.7rem', padding: '3px 9px', borderRadius: '10px',
-                                                    background: 'var(--md-sys-color-tertiary-container)',
-                                                    color: 'var(--md-sys-color-on-tertiary-container)',
-                                                    fontWeight: 600
-                                                }}>
-                                                    🏢 {intern.company}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    )}
-
                                     <div style={{ fontSize: '0.8rem', color: 'var(--md-sys-color-secondary)', borderTop: '1px solid var(--md-sys-color-outline-variant)', paddingTop: '0.75rem' }}>
                                         🏛️ {student.college.split(' ')[0]}...
                                     </div>
@@ -560,29 +516,6 @@ export default function StudentProfilesPage() {
                                             </div>
                                         </div>
 
-                                        {/* Internship Experience */}
-                                        {selectedStudent.internships && selectedStudent.internships.length > 0 && (
-                                            <div>
-                                                <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.75rem', color: 'var(--md-sys-color-secondary)' }}>INTERNSHIP EXPERIENCE</h3>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                                    {selectedStudent.internships.map((intern, idx) => (
-                                                        <div key={idx} style={{
-                                                            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                                            padding: '1rem 1.25rem', borderRadius: '16px',
-                                                            background: 'var(--md-sys-color-tertiary-container)',
-                                                            color: 'var(--md-sys-color-on-tertiary-container)'
-                                                        }}>
-                                                            <div>
-                                                                <div style={{ fontWeight: 700, fontSize: '1rem' }}>🏢 {intern.company}</div>
-                                                                <div style={{ fontSize: '0.9rem', opacity: 0.85, marginTop: '2px' }}>{intern.role}</div>
-                                                            </div>
-                                                            <div style={{ fontSize: '0.8rem', opacity: 0.7, whiteSpace: 'nowrap' }}>{intern.duration}</div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
                                         {/* Details Grid */}
                                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                             <div>
@@ -605,7 +538,9 @@ export default function StudentProfilesPage() {
                                         {/* Actions */}
                                         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                                             <Button variant="filled" style={{ flex: 1 }}>Send Message</Button>
-                                            <Button variant="outlined" style={{ flex: 1 }}>View Resume</Button>
+                                            <a href={selectedStudent.resumeLink} target="_blank" rel="noopener noreferrer" style={{ flex: 1, textDecoration: 'none' }}>
+                                                <Button variant="outlined" style={{ width: '100%' }}>View Resume ↗</Button>
+                                            </a>
                                         </div>
 
                                     </div>
