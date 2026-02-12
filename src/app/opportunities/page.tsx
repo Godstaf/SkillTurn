@@ -2,41 +2,50 @@
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { opportunities as staticOpportunities, Opportunity } from "@/data/opportunities";
+import { Opportunity } from "@/data/opportunities";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 
 export default function OpportunitiesPage() {
-  const [allOpportunities, setAllOpportunities] = useState<Opportunity[]>(staticOpportunities);
+  const [allOpportunities, setAllOpportunities] = useState<Opportunity[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<"All" | "Project" | "Internship">("All");
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load posted interns from localStorage on mount
+  // Fetch opportunities from backend
   useEffect(() => {
-    try {
-      const stored = JSON.parse(localStorage.getItem('postedInterns') || '[]');
-      if (stored.length > 0) {
-        const newOpps: Opportunity[] = stored.map((item: Record<string, string>) => ({
-          id: `opp-${item.id}`,
-          title: item.title || item.position,
-          type: 'Internship' as const,
-          organization: item.company,
-          description: item.description || `${item.tenure} position at ${item.company}. Location: ${item.location}. Salary: ${item.salary || 'Not specified'}.`,
-          skills: [],
-          postedDate: item.postedDate || new Date().toISOString().split('T')[0],
-          deadline: item.deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        }));
-        setAllOpportunities(prev => {
-          const existingIds = new Set(prev.map(o => o.id));
-          const unique = newOpps.filter(o => !existingIds.has(o.id));
-          return [...prev, ...unique];
-        });
+    const fetchOpportunities = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/opportunities');
+        if (response.ok) {
+          const data = await response.json();
+          // Map backend data to frontend interface
+          const mappedOpportunities: Opportunity[] = data.map((item: any) => ({
+            id: item.id || item._id, // Fallback for ID
+            title: item.title,
+            type: item.type === 'Job' ? 'Internship' : item.type,
+            organization: item.organization,
+            description: item.description,
+            skills: item.skills || [],
+            postedDate: new Date(item.posted_date).toISOString().split('T')[0],
+            deadline: item.deadline || 'No deadline'
+          }));
+          setAllOpportunities(mappedOpportunities);
+        } else {
+          console.error("Failed to fetch opportunities:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching opportunities:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch { /* ignore parse errors */ }
+    };
+
+    fetchOpportunities();
   }, []);
 
   // Extract all unique skills from opportunities
@@ -83,6 +92,14 @@ export default function OpportunitiesPage() {
   };
 
   const hasActiveFilters = searchQuery !== "" || selectedType !== "All" || selectedSkills.length > 0;
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--md-sys-color-surface)' }}>
+        <p>Loading Opportunities...</p>
+      </div>
+    );
+  }
 
   return (
     <main
