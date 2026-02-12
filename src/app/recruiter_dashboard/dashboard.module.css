@@ -134,6 +134,8 @@
     border-radius: 50%;
     width: 36px;
     height: 36px;
+    min-width: unset;
+    /* Allow width to be respected */
     padding: 0;
     z-index: 10;
 }
