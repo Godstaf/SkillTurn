@@ -327,7 +327,7 @@ export default function LoginPage() {
                         }}
                     >
                         <Link
-                            href="#"
+                            href="/forgot-password"
                             style={{
                                 color: "var(--md-sys-color-primary)",
                                 textDecoration: "none",
@@ -347,13 +347,13 @@ export default function LoginPage() {
                     </Button>
                 </form>
 
-                <div style={{ margin: '2rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                {/* <div style={{ margin: '2rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ flex: 1, height: '1px', background: 'var(--input-border)' }} />
                     <span style={{ color: 'var(--md-sys-color-secondary)', fontSize: '0.875rem' }}>Or continue with</span>
                     <div style={{ flex: 1, height: '1px', background: 'var(--input-border)' }} />
-                </div>
+                </div> */}
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                {/* <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <button
                         type="button"
                         onClick={() => alert("Google login not implemented yet")}
@@ -401,7 +401,7 @@ export default function LoginPage() {
                         </svg>
                         GitHub
                     </button>
-                </div>
+                </div> */}
 
                 <div
                     style={{
