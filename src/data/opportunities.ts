@@ -60,4 +60,14 @@ export const opportunities: Opportunity[] = [
         postedDate: '2025-11-26',
         deadline: '2025-12-30',
     },
+    {
+        id: '6',
+        title: 'Predictive Student Performance Analytics',
+        type: 'Project',
+        organization: 'Dr. Aditi Verma (CS Dept)',
+        description: 'A data analytics platform to predict student academic performance using historical data and machine learning models to enable early interventions. Looking for 4 team members.',
+        skills: ['Python', 'Scikit-learn', 'Pandas', 'Streamlit'],
+        postedDate: '2026-01-10',
+        deadline: '2026-03-01',
+    },
 ];

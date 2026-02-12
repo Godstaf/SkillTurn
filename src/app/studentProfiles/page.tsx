@@ -5,7 +5,7 @@ import { GlassContainer } from "@/components/ui/GlassContainer";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // --- Mock Data ---
 
@@ -105,12 +105,15 @@ const MOCK_STUDENTS: StudentProfile[] = [
 
 export default function StudentProfilesPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const collegeParam = searchParams.get('college');
+
     const [students] = useState<StudentProfile[]>(MOCK_STUDENTS);
     const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
 
     // Filters State
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedCollege, setSelectedCollege] = useState<string>('All');
+    const [selectedCollege, setSelectedCollege] = useState<string>(collegeParam || 'All');
     const [selectedBranch, setSelectedBranch] = useState<string>('All');
     const [selectedYear, setSelectedYear] = useState<string>('All');
     const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -186,6 +189,37 @@ export default function StudentProfilesPage() {
                     </div>
                 </header>
             </ScrollReveal>
+
+            {/* Faculty College Filter Banner */}
+            {collegeParam && (
+                <ScrollReveal width="100%" delay={0.05}>
+                    <div style={{
+                        marginBottom: '1.5rem',
+                        padding: '12px 20px',
+                        borderRadius: '16px',
+                        background: 'var(--md-sys-color-primary-container)',
+                        color: 'var(--md-sys-color-on-primary-container)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: '0.75rem',
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '1.1rem' }}>🏛️</span>
+                            <span style={{ fontWeight: 600 }}>
+                                Showing students from <strong>{collegeParam}</strong>
+                            </span>
+                        </div>
+                        <Button variant="outlined" onClick={() => {
+                            setSelectedCollege('All');
+                            router.replace('/studentProfiles');
+                        }} style={{ fontSize: '0.85rem', padding: '6px 16px' }}>
+                            Show All Colleges
+                        </Button>
+                    </div>
+                </ScrollReveal>
+            )}
 
             {/* Filter Bar */}
             <ScrollReveal width="100%" delay={0.1}>

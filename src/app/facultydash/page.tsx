@@ -98,7 +98,10 @@ export default function FacultyDashboardPage() {
               Verify student requests and internships.
             </p>
           </div>
-          <Button variant="outlined" onClick={() => router.push('/facultyprofile')}>My Profile</Button>
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <Button variant="filled" onClick={() => router.push('/facultyprojects')}>Projects</Button>
+            <Button variant="outlined" onClick={() => router.push('/facultyprofile')}>My Profile</Button>
+          </div>
         </header>
       </ScrollReveal>
 
