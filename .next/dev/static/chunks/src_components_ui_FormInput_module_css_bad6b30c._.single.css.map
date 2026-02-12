@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/components/ui/FormInput.module.css"],"sourcesContent":[".inputGroup {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 4px;\r\n  margin-bottom: 18px;\r\n}\r\n.label {\r\n  color: var(--md-sys-color-on-surface);\r\n  font-size: 1rem;\r\n  font-weight: 500;\r\n}\r\n.input {\r\n  padding: 8px 14px;\r\n  border-radius: 8px;\r\n  border: 1px solid var(--input-border);\r\n  background: var(--input-background);\r\n  color: var(--input-color);\r\n  font-size: 1rem;\r\n  outline: none;\r\n  transition: border 0.2s;\r\n}\r\n.input:focus {\r\n  border-color: var(--md-sys-color-primary);\r\n  box-shadow: 0 0 0 1px var(--md-sys-color-primary);\r\n}\r\n.required {\r\n  color: var(--md-sys-color-error);\r\n  margin-left: 4px;\r\n}\r\n.error {\r\n  color: var(--md-sys-color-error);\r\n  font-size: 0.92em;\r\n  margin-top: 2px;\r\n}\r\n"],"names":[],"mappings":"AAAA;;;;;;;AAMA;;;;;;AAKA;;;;;;;;;;;AAUA;;;;;AAIA;;;;;AAIA"}}]
-}
