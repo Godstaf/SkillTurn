@@ -199,6 +199,7 @@ export const Navbar = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                suppressHydrationWarning
               />
               <path
                 d="M3 6H21"
@@ -206,6 +207,7 @@ export const Navbar = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                suppressHydrationWarning
               />
               <path
                 d="M3 18H21"
@@ -213,6 +215,7 @@ export const Navbar = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                suppressHydrationWarning
               />
             </svg>
           </motion.button>
