@@ -19,10 +19,39 @@ export default function AddProjectPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setLoading(false);
-        router.push('/dashboard');
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                router.push('/login');
+                return;
+            }
+
+            const res = await fetch('http://127.0.0.1:8000/student/projects', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: formData.title,
+                    description: formData.description + (formData.technologies ? `\nTechnologies: ${formData.technologies}` : ""),
+                    project_link: formData.link,
+                    category: "Project"
+                })
+            });
+
+            if (res.ok) {
+                router.push('/dashboard');
+            } else {
+                console.error("Failed to add project");
+                // Handle error
+            }
+        } catch (error) {
+            console.error("Error adding project:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

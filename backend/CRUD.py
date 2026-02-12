@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr
+import uuid
 from typing import List, Optional, Literal
 from datetime import datetime
 from database import (
@@ -113,8 +114,10 @@ class RecruiterRegistrationRequest(BaseModel):
 # --- Student Extra Details ---
 
 class SkillItem(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    verified: Optional[str] = None # None = not verified, String = faculty_user_id
+    verified: Optional[str] = None # Faculty ID who verified
+    verification_status: Literal["Pending", "Verified", "Rejected"] = "Pending"
 
 class StudentSkills(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
@@ -123,10 +126,13 @@ class StudentSkills(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 class ProjectItem(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
     description: Optional[str] = None
     project_link: Optional[str] = None
-    verified: Optional[str] = None # None = not verified, String = faculty_user_id
+    category: Literal["Project", "Internship"] = "Project"
+    verified: Optional[str] = None # Faculty ID who verified
+    verification_status: Literal["Pending", "Verified", "Rejected"] = "Pending"
 
 class StudentProjects(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
@@ -251,6 +257,12 @@ def update_user_verification(username: str, status: bool):
         {"username": username},
         {"$set": {"is_verified": status, "updated_at": datetime.utcnow()}}
     )
+
+def get_all_students():
+    students = []
+    for user in users_collection.find({"role": "student"}):
+        students.append(User(**fix_mongo_id(user)))
+    return students
 
 # 2. Student Panel
 def create_student_profile(profile: StudentProfile):
@@ -386,3 +398,73 @@ def get_all_opportunities():
 
 def get_opportunity(opportunity_id: str):
     return retrieve_item(opportunities_collection, opportunity_id, Opportunity)
+
+def get_opportunities_by_company(company_id: str):
+    items = []
+    # Find opportunities where company_id matches OR organization matches name (legacy support)
+    # Ideally just company_id
+    for item in opportunities_collection.find({"company_id": company_id}):
+        items.append(Opportunity(**fix_mongo_id(item)))
+    return items
+
+def get_applications_for_opportunities(opportunity_ids: List[str]):
+    items = []
+    for item in applications_collection.find({"job_id": {"$in": opportunity_ids}}):
+        items.append(AppliedJob(**fix_mongo_id(item)))
+    return items
+
+def update_application_status(application_id: str, status: str):
+    applications_collection.update_one(
+        {"_id": ObjectId(application_id)},
+        {"$set": {"status": status, "updated_at": datetime.utcnow()}}
+    )
+    return True
+
+def get_application_by_student_and_job(user_id: str, job_id: str):
+    app = applications_collection.find_one({"user_id": user_id, "job_id": job_id})
+    if app:
+        return AppliedJob(**fix_mongo_id(app))
+    return None
+
+def get_all_full_student_profiles():
+    """
+    Aggregates data from Users, StudentProfiles, and StudentSkills
+    to return a comprehensive list of student profiles for the frontend.
+    """
+    students = []
+    # 1. Get all users with role "student"
+    student_users = users_collection.find({"role": "student"})
+    
+    for user_doc in student_users:
+        user = User(**fix_mongo_id(user_doc))
+        user_id = str(user.id)
+        
+        # 2. Get Profile Details
+        profile_doc = student_profiles_collection.find_one({"user_id": user_id})
+        profile = StudentProfile(**fix_mongo_id(profile_doc)) if profile_doc else None
+        
+        # 3. Get Skills
+        skills_doc = student_skills_collection.find_one({"user_id": user_id})
+        skills_data = StudentSkills(**fix_mongo_id(skills_doc)) if skills_doc else None
+        skills_list = [s.name for s in skills_data.skills] if skills_data else []
+        
+        # 4. Construct Aggregated Object
+        # Defaults if profile missing
+        student_data = {
+            "id": user_id,
+            "name": user.full_name,
+            "email": user.email,
+            "college": profile.college if profile else "Unknown College",
+            "branch": profile.branch if profile else "Unknown Branch",
+            "year": f"{profile.year_of_study}th Year" if profile and profile.year_of_study else "Unknown Year",
+            "cgpa": profile.gpa if profile else 0.0,
+            "skills": skills_list,
+            "phone": "+91 98765 43210", # Placeholder
+            "location": "India", # Placeholder
+            "bio": f"Student at {profile.college}" if profile and profile.college else "Student",
+            "avatarInitials": "".join([n[0] for n in user.full_name.split(" ")[:2]]).upper() if user.full_name else "ST",
+            "resumeLink": "#" # Placeholder
+        }
+        students.append(student_data)
+        
+    return students

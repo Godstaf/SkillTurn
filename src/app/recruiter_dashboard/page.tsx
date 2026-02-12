@@ -34,111 +34,67 @@ interface Candidate {
     program: string;
     branch: string;
     skills: string[];
-    projectsCount?: number; // Added for score calculation
     resumeLink: string;
-    matchScore: number; // Base match score
+    matchScore: number; // 0-100
     appliedDate: string;
     avatarInitials: string;
 }
 
 // --- Initial Mock Data ---
 
-const INITIAL_JOBS: JobPosition[] = [
-    {
-        id: 'j1', title: 'Senior Frontend Engineer', department: 'Engineering', location: 'Remote',
-        type: 'Full-time', postedString: '2 days ago', applicantsCount: 45, status: 'Active',
-        skills: ['React', 'TypeScript', 'Next.js']
-    },
-    {
-        id: 'j2', title: 'UX Designer Intern', department: 'Design', location: 'New York, NY',
-        type: 'Internship', postedString: '1 week ago', applicantsCount: 128, status: 'Active',
-        skills: ['Figma', 'Prototyping']
-    },
-    {
-        id: 'j3', title: 'Product Manager', department: 'Product', location: 'San Francisco, CA',
-        type: 'Full-time', postedString: '3 days ago', applicantsCount: 32, status: 'Active',
-        skills: ['Agile', 'Roadmapping']
-    },
-    {
-        id: 'j4', title: 'Backend Developer', department: 'Engineering', location: 'Remote',
-        type: 'Contract', postedString: '5 days ago', applicantsCount: 18, status: 'Active',
-        skills: ['Node.js', 'PostgreSQL']
-    },
-];
-
-const INITIAL_CANDIDATES: Candidate[] = [
-    {
-        id: 'c1', name: 'Alex Johnson', email: 'alex.j@example.com',
-        appliedRole: 'Senior Frontend Engineer', status: 'New',
-        institution: 'IIT Bombay', program: 'B.Tech', branch: 'Computer Science and Engineering',
-        skills: ['React', 'TypeScript', 'Node.js'], projectsCount: 4, resumeLink: 'https://drive.google.com/file/d/alex_resume/view',
-        matchScore: 92, appliedDate: '2 hours ago', avatarInitials: 'AJ'
-    },
-    {
-        id: 'c2', name: 'Samantha Lee', email: 'sam.lee@example.com',
-        appliedRole: 'UX Designer Intern', status: 'Screening',
-        institution: 'NID Ahmedabad', program: 'B.Des', branch: 'Interaction Design',
-        skills: ['Figma', 'Adobe XD', 'Prototyping'], projectsCount: 5, resumeLink: 'https://drive.google.com/file/d/sam_portfolio/view',
-        matchScore: 88, appliedDate: '1 day ago', avatarInitials: 'SL'
-    },
-    {
-        id: 'c3', name: 'Michael Chen', email: 'm.chen@example.com',
-        appliedRole: 'Senior Frontend Engineer', status: 'New',
-        institution: 'IIIT Hyderabad', program: 'M.Tech', branch: 'Computer Science',
-        skills: ['Vue.js', 'JavaScript', 'AWS'], projectsCount: 2, resumeLink: 'https://drive.google.com/file/d/mike_cv/view',
-        matchScore: 75, appliedDate: '3 hours ago', avatarInitials: 'MC'
-    },
-    {
-        id: 'c4', name: 'Emily Davis', email: 'emily.d@example.com',
-        appliedRole: 'Product Manager', status: 'Interview',
-        institution: 'IIM Bangalore', program: 'MBA', branch: 'General Management',
-        skills: ['Agile', 'JIRA', 'Roadmapping'], projectsCount: 3, resumeLink: 'https://drive.google.com/file/d/emily_pm/view',
-        matchScore: 95, appliedDate: '2 days ago', avatarInitials: 'ED'
-    },
-    {
-        id: 'c5', name: 'David Wilson', email: 'david.w@example.com',
-        appliedRole: 'UX Designer Intern', status: 'Rejected',
-        institution: 'NIT Trichy', program: 'B.Tech', branch: 'Electrical Engineering',
-        skills: ['Photoshop', 'Sketch'], projectsCount: 1, resumeLink: 'https://drive.google.com/file/d/david_res/view',
-        matchScore: 45, appliedDate: '4 days ago', avatarInitials: 'DW'
-    },
-];
+const INITIAL_JOBS: JobPosition[] = []; // Fetched from API
+const INITIAL_CANDIDATES: Candidate[] = []; // Fetched from API
 
 import { useRouter } from 'next/navigation';
 
 export default function RecruiterDashboardPage() {
     const router = useRouter();
 
-    const [jobs, setJobs] = useState<JobPosition[]>([]);
-    const [candidates, setCandidates] = useState<Candidate[]>([]);
+    const [jobs, setJobs] = useState<JobPosition[]>(INITIAL_JOBS);
+    const [candidates, setCandidates] = useState<Candidate[]>(INITIAL_CANDIDATES);
     const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
     const [filterStatus, setFilterStatus] = useState<'All' | 'New' | 'Screening' | 'Interview' | 'Selected'>('All');
     const [selectedJobFilter, setSelectedJobFilter] = useState<string | null>(null); // null means 'All Interns'
     const [selectedJobDetail, setSelectedJobDetail] = useState<JobPosition | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [recruiterName, setRecruiterName] = useState("Recruiter");
+    const [companyName, setCompanyName] = useState("Company");
 
     // --- Fetch Real Data ---
     const fetchDashboardData = async (isInitial = false) => {
         if (isInitial) setIsLoading(true);
+        const token = localStorage.getItem('token');
+        if (!token) {
+            router.push('/login');
+            return;
+        }
+
         try {
-            const response = await fetch('http://127.0.0.1:8000/recruiter/dashboard-data');
-            const data = await response.json();
+            const response = await fetch('http://127.0.0.1:8000/recruiter/dashboard', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
 
-            // Map backend opportunities to JobPosition
-            const dbJobs: JobPosition[] = data.jobs.map((j: any) => ({
-                id: j.id,
-                title: j.title,
-                department: j.organization,
-                location: j.location,
-                type: j.type as any,
-                postedString: new Date(j.posted_date).toLocaleDateString(),
-                applicantsCount: data.candidates.filter((c: any) => c.appliedRole === j.title).length,
-                status: 'Active',
-                skills: j.skills
-            }));
+            if (response.ok) {
+                const data = await response.json();
 
-            setJobs(dbJobs);
-            setCandidates(data.candidates);
+                // Map backend opportunities to JobPosition (or use data.jobs directly if format matches)
+                const dbJobs: JobPosition[] = data.jobs.map((j: any) => ({
+                    id: j.id,
+                    title: j.title,
+                    department: j.department || j.organization,
+                    location: j.location,
+                    type: j.type as any,
+                    postedString: j.postedString || new Date().toLocaleDateString(),
+                    applicantsCount: j.applicantsCount || 0,
+                    status: j.status || 'Active',
+                    skills: j.skills || []
+                }));
+
+                setJobs(dbJobs);
+                setCandidates(data.candidates);
+                setRecruiterName(data.recruiterName || "Recruiter");
+                setCompanyName(data.companyName || "Company");
+            }
         } catch (error) {
             console.error("Error fetching dashboard data:", error);
         } finally {
@@ -146,46 +102,10 @@ export default function RecruiterDashboardPage() {
         }
     };
 
+    // Fetch Dashboard Data
     useEffect(() => {
         fetchDashboardData(true);
-
-        // Auto-refresh every 15 seconds to keep data dynamic
-        const interval = setInterval(() => fetchDashboardData(), 15000);
-        return () => clearInterval(interval);
-    }, []);
-
-    // --- Scoring Algorithm ---
-    const calculateScore = (candidate: Candidate) => {
-        // If specific job is selected, calculate against it. Otherwise use a representative job or baseline.
-        const targetJob = selectedJobFilter
-            ? jobs.find(j => j.title === selectedJobFilter)
-            : jobs.find(j => j.title === candidate.appliedRole);
-
-        if (!targetJob || !targetJob.skills || targetJob.skills.length === 0) {
-            return candidate.matchScore;
-        }
-
-        const matchedSkills = candidate.skills.filter(skill =>
-            targetJob.skills?.some(jobSkill => jobSkill.toLowerCase() === skill.toLowerCase())
-        ).length;
-
-        const skillPercentage = (matchedSkills / targetJob.skills.length) * 100;
-
-        // Add 6 points per project, capped at 30 bonus points
-        const projectBonus = Math.min(30, (candidate.projectsCount || 0) * 6);
-
-        // Final score combines skills (70% weight) and project bonus, but user asked for "skills match * 100 + extra points"
-        // Let's stick closer to the literal request: (matched/required)*100 + bonus
-        const finalScore = Math.min(100, Math.round(skillPercentage + projectBonus));
-        return finalScore;
-    };
-
-    const getRecruiterSuggestion = (score: number) => {
-        if (score >= 90) return { text: 'Highly Recommended', color: '#4CAF50' };
-        if (score >= 75) return { text: 'Strong Match', color: 'var(--md-sys-color-primary)' };
-        if (score >= 60) return { text: 'Potential Fit', color: '#FF9800' };
-        return { text: 'Limited Match', color: '#F44336' };
-    };
+    }, [router]);
 
     // --- Derived Stats ---
     const totalApplications = candidates.length;
@@ -207,16 +127,20 @@ export default function RecruiterDashboardPage() {
         if (!token) return;
 
         try {
-            const response = await fetch(`http://127.0.0.1:8000/recruiter/applications/${id}/status?new_status=${newStatus}`, {
+            const res = await fetch(`http://127.0.0.1:8000/recruiter/applications/${id}/status`, {
                 method: 'PATCH',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
             });
 
-            if (response.ok) {
+            if (res.ok) {
                 setCandidates(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c));
             }
-        } catch (error) {
-            console.error("Failed to update status:", error);
+        } catch (e) {
+            console.error("Failed to update status", e);
         }
     };
 
@@ -227,59 +151,43 @@ export default function RecruiterDashboardPage() {
         if (!token) return;
 
         try {
-            const opportunityPayload = {
-                title: data.position,
-                type: data.tenure === 'Full-time' ? 'Job' : (data.tenure as any),
-                organization: data.company,
-                description: data.description,
-                skills: [], // Could add skills field to modal later
-                location: data.location,
-                salary: data.salary,
-                deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-            };
-
-            const response = await fetch('http://127.0.0.1:8000/opportunities', {
+            const res = await fetch('http://127.0.0.1:8000/recruiter/opportunities', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(opportunityPayload)
+                body: JSON.stringify({
+                    title: data.position,
+                    type: data.tenure, // Assuming JobData tenure maps to type
+                    description: data.description,
+                    skills: [], // JobData doesn't seem to have skills array exposed in form yet
+                    location: data.location,
+                    salary: data.salary,
+                    deadline: "2026-12-31" // Placeholder
+                })
             });
 
-            if (response.ok) {
-                const newOpp = await response.json();
-
-                // Add to local state
+            if (res.ok) {
+                const newOpp = await res.json();
+                // Refresh dashboard or append to local state
                 setJobs(prev => [...prev, {
                     id: newOpp.id,
                     title: newOpp.title,
                     department: newOpp.organization,
                     location: newOpp.location,
-                    type: newOpp.type === 'Job' ? 'Full-time' : newOpp.type,
+                    type: newOpp.type as any,
                     postedString: 'Just now',
                     applicantsCount: 0,
-                    status: 'Active',
-                    skills: newOpp.skills
+                    status: 'Active'
                 }]);
-
                 setShowJobModal(false);
-                alert("Intern Posted Successfully to Database!");
+                alert("Opportunity Posted Successfully!");
             }
-        } catch (error) {
-            console.error("Failed to post job:", error);
-            alert("Error posting job to database.");
+        } catch (e) {
+            console.error("Failed to post opportunity", e);
         }
     };
-
-    if (isLoading) {
-        return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--md-sys-color-surface)' }}>
-                <div className={styles.loader}></div>
-                <p style={{ marginLeft: '1rem', color: 'var(--md-sys-color-primary)', fontWeight: 600 }}>Loading Dashboard...</p>
-            </div>
-        );
-    }
 
     return (
         <main style={{ padding: '2rem 24px', maxWidth: '1400px', margin: '0 auto', minHeight: '100vh' }}>
@@ -293,12 +201,12 @@ export default function RecruiterDashboardPage() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'white', fontSize: '2rem', fontWeight: 'bold', boxShadow: '0 10px 30px -10px var(--md-sys-color-primary)'
                     }}>
-                        JS
+                        {recruiterName.charAt(0)}
                     </div>
                     <div>
-                        <h1 style={{ fontWeight: 'bold', fontSize: '2rem', lineHeight: '1.2' }}>John Smith</h1>
+                        <h1 style={{ fontWeight: 'bold', fontSize: '2rem', lineHeight: '1.2' }}>{recruiterName}</h1>
                         <p style={{ fontSize: '1rem', color: 'var(--md-sys-color-primary)', fontWeight: 500 }}>Global Talent Acquisition Lead</p>
-                        <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-secondary)' }}>TechFlow Industries</p>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-secondary)' }}>{companyName}</p>
                     </div>
                 </div>
 
@@ -379,19 +287,7 @@ export default function RecruiterDashboardPage() {
                                                 {job.department} • {job.location}
                                             </p>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: 'var(--md-sys-color-secondary)' }}>
-                                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                                    <span>{job.applicantsCount} Applicants</span>
-                                                    <span>•</span>
-                                                    <span
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setSelectedJobDetail(job);
-                                                        }}
-                                                        style={{ color: 'var(--md-sys-color-primary)', fontWeight: 'bold', textDecoration: 'underline' }}
-                                                    >
-                                                        Details
-                                                    </span>
-                                                </div>
+                                                <span>{job.applicantsCount} Applicants</span>
                                                 <span>{job.postedString}</span>
                                             </div>
                                         </GlassContainer>
@@ -467,29 +363,13 @@ export default function RecruiterDashboardPage() {
                                                     </span>
                                                 </div>
                                                 <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-secondary)' }}>Applying for <span style={{ color: 'var(--md-sys-color-primary)', fontWeight: 500 }}>{candidate.appliedRole}</span></p>
-
-                                                {/* Suggestion Badge */}
-                                                <div style={{
-                                                    display: 'inline-block', marginTop: '8px', padding: '2px 10px',
-                                                    borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600,
-                                                    background: `${getRecruiterSuggestion(calculateScore(candidate)).color}15`,
-                                                    color: getRecruiterSuggestion(calculateScore(candidate)).color,
-                                                    border: `1px solid ${getRecruiterSuggestion(calculateScore(candidate)).color}30`
-                                                }}>
-                                                    ✨ {getRecruiterSuggestion(calculateScore(candidate)).text}
-                                                </div>
                                             </div>
 
                                             {/* Metrics */}
                                             <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                                                 <div style={{ textAlign: 'center' }}>
                                                     <div style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-secondary)' }}>Match</div>
-                                                    <div style={{
-                                                        fontSize: '1.2rem', fontWeight: 'bold',
-                                                        color: getRecruiterSuggestion(calculateScore(candidate)).color
-                                                    }}>
-                                                        {calculateScore(candidate)}%
-                                                    </div>
+                                                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: candidate.matchScore > 80 ? 'green' : 'orange' }}>{candidate.matchScore}%</div>
                                                 </div>
                                                 <Button variant="glass" style={{ borderRadius: '50%', width: '40px', height: '40px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>➔</Button>
                                             </div>
@@ -578,8 +458,8 @@ export default function RecruiterDashboardPage() {
                                     <div style={{ marginBottom: '2rem' }}>
                                         <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--md-sys-color-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Skills</h3>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                            {selectedCandidate.skills.map((skill, idx) => (
-                                                <span key={`${skill}-${idx}`} style={{
+                                            {selectedCandidate.skills.map(skill => (
+                                                <span key={skill} style={{
                                                     padding: '6px 14px', borderRadius: '20px',
                                                     border: '1px solid var(--md-sys-color-outline, #ccc)',
                                                     fontSize: '0.9rem', color: 'var(--md-sys-color-on-surface)'
@@ -651,96 +531,8 @@ export default function RecruiterDashboardPage() {
                     </motion.div>
                 )}
 
-                {selectedJobDetail && (
-                    <motion.div
-                        key="job-detail-backdrop"
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className={styles.modalOverlay}
-                        style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }}
-                        onClick={() => setSelectedJobDetail(null)}
-                    >
-                        <motion.div
-                            initial={{ scale: 0.9, y: 30 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 30 }}
-                            className={styles.modalContent}
-                            style={{
-                                maxWidth: '600px',
-                                padding: '2.5rem',
-                                background: 'var(--md-sys-color-surface)',
-                                borderRadius: '32px',
-                                boxShadow: '0 40px 100px rgba(0,0,0,0.5)',
-                                border: '1px solid rgba(255,255,255,0.1)'
-                            }}
-                            onClick={e => e.stopPropagation()}
-                        >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
-                                <div>
-                                    <h2 style={{ fontSize: '1.8rem', fontWeight: 800, margin: 0, color: 'var(--md-sys-color-on-surface)' }}>Internship Details</h2>
-                                    <p style={{ color: 'var(--md-sys-color-primary)', fontWeight: 600, fontSize: '1.1rem', marginTop: '0.5rem' }}>{selectedJobDetail.title}</p>
-                                </div>
-                                <Button variant="glass" onClick={() => setSelectedJobDetail(null)} style={{ minWidth: '40px', padding: 0, borderRadius: '50%' }}>✕</Button>
-                            </div>
-
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                                <div style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: '1fr 1fr',
-                                    gap: '1.5rem',
-                                    padding: '1.5rem',
-                                    background: 'rgba(255,255,255,0.03)',
-                                    borderRadius: '20px',
-                                    border: '1px solid rgba(255,255,255,0.05)'
-                                }}>
-                                    {[
-                                        { label: 'Department', value: selectedJobDetail.department },
-                                        { label: 'Location', value: selectedJobDetail.location },
-                                        { label: 'Type', value: selectedJobDetail.type },
-                                        { label: 'Posted On', value: selectedJobDetail.postedString }
-                                    ].map((item, i) => (
-                                        <div key={i}>
-                                            <label style={{ fontSize: '0.7rem', color: 'var(--md-sys-color-secondary)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '4px', display: 'block' }}>{item.label}</label>
-                                            <p style={{ fontWeight: 600, margin: 0, fontSize: '1rem', color: 'var(--md-sys-color-on-surface)' }}>{item.value}</p>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div>
-                                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        🎯 Required Skills
-                                    </h3>
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                                        {selectedJobDetail.skills && selectedJobDetail.skills.length > 0 ? (
-                                            selectedJobDetail.skills.map((skill, idx) => (
-                                                <span key={idx} style={{
-                                                    padding: '8px 18px', borderRadius: '100px',
-                                                    background: 'rgba(var(--md-sys-color-primary-rgb), 0.1)',
-                                                    color: 'var(--md-sys-color-primary)',
-                                                    border: '1px solid rgba(var(--md-sys-color-primary-rgb), 0.2)',
-                                                    fontSize: '0.9rem',
-                                                    fontWeight: 500
-                                                }}>
-                                                    {skill}
-                                                </span>
-                                            ))
-                                        ) : (
-                                            <p style={{ color: 'var(--md-sys-color-secondary)', fontSize: '0.9rem', fontStyle: 'italic', padding: '1rem', background: 'rgba(0,0,0,0.1)', borderRadius: '12px', width: '100%' }}>No specific skills were listed for this requirement.</p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem', gap: '12px' }}>
-                                    <Button variant="outlined" onClick={() => setSelectedJobDetail(null)}>Close</Button>
-                                    <Button variant="filled" onClick={() => { setSelectedJobFilter(selectedJobDetail.title); setSelectedJobDetail(null); }}>
-                                        View Applicants
-                                    </Button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-
                 {/* Intern Post Modal */}
                 <JobFormModal
-                    key="job-form-modal"
                     isOpen={showJobModal}
                     onClose={() => setShowJobModal(false)}
                     onSubmit={handleJobSubmit}
