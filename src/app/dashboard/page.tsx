@@ -13,6 +13,7 @@ interface Skill {
     id: string;
     name: string;
     verified: boolean;
+    verification_status?: string;
 }
 
 interface Project {
@@ -20,6 +21,7 @@ interface Project {
     title: string;
     description: string;
     verified: boolean;
+    verification_status?: string;
     technologies: string[];
 }
 
@@ -116,28 +118,83 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const token = localStorage.getItem('token');
+            if (token) {
+                setLoading(true);
+                try {
+                    const res = await fetch('http://127.0.0.1:8000/student/full-profile', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        // Map Skills
+                        const mappedSkills = data.skills.map((s: any) => ({
+                            id: s.id,
+                            name: s.name,
+                            verified: s.verification_status === 'Verified',
+                            verification_status: s.verification_status
+                        }));
+                        setSkills(mappedSkills);
 
-            // Set data from mock response
-            setAppliedOpportunities(mockApiResponse.applied);
-            setPastOpportunities(mockApiResponse.past);
-            setSkills(mockApiResponse.skills);
-            setProjects(mockApiResponse.projects);
-            setLoading(false);
+                        // Map Projects
+                        const mappedProjects = data.projects.map((p: any) => ({
+                            id: p.id,
+                            title: p.title,
+                            description: p.description,
+                            verified: p.verification_status === 'Verified',
+                            verification_status: p.verification_status,
+                            technologies: [] // Not stored in backend yet
+                        }));
+                        setProjects(mappedProjects);
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch profile", e);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
+            }
         };
 
         fetchData();
     }, []);
 
-    const updateSkills = (newSkillNames: string[]) => {
-        // In a real app, this would be an API call
-        const updatedSkills = newSkillNames.map((name, idx) => {
-            const existing = skills.find(s => s.name === name);
-            return existing || { id: `new-${idx}`, name, verified: false };
-        });
-        setSkills(updatedSkills);
+    const updateSkills = async (newSkillNames: string[]) => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const currentNames = skills.map(s => s.name);
+        const toAdd = newSkillNames.filter(n => !currentNames.includes(n));
+
+        for (const name of toAdd) {
+            try {
+                const res = await fetch('http://127.0.0.1:8000/student/skills', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name })
+                });
+
+                if (res.ok) {
+                    // Update local state optimistically or refetch
+                    const saved = await res.json();
+                    // The response is the full StudentSkills object or just the new skill?
+                    // My endpoint returns StudentSkills object (list of all skills).
+                    const newSkillList = saved.skills.map((s: any) => ({
+                        id: s.id,
+                        name: s.name,
+                        verified: s.verification_status === 'Verified',
+                        verification_status: s.verification_status
+                    }));
+                    setSkills(newSkillList);
+                }
+            } catch (e) {
+                console.error("Failed to add skill", name, e);
+            }
+        }
     };
 
     if (loading) {
@@ -220,7 +277,7 @@ export default function DashboardPage() {
                                 {skills.map(skill => (
                                     <div
                                         key={skill.id}
-                                        title={skill.verified ? "Verified by Faculty" : "Pending Verification"}
+                                        title={skill.verification_status || "Pending"}
                                         style={{
                                             padding: '8px 16px',
                                             borderRadius: '24px',
@@ -229,14 +286,16 @@ export default function DashboardPage() {
                                             gap: '8px',
                                             fontSize: '1rem',
                                             fontWeight: 500,
-                                            background: skill.verified ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 193, 7, 0.1)',
-                                            border: `1px solid ${skill.verified ? '#4CAF50' : '#FFC107'}`,
+                                            background: skill.verification_status === 'Verified' ? 'rgba(76, 175, 80, 0.1)' : skill.verification_status === 'Rejected' ? 'rgba(244, 67, 54, 0.1)' : 'rgba(255, 193, 7, 0.1)',
+                                            border: `1px solid ${skill.verification_status === 'Verified' ? '#4CAF50' : skill.verification_status === 'Rejected' ? '#F44336' : '#FFC107'}`,
                                             color: 'var(--md-sys-color-on-surface)'
                                         }}
                                     >
                                         {skill.name}
-                                        {skill.verified ? (
+                                        {skill.verification_status === 'Verified' ? (
                                             <span style={{ color: '#4CAF50', fontSize: '1.1rem' }}>✓</span>
+                                        ) : skill.verification_status === 'Rejected' ? (
+                                            <span style={{ color: '#F44336', fontSize: '1.1rem' }}>✕</span>
                                         ) : (
                                             <span style={{ color: '#FFC107', fontSize: '1.1rem' }}>●</span>
                                         )}
@@ -264,18 +323,18 @@ export default function DashboardPage() {
                                 <Card key={project.id} variant="elevated" style={{ padding: '1.5rem', position: 'relative' }}>
                                     <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem' }}>
                                         <span
-                                            title={project.verified ? "Verified Project" : "Pending Verification"}
+                                            title={project.verification_status || "Pending"}
                                             style={{
                                                 fontSize: '0.8rem',
                                                 padding: '4px 10px',
                                                 borderRadius: '8px',
                                                 fontWeight: 600,
-                                                background: project.verified ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 193, 7, 0.1)',
-                                                border: `1px solid ${project.verified ? '#4CAF50' : '#FFC107'}`,
-                                                color: project.verified ? '#2E7D32' : '#F57F17'
+                                                background: project.verification_status === 'Verified' ? 'rgba(76, 175, 80, 0.1)' : project.verification_status === 'Rejected' ? 'rgba(244, 67, 54, 0.1)' : 'rgba(255, 193, 7, 0.1)',
+                                                border: `1px solid ${project.verification_status === 'Verified' ? '#4CAF50' : project.verification_status === 'Rejected' ? '#F44336' : '#FFC107'}`,
+                                                color: project.verification_status === 'Verified' ? '#2E7D32' : project.verification_status === 'Rejected' ? '#C62828' : '#F57F17'
                                             }}
                                         >
-                                            {project.verified ? 'Verified' : 'Pending'}
+                                            {project.verification_status || 'Pending'}
                                         </span>
                                     </div>
                                     <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem', paddingRight: '5rem' }}>{project.title}</h3>

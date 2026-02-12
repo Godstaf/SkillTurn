@@ -7,7 +7,7 @@ import { JobFormModal, JobData } from "@/components/JobFormModal";
 import styles from './dashboard.module.css';
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 // --- Mock Data Interfaces ---
@@ -42,66 +42,8 @@ interface Candidate {
 
 // --- Initial Mock Data ---
 
-const INITIAL_JOBS: JobPosition[] = [
-    {
-        id: 'j1', title: 'Senior Frontend Engineer', department: 'Engineering', location: 'Remote',
-        type: 'Full-time', postedString: '2 days ago', applicantsCount: 45, status: 'Active',
-        skills: ['React', 'TypeScript', 'Next.js']
-    },
-    {
-        id: 'j2', title: 'UX Designer Intern', department: 'Design', location: 'New York, NY',
-        type: 'Internship', postedString: '1 week ago', applicantsCount: 128, status: 'Active',
-        skills: ['Figma', 'Prototyping']
-    },
-    {
-        id: 'j3', title: 'Product Manager', department: 'Product', location: 'San Francisco, CA',
-        type: 'Full-time', postedString: '3 days ago', applicantsCount: 32, status: 'Active',
-        skills: ['Agile', 'Roadmapping']
-    },
-    {
-        id: 'j4', title: 'Backend Developer', department: 'Engineering', location: 'Remote',
-        type: 'Contract', postedString: '5 days ago', applicantsCount: 18, status: 'Active',
-        skills: ['Node.js', 'PostgreSQL']
-    },
-];
-
-const INITIAL_CANDIDATES: Candidate[] = [
-    {
-        id: 'c1', name: 'Alex Johnson', email: 'alex.j@example.com',
-        appliedRole: 'Senior Frontend Engineer', status: 'New',
-        institution: 'IIT Bombay', program: 'B.Tech', branch: 'Computer Science and Engineering',
-        skills: ['React', 'TypeScript', 'Node.js'], resumeLink: 'https://drive.google.com/file/d/alex_resume/view',
-        matchScore: 92, appliedDate: '2 hours ago', avatarInitials: 'AJ'
-    },
-    {
-        id: 'c2', name: 'Samantha Lee', email: 'sam.lee@example.com',
-        appliedRole: 'UX Designer Intern', status: 'Screening',
-        institution: 'NID Ahmedabad', program: 'B.Des', branch: 'Interaction Design',
-        skills: ['Figma', 'Adobe XD', 'Prototyping'], resumeLink: 'https://drive.google.com/file/d/sam_portfolio/view',
-        matchScore: 88, appliedDate: '1 day ago', avatarInitials: 'SL'
-    },
-    {
-        id: 'c3', name: 'Michael Chen', email: 'm.chen@example.com',
-        appliedRole: 'Senior Frontend Engineer', status: 'New',
-        institution: 'IIIT Hyderabad', program: 'M.Tech', branch: 'Computer Science',
-        skills: ['Vue.js', 'JavaScript', 'AWS'], resumeLink: 'https://drive.google.com/file/d/mike_cv/view',
-        matchScore: 75, appliedDate: '3 hours ago', avatarInitials: 'MC'
-    },
-    {
-        id: 'c4', name: 'Emily Davis', email: 'emily.d@example.com',
-        appliedRole: 'Product Manager', status: 'Interview',
-        institution: 'IIM Bangalore', program: 'MBA', branch: 'General Management',
-        skills: ['Agile', 'JIRA', 'Roadmapping'], resumeLink: 'https://drive.google.com/file/d/emily_pm/view',
-        matchScore: 95, appliedDate: '2 days ago', avatarInitials: 'ED'
-    },
-    {
-        id: 'c5', name: 'David Wilson', email: 'david.w@example.com',
-        appliedRole: 'UX Designer Intern', status: 'Rejected',
-        institution: 'NIT Trichy', program: 'B.Tech', branch: 'Electrical Engineering',
-        skills: ['Photoshop', 'Sketch'], resumeLink: 'https://drive.google.com/file/d/david_res/view',
-        matchScore: 45, appliedDate: '4 days ago', avatarInitials: 'DW'
-    },
-];
+const INITIAL_JOBS: JobPosition[] = []; // Fetched from API
+const INITIAL_CANDIDATES: Candidate[] = []; // Fetched from API
 
 import { useRouter } from 'next/navigation';
 
@@ -113,6 +55,38 @@ export default function RecruiterDashboardPage() {
     const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
     const [filterStatus, setFilterStatus] = useState<'All' | 'New' | 'Screening' | 'Interview' | 'Selected'>('All');
     const [selectedJobFilter, setSelectedJobFilter] = useState<string | null>(null); // null means 'All Interns'
+    const [recruiterName, setRecruiterName] = useState("Recruiter");
+    const [companyName, setCompanyName] = useState("Company");
+
+    // Fetch Dashboard Data
+    useEffect(() => {
+        const fetchDashboard = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                router.push('/login');
+                return;
+            }
+
+            try {
+                const res = await fetch('http://127.0.0.1:8000/recruiter/dashboard', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    setJobs(data.jobs);
+                    setCandidates(data.candidates);
+                    setRecruiterName(data.recruiterName);
+                    setCompanyName(data.companyName);
+                } else {
+                    console.error("Failed to fetch dashboard");
+                }
+            } catch (err) {
+                console.error("Error fetching dashboard:", err);
+            }
+        };
+        fetchDashboard();
+    }, [router]);
 
     // --- Derived Stats ---
     const totalApplications = candidates.length;
@@ -129,56 +103,71 @@ export default function RecruiterDashboardPage() {
 
     const selectedCandidate = candidates.find(c => c.id === selectedCandidateId);
 
-    const handleStatusUpdate = (id: string, newStatus: Candidate['status']) => {
-        setCandidates(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c));
+    const handleStatusUpdate = async (id: string, newStatus: Candidate['status']) => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        try {
+            const res = await fetch(`http://127.0.0.1:8000/recruiter/applications/${id}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (res.ok) {
+                setCandidates(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c));
+            }
+        } catch (e) {
+            console.error("Failed to update status", e);
+        }
     };
 
     const [showJobModal, setShowJobModal] = useState(false);
 
-    const handleJobSubmit = (data: JobData) => {
-        // Save to localStorage so r-posted_jobs and opportunities pages can read it
-        const existing = JSON.parse(localStorage.getItem('postedInterns') || '[]');
-        const newId = `posted-${Date.now()}`;
-        const now = new Date();
-        const postedDate = now.toISOString().split('T')[0];
-        const deadline = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const handleJobSubmit = async (data: JobData) => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
 
-        const newIntern = {
-            id: newId,
-            position: data.position,
-            company: data.company,
-            tenure: data.tenure,
-            location: data.location,
-            salary: data.salary,
-            description: data.description,
-            title: data.position,
-            type: data.tenure,
-            postedDate,
-            expirationDate: `In 30 days`,
-            status: 'Active',
-            applicants: 0,
-            views: 0,
-            deadline,
-        };
+        try {
+            const res = await fetch('http://127.0.0.1:8000/recruiter/opportunities', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: data.position,
+                    type: data.tenure, // Assuming JobData tenure maps to type
+                    description: data.description,
+                    skills: [], // JobData doesn't seem to have skills array exposed in form yet
+                    location: data.location,
+                    salary: data.salary,
+                    deadline: "2026-12-31" // Placeholder
+                })
+            });
 
-        existing.push(newIntern);
-        localStorage.setItem('postedInterns', JSON.stringify(existing));
-
-        // Also add to the local dashboard jobs list
-        setJobs(prev => [...prev, {
-            id: newId,
-            title: data.position,
-            department: data.company,
-            location: data.location,
-            type: data.tenure as 'Full-time' | 'Internship' | 'Contract',
-            postedString: 'Just now',
-            applicantsCount: 0,
-            status: 'Active'
-        }]);
-
-        console.log("Intern Posted:", data);
-        setShowJobModal(false);
-        alert("Intern Posted Successfully!");
+            if (res.ok) {
+                const newOpp = await res.json();
+                // Refresh dashboard or append to local state
+                setJobs(prev => [...prev, {
+                    id: newOpp.id,
+                    title: newOpp.title,
+                    department: newOpp.organization,
+                    location: newOpp.location,
+                    type: newOpp.type as any,
+                    postedString: 'Just now',
+                    applicantsCount: 0,
+                    status: 'Active'
+                }]);
+                setShowJobModal(false);
+                alert("Opportunity Posted Successfully!");
+            }
+        } catch (e) {
+            console.error("Failed to post opportunity", e);
+        }
     };
 
     return (
@@ -193,12 +182,12 @@ export default function RecruiterDashboardPage() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'white', fontSize: '2rem', fontWeight: 'bold', boxShadow: '0 10px 30px -10px var(--md-sys-color-primary)'
                     }}>
-                        JS
+                        {recruiterName.charAt(0)}
                     </div>
                     <div>
-                        <h1 style={{ fontWeight: 'bold', fontSize: '2rem', lineHeight: '1.2' }}>John Smith</h1>
+                        <h1 style={{ fontWeight: 'bold', fontSize: '2rem', lineHeight: '1.2' }}>{recruiterName}</h1>
                         <p style={{ fontSize: '1rem', color: 'var(--md-sys-color-primary)', fontWeight: 500 }}>Global Talent Acquisition Lead</p>
-                        <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-secondary)' }}>TechFlow Industries</p>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-secondary)' }}>{companyName}</p>
                     </div>
                 </div>
 

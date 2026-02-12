@@ -6,11 +6,13 @@ import { Card } from "@/components/ui/Card";
 import { GlassContainer } from "@/components/ui/GlassContainer";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Student } from "@/context/AuthContext";
 
 // Extended type for Dashboard purposes (Student + Application Request Info)
 interface StudentApplication extends Student {
+  studentId?: string; // Mapped from backend ID
+
   requestId: string;
   category: 'Internship' | 'Project' | 'Skills';
   shortDescription: string;
@@ -34,52 +36,44 @@ interface StudentApplication extends Student {
   certificationUrl?: string;
 }
 
-const INITIAL_APPLICATIONS: StudentApplication[] = [
-  {
-    id: '1', username: 'aaravp', email: 'aarav@example.com', full_name: 'Aarav Patel', role: 'student', is_active: true, is_verified: true, created_at: '2023-01-01',
-    collegeName: 'PICT', degree: 'B.E.', branch: 'Computer Engineering', yearsOfStudy: 3, expectedGraduationYear: 2026, rollNumber: '31101', collegeEmail: 'aarav.p@pict.edu',
-
-    requestId: 'req1',
-    category: 'Internship',
-    shortDescription: 'Internship verification',
-    detailedDescription: 'Requesting verification for 6-month web development internship at TechCorp.',
-    documents: ['https://drive.google.com/file/d/abc123/view'],
-    internshipDomain: 'Web Development', companyName: 'TechCorp', duration: '6 Months',
-    approvalStatus: 'Pending'
-  },
-  {
-    id: '2', username: 'ishitas', email: 'ishita@example.com', full_name: 'Ishita Sharma', role: 'student', is_active: true, is_verified: true, created_at: '2023-01-01',
-    collegeName: 'PICT', degree: 'B.E.', branch: 'Information Technology', yearsOfStudy: 4, expectedGraduationYear: 2025, rollNumber: '31102', collegeEmail: 'ishita.s@pict.edu',
-
-    requestId: 'req2',
-    category: 'Project',
-    shortDescription: 'Project completion approval',
-    detailedDescription: 'Requesting approval for completion of Smart Attendance System project using IoT and ML.',
-    documents: ['https://drive.google.com/file/d/def456/view'],
-    projectTitle: 'Smart Attendance System', projectDomain: 'IoT & Machine Learning', teamSize: 4,
-    approvalStatus: 'Approved'
-  },
-  {
-    id: '3', username: 'rohang', email: 'rohan@example.com', full_name: 'Rohan Gupta', role: 'student', is_active: true, is_verified: true, created_at: '2023-01-01',
-    collegeName: 'PICT', degree: 'B.E.', branch: 'EnTC', yearsOfStudy: 3, expectedGraduationYear: 2026, rollNumber: '31103', collegeEmail: 'rohan.g@pict.edu',
-
-    requestId: 'req3',
-    category: 'Skills',
-    shortDescription: 'AWS Cloud Practitioner certification',
-    detailedDescription: 'Requesting verification for AWS Cloud Practitioner certification completed via Coursera.',
-    documents: ['https://drive.google.com/file/d/ghi789/view'],
-    skillName: 'AWS Cloud Practitioner', proficiencyLevel: 'Intermediate', certificationUrl: 'https://www.credly.com/badges/example',
-    approvalStatus: 'Pending'
-  },
-];
+// Removed mock data
 
 export default function FacultyDashboardPage() {
-  const [applications, setApplications] = useState<StudentApplication[]>(INITIAL_APPLICATIONS);
+  const [applications, setApplications] = useState<StudentApplication[]>([]);
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
   const [approvalFilter, setApprovalFilter] = useState<'Pending' | 'Approved' | 'Rejected'>('Pending');
   const [showAllStudents, setShowAllStudents] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
+
+  // Fetch Data
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+      try {
+        const res = await fetch('http://127.0.0.1:8000/faculty/dashboard', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          // Map backend ID to studentId and requestId to ID for uniqueness
+          const mapped = data.map((item: any) => ({
+            ...item,
+            id: item.requestId,
+            studentId: item.id
+          }));
+          setApplications(mapped);
+        }
+      } catch (e) {
+        console.error("Failed to fetch dashboard", e);
+      }
+    };
+    fetchDashboard();
+  }, [router]);
 
   const totalApplications = applications.length;
   const pendingApprovals = applications.filter(s => s.approvalStatus === 'Pending').length;
@@ -91,8 +85,36 @@ export default function FacultyDashboardPage() {
   );
   const displayedApplications = showAllStudents ? filteredDirectory : filteredDirectory.slice(0, 6);
 
-  const handleApproval = (id: string, status: 'Approved' | 'Rejected') => {
-    setApplications(prev => prev.map(s => s.id === id ? { ...s, approvalStatus: status } : s));
+  const handleApproval = async (id: string, status: 'Approved' | 'Rejected') => {
+    const app = applications.find(s => s.id === id);
+    if (!app || !app.studentId) return;
+
+    const token = localStorage.getItem('token');
+    const endpoint = app.category === 'Skills'
+      ? `http://127.0.0.1:8000/faculty/verify/skill/${app.studentId}/${app.requestId}`
+      : `http://127.0.0.1:8000/faculty/verify/project/${app.studentId}/${app.requestId}`;
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: new URLSearchParams({ status }) // Endpoint expects query param 'status', wait. 
+        // My backend defined: verify_skill(..., status: str, ...)
+        // FastAPI defaults query params for simple types. 
+        // So URL should be endpoint + `?status=${status}`.
+      });
+      // Actually, let's fix the fetch call to append query param.
+      const res2 = await fetch(`${endpoint}?status=${status}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (res2.ok) {
+        setApplications(prev => prev.map(s => s.id === id ? { ...s, approvalStatus: status } : s));
+      }
+    } catch (e) {
+      console.error("Verification failed", e);
+    }
   };
 
   const selectedApp = applications.find(s => s.id === selectedAppId);

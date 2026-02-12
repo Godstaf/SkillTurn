@@ -52,56 +52,7 @@ const SKILLS_BY_BRANCH: Record<string, string[]> = {
     "Civil Engineering": ["AutoCAD", "Structural Analysis", "Revit", "Staad Pro", "Surveying"],
 };
 
-const MOCK_STUDENTS: StudentProfile[] = [
-    {
-        id: '1', name: 'Aarav Patel', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'TE',
-        cgpa: 9.2, skills: ['React', 'Node.js', 'Python'], email: 'aarav.p@example.com', phone: '+91 98765 43210',
-        location: 'Pune, India', bio: 'Passionate full-stack developer looking for internship opportunities.',
-        avatarInitials: 'AP', resumeLink: 'https://drive.google.com/file/d/aarav_resume/view'
-    },
-    {
-        id: '2', name: 'Ishita Sharma', college: 'Global Engineering College', branch: 'Information Technology', year: 'BE',
-        cgpa: 8.9, skills: ['Java', 'Spring Boot', 'SQL'], email: 'ishita.s@example.com', phone: '+91 98765 43211',
-        location: 'Mumbai, India', bio: 'Aspiring software engineer with a strong foundation in backend systems.',
-        avatarInitials: 'IS', resumeLink: 'https://drive.google.com/file/d/ishita_resume/view'
-    },
-    {
-        id: '3', name: 'Rohan Gupta', college: 'City University', branch: 'Electronics & Telecommunication', year: 'TE',
-        cgpa: 7.8, skills: ['Embedded C', 'IoT', 'Arduino'], email: 'rohan.g@example.com', phone: '+91 98765 43212',
-        location: 'Bangalore, India', bio: 'IoT enthusiast working on smart home automation projects.',
-        avatarInitials: 'RG', resumeLink: 'https://drive.google.com/file/d/rohan_resume/view'
-    },
-    {
-        id: '4', name: 'Meera Singh', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'SE',
-        cgpa: 8.5, skills: ['C++', 'Data Structures', 'Algorithms'], email: 'meera.s@example.com', phone: '+91 98765 43213',
-        location: 'Pune, India', bio: 'Competitive programmer and algorithm lover.',
-        avatarInitials: 'MS', resumeLink: 'https://drive.google.com/file/d/meera_resume/view'
-    },
-    {
-        id: '5', name: 'Vikram Malhotra', college: 'State Technical Institute', branch: 'Mechanical Engineering', year: 'BE',
-        cgpa: 7.2, skills: ['AutoCAD', 'SolidWorks', 'Thermodynamics'], email: 'vikram.m@example.com', phone: '+91 98765 43214',
-        location: 'Delhi, India', bio: 'Mechanical engineer interested in automotive design.',
-        avatarInitials: 'VM', resumeLink: 'https://drive.google.com/file/d/vikram_resume/view'
-    },
-    {
-        id: '6', name: 'Ananya Desai', college: 'Global Engineering College', branch: 'Information Technology', year: 'TE',
-        cgpa: 9.5, skills: ['Machine Learning', 'Python', 'TensorFlow'], email: 'ananya.d@example.com', phone: '+91 98765 43215',
-        location: 'Hyderabad, India', bio: 'AI/ML researcher working on NLP projects.',
-        avatarInitials: 'AD', resumeLink: 'https://drive.google.com/file/d/ananya_resume/view'
-    },
-    {
-        id: '7', name: 'Kabir Joshi', college: 'City University', branch: 'Civil Engineering', year: 'SE',
-        cgpa: 6.8, skills: ['AutoCAD', 'Structural Analysis'], email: 'kabir.j@example.com', phone: '+91 98765 43216',
-        location: 'Chennai, India', bio: 'Future civil engineer.',
-        avatarInitials: 'KJ', resumeLink: 'https://drive.google.com/file/d/kabir_resume/view'
-    },
-    {
-        id: '8', name: 'Sana Khan', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'BE',
-        cgpa: 9.8, skills: ['Cloud Computing', 'AWS', 'Docker'], email: 'sana.k@example.com', phone: '+91 98765 43217',
-        location: 'Pune, India', bio: 'Cloud native developer.',
-        avatarInitials: 'SK', resumeLink: 'https://drive.google.com/file/d/sana_resume/view'
-    }
-];
+const MOCK_STUDENTS: StudentProfile[] = []; // Fetched from API
 
 
 export default function StudentProfilesPage() {
@@ -109,7 +60,30 @@ export default function StudentProfilesPage() {
     const searchParams = useSearchParams();
     const collegeParam = searchParams.get('college');
 
-    const [students] = useState<StudentProfile[]>(MOCK_STUDENTS);
+    const [students, setStudents] = useState<StudentProfile[]>(MOCK_STUDENTS);
+
+    // Fetch Students
+    useEffect(() => {
+        const fetchStudents = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            try {
+                const res = await fetch('http://127.0.0.1:8000/students', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setStudents(data);
+                } else {
+                    console.error("Failed to fetch students");
+                }
+            } catch (err) {
+                console.error("Error fetching students:", err);
+            }
+        };
+        fetchStudents();
+    }, []);
     const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
 
     // Filters State

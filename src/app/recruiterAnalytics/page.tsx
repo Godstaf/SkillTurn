@@ -11,6 +11,7 @@ import {
     ResponsiveContainer, PieChart, Pie, Cell, ScatterChart, Scatter,
     LineChart, Line,
 } from "recharts";
+import { useState, useEffect } from "react";
 
 // ═══════════════════════════════════════════════
 //  MOCK DATA
@@ -166,6 +167,29 @@ const chartSubtitleStyle: React.CSSProperties = {
 
 export default function RecruiterAnalyticsPage() {
     const router = useRouter();
+    const [kpiData, setKpiData] = useState(KPI);
+    const [funnelData, setFunnelData] = useState(FUNNEL_DATA);
+
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const res = await fetch('http://127.0.0.1:8000/recruiter/analytics', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.kpi) setKpiData(data.kpi);
+                        if (data.funnel) setFunnelData(data.funnel);
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch analytics", e);
+                }
+            }
+        };
+        fetchAnalytics();
+    }, []);
 
     return (
         <main style={{ padding: "2rem 24px", maxWidth: "1400px", margin: "0 auto", minHeight: "100vh" }}>
@@ -188,7 +212,7 @@ export default function RecruiterAnalyticsPage() {
             {/* ── KPI Cards ── */}
             <ScrollReveal width="100%" delay={0.05}>
                 <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.25rem", marginBottom: "2.5rem" }}>
-                    {KPI.map((kpi, i) => (
+                    {kpiData.map((kpi: any, i: number) => (
                         <motion.div key={i} whileHover={{ y: -3 }} transition={{ duration: 0.2 }}>
                             <Card variant="elevated" style={{ padding: "1.25rem" }}>
                                 <h3 style={{ fontSize: "0.85rem", color: "var(--md-sys-color-secondary)", marginBottom: "0.4rem", fontWeight: 600 }}>{kpi.label}</h3>
@@ -281,8 +305,8 @@ export default function RecruiterAnalyticsPage() {
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem 0", gap: "1.5rem" }}>
                             {/* Pyramid */}
                             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0px", flex: 1, maxWidth: "420px" }}>
-                                {FUNNEL_DATA.map((stage, i) => {
-                                    const total = FUNNEL_DATA.length;
+                                {funnelData.map((stage: any, i: number) => {
+                                    const total = funnelData.length;
                                     const topWidthPct = 100 - (i / total) * 60;
                                     const bottomWidthPct = 100 - ((i + 1) / total) * 60;
                                     const leftTopInset = ((100 - topWidthPct) / 2).toFixed(1);
@@ -290,7 +314,7 @@ export default function RecruiterAnalyticsPage() {
                                     const leftBottomInset = ((100 - bottomWidthPct) / 2).toFixed(1);
                                     const rightBottomInset = (100 - (100 - bottomWidthPct) / 2).toFixed(1);
                                     const clipPath = `polygon(${leftTopInset}% 0%, ${rightTopInset}% 0%, ${rightBottomInset}% 100%, ${leftBottomInset}% 100%)`;
-                                    const conversionRate = i > 0 ? ((stage.value / FUNNEL_DATA[i - 1].value) * 100).toFixed(1) : null;
+                                    const conversionRate = i > 0 ? ((stage.value / funnelData[i - 1].value) * 100).toFixed(1) : null;
 
                                     return (
                                         <motion.div
@@ -332,7 +356,7 @@ export default function RecruiterAnalyticsPage() {
                             </div>
                         </div>
                         <div style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--md-sys-color-secondary)", fontWeight: 500 }}>
-                            Overall conversion: <span style={{ fontWeight: 700, color: "var(--md-sys-color-primary)" }}>{((FUNNEL_DATA[FUNNEL_DATA.length - 1].value / FUNNEL_DATA[0].value) * 100).toFixed(1)}%</span>
+                            Overall conversion: <span style={{ fontWeight: 700, color: "var(--md-sys-color-primary)" }}>{((funnelData[funnelData.length - 1].value / funnelData[0].value) * 100).toFixed(1)}%</span>
                         </div>
                     </GlassContainer>
                 </ScrollReveal>
@@ -348,7 +372,7 @@ export default function RecruiterAnalyticsPage() {
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.15)" />
                                     <XAxis type="number" tick={{ fontSize: 12 }} unit="%" />
                                     <YAxis dataKey="role" type="category" tick={{ fontSize: 11 }} width={120} />
-                                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }} formatter={(value: number) => `${value}%`} />
+                                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }} formatter={(value: number) => [`${value}%`]} />
                                     <Bar dataKey="percentage" name="Selection %" fill="#6366f1" radius={[0, 6, 6, 0]} />
                                 </BarChart>
                             </ResponsiveContainer>
@@ -367,7 +391,7 @@ export default function RecruiterAnalyticsPage() {
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.15)" />
                                     <XAxis dataKey="skill" tick={{ fontSize: 11 }} />
                                     <YAxis tick={{ fontSize: 12 }} unit="%" />
-                                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }} formatter={(value: number) => `${value}%`} />
+                                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }} formatter={(value: number) => [`${value}%`]} />
                                     <Legend />
                                     <Bar dataKey="students" name="Students with Skill %" fill="#a78bfa" radius={[6, 6, 0, 0]} />
                                     <Bar dataKey="hired" name="Hired %" fill="#f97316" radius={[6, 6, 0, 0]} />
@@ -456,14 +480,14 @@ export default function RecruiterAnalyticsPage() {
                                         innerRadius={60} outerRadius={110}
                                         paddingAngle={3}
                                         dataKey="value"
-                                        label={({ name, value }) => `${name} ${value}%`}
+                                        label={({ name, value }: { name: string, value: number }) => `${name} ${value}%`}
                                         labelLine={false}
                                     >
                                         {DEGREE_DATA.map((_, index) => (
                                             <Cell key={`cell-${index}`} fill={DEGREE_COLORS[index % DEGREE_COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }} formatter={(value: number) => `${value}%`} />
+                                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }} formatter={(value: number) => [`${value}%`]} />
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
@@ -504,7 +528,7 @@ export default function RecruiterAnalyticsPage() {
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.15)" />
                                     <XAxis dataKey="category" tick={{ fontSize: 12 }} />
                                     <YAxis tick={{ fontSize: 12 }} unit="%" />
-                                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }} formatter={(value: number) => `${value}%`} />
+                                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }} formatter={(value: number) => [`${value}%`]} />
                                     <Legend />
                                     <Bar dataKey="internships" name="Internships" stackId="a" fill="#6366f1" radius={[0, 0, 0, 0]} />
                                     <Bar dataKey="hackathons" name="Hackathons" stackId="a" fill="#8b5cf6" />
