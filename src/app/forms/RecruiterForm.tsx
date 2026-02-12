@@ -17,6 +17,7 @@ export default function RecruiterForm() {
     linkedin: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   function isAllowedWorkEmail(email: string) {
     if (!email) return false;
@@ -28,6 +29,8 @@ export default function RecruiterForm() {
   }
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    console.log("RecruiterForm: Submission started", form);
+
     if (
       !(
         form.fullName &&
@@ -45,42 +48,56 @@ export default function RecruiterForm() {
       return;
     }
     setError("");
+    setIsLoading(true);
+
     try {
       const token = localStorage.getItem("token");
+      console.log("RecruiterForm: Token present:", !!token);
+
       if (!token) {
         setError("No authentication token found. Please login.");
+        setIsLoading(false);
         return;
       }
 
-      const response = await fetch("http://localhost:8000/recruiter/profile", {
+      const payload = {
+        user_id: "temp",
+        full_name: form.fullName,
+        company_id: form.companyId || null,
+        company_name: form.companyName,
+        designation: form.jobTitle,
+        work_email: form.workEmail,
+        company_website: form.companyWeb,
+        company_size: form.companySize || null,
+        hiring_domain: form.domains || null,
+        linkedin_profile: form.linkedin || null
+      };
+
+      console.log("RecruiterForm: Sending request to http://127.0.0.1:8000/recruiter/profile");
+      const response = await fetch("http://127.0.0.1:8000/recruiter/profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-          user_id: "temp",
-          full_name: form.fullName,
-          company_id: form.companyId || null,
-          company_name: form.companyName,
-          designation: form.jobTitle,
-          work_email: form.workEmail,
-          company_website: form.companyWeb,
-          company_size: form.companySize || null,
-          hiring_domain: form.domains || null,
-          linkedin_profile: form.linkedin || null
-        })
+        body: JSON.stringify(payload)
       });
+
+      console.log("RecruiterForm: Response status:", response.status);
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("RecruiterForm: Server Error:", errorData);
         throw new Error(errorData.detail || "Failed to create profile");
       }
 
+      console.log("RecruiterForm: Success, redirecting...");
       window.location.href = "/recruiter_dashboard";
     } catch (err: any) {
-      console.error(err);
+      console.error("RecruiterForm: Caught Exception:", err);
       setError(err.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   }
   return (
@@ -161,9 +178,10 @@ export default function RecruiterForm() {
       <Button
         type="submit"
         variant="filled"
+        disabled={isLoading}
         style={{ width: "100%", marginTop: 8 }}
       >
-        Submit
+        {isLoading ? "Submitting..." : "Submit"}
       </Button>
     </form>
   );

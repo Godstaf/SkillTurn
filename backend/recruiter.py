@@ -1,28 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel
-from typing import List, Optional
-from datetime import datetime
-from CRUD import (
-    create_recruiter_profile, 
-    update_user_verification, 
-    RecruiterProfile, 
-    User,
-    RecruiterRegistrationRequest,
-    Company,
-    create_company,
-    get_company_by_name,
-    get_company_by_id
-)
-from login import get_current_active_user, UserPublic
-from bson import ObjectId
-from database import (
-    applications_collection,
-    users_collection,
-    student_profiles_collection,
-    student_skills_collection,
-    student_projects_collection
-)
-from typing import List, Dict, Any, Optional
+from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 from CRUD import (
     create_recruiter_profile, 
@@ -45,6 +23,15 @@ from CRUD import (
     get_student_skills,
     get_student_projects,
     get_user_by_id
+)
+from login import get_current_active_user, UserPublic
+from bson import ObjectId
+from database import (
+    applications_collection,
+    users_collection,
+    student_profiles_collection,
+    student_skills_collection,
+    student_projects_collection
 )
 from ai_utils import calculate_match_score
 
