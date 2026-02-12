@@ -117,7 +117,7 @@ function RecruiterForm() {
             [e.target.name]: e.target.value
         });
     }
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
         if (!(form.fullName && form.companyName && form.jobTitle && form.workEmail && form.companyWeb)) {
             setError("Please fill all required fields.");
@@ -128,8 +128,39 @@ function RecruiterForm() {
             return;
         }
         setError("");
-        // TODO: API action here
-        alert("Recruiter form submitted!\n" + JSON.stringify(form, null, 2));
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                setError("No authentication token found. Please login.");
+                return;
+            }
+            const response = await fetch("http://localhost:8000/recruiter/profile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    user_id: "temp",
+                    full_name: form.fullName,
+                    company_name: form.companyName,
+                    designation: form.jobTitle,
+                    work_email: form.workEmail,
+                    company_website: form.companyWeb,
+                    company_size: form.companySize || null,
+                    hiring_domain: form.domains || null,
+                    linkedin_profile: form.linkedin || null
+                })
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || "Failed to create profile");
+            }
+            window.location.href = "/recruiter_dashboard";
+        } catch (err) {
+            console.error(err);
+            setError(err.message || "Something went wrong");
+        }
     }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
         onSubmit: handleSubmit,
@@ -147,8 +178,8 @@ function RecruiterForm() {
                 onChange: handleChange
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 52,
-                columnNumber: 11
+                lineNumber: 86,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$FormInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormInput"], {
                 label: "Company name",
@@ -158,8 +189,8 @@ function RecruiterForm() {
                 onChange: handleChange
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 59,
-                columnNumber: 11
+                lineNumber: 93,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$FormInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormInput"], {
                 label: "Job title (HR, Founder, Recruiter)",
@@ -169,8 +200,8 @@ function RecruiterForm() {
                 onChange: handleChange
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 66,
-                columnNumber: 11
+                lineNumber: 100,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$FormInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormInput"], {
                 type: "email",
@@ -182,8 +213,8 @@ function RecruiterForm() {
                 error: form.workEmail && !isAllowedWorkEmail(form.workEmail) ? "Please use your work email." : undefined
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 73,
-                columnNumber: 11
+                lineNumber: 107,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$FormInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormInput"], {
                 label: "Company website or LinkedIn",
@@ -193,8 +224,8 @@ function RecruiterForm() {
                 onChange: handleChange
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 86,
-                columnNumber: 11
+                lineNumber: 120,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$FormInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormInput"], {
                 label: "Company size (optional)",
@@ -203,8 +234,8 @@ function RecruiterForm() {
                 onChange: handleChange
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 93,
-                columnNumber: 11
+                lineNumber: 127,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$FormInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormInput"], {
                 label: "Hiring domains (optional - Tech, Sales, Core, etc.)",
@@ -213,8 +244,8 @@ function RecruiterForm() {
                 onChange: handleChange
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 99,
-                columnNumber: 11
+                lineNumber: 133,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$FormInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FormInput"], {
                 label: "LinkedIn profile (optional)",
@@ -223,8 +254,8 @@ function RecruiterForm() {
                 onChange: handleChange
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 105,
-                columnNumber: 11
+                lineNumber: 139,
+                columnNumber: 7
             }, this),
             error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 style: {
@@ -234,8 +265,8 @@ function RecruiterForm() {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 112,
-                columnNumber: 13
+                lineNumber: 146,
+                columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                 type: "submit",
@@ -247,14 +278,14 @@ function RecruiterForm() {
                 children: "Submit"
             }, void 0, false, {
                 fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-                lineNumber: 118,
-                columnNumber: 11
+                lineNumber: 152,
+                columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/forms/RecruiterForm.tsx",
-        lineNumber: 51,
-        columnNumber: 9
+        lineNumber: 85,
+        columnNumber: 5
     }, this);
 }
 _s(RecruiterForm, "pU9f1tYqGEbW46011oeFPnydoXw=");
