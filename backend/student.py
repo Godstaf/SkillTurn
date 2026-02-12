@@ -124,15 +124,38 @@ async def get_my_applications(current_user: User = Depends(get_current_active_us
     # Enrich each application with opportunity details
     enriched = []
     for app in applications:
+        # Try finding in opportunities_collection first
         opp = get_opportunity(app.job_id)
+        
+        # Fallback to jobs_collection if not found (for recruiter-direct jobs)
+        if not opp:
+            from CRUD import jobs_collection, Job, fix_mongo_id
+            from bson import ObjectId
+            try:
+                job_doc = jobs_collection.find_one({"_id": ObjectId(app.job_id)})
+                if job_doc:
+                    # Map Job to something similar to Opportunity for front-end compatibility
+                    opp_data = fix_mongo_id(job_doc)
+                    opp_title = opp_data.get("job_title", "Unknown Opportunity")
+                    opp_org = "Recruiter" # Default if not found
+                else:
+                    opp_title = "Unknown Opportunity"
+                    opp_org = "Unknown"
+            except:
+                opp_title = "Unknown Opportunity"
+                opp_org = "Unknown"
+        else:
+            opp_title = opp.title
+            opp_org = opp.organization
+
         enriched.append({
             "id": app.id,
             "job_id": app.job_id,
             "status": app.status.capitalize(),
             "applied_at": app.applied_at.isoformat() if app.applied_at else None,
-            "title": opp.title if opp else "Unknown Opportunity",
-            "type": opp.type if opp else "Unknown",
-            "organization": opp.organization if opp else "Unknown",
+            "title": opp_title,
+            "type": opp.type if opp else "Job",
+            "organization": opp_org,
             "description": opp.description if opp else "",
             "skills": opp.skills if opp else [],
             "location": opp.location if opp else "",

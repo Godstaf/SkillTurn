@@ -14,6 +14,14 @@ from CRUD import (
     get_company_by_id
 )
 from login import get_current_active_user, UserPublic
+from bson import ObjectId
+from database import (
+    applications_collection,
+    users_collection,
+    student_profiles_collection,
+    student_skills_collection,
+    student_projects_collection
+)
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
 from CRUD import (
@@ -224,16 +232,18 @@ async def get_analytics(current_user: User = Depends(get_current_active_user)):
 
 @router.get("/recruiter/applications/{app_id}/resume-data")
 async def get_app_resume_data(app_id: str, current_user: User = Depends(get_current_active_user)):
-    print(f"--- Resume Data Request for AppID: {app_id} ---")
+    print(f"--- Resume Data Request for AppID: '{app_id}' ---")
     if current_user.role not in ["recruiter", "admin"]:
          print(f"Access Denied: User role is {current_user.role}")
          raise HTTPException(status_code=403, detail="Unauthorized")
     
     try:
-        app_obj_id = ObjectId(app_id)
+        clean_app_id = app_id.strip()
+        print(f"Original App ID: '{app_id}', Clean App ID: '{clean_app_id}'")
+        app_obj_id = ObjectId(clean_app_id)
     except Exception as e:
-        print(f"Invalid App ID format: {app_id}")
-        raise HTTPException(status_code=400, detail="Invalid application ID format")
+        print(f"Invalid App ID format: '{app_id}'. Error: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid application ID format: {e}")
 
     app = applications_collection.find_one({"_id": app_obj_id})
     if not app:

@@ -382,7 +382,12 @@ export default function DashboardPage() {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
                                         <div style={{ textAlign: 'right' }}>
                                             <span style={{ display: 'block', fontSize: '0.875rem', color: 'var(--md-sys-color-secondary)' }}>Status</span>
-                                            <span style={{ fontWeight: 600, color: opp.status === 'Shortlisted' ? '#4CAF50' : 'var(--md-sys-color-primary)' }}>{opp.status}</span>
+                                            <span style={{
+                                                fontWeight: 600,
+                                                color: (opp.status === 'Shortlisted' || opp.status === 'Selected') ? '#4CAF50' : 'var(--md-sys-color-primary)'
+                                            }}>
+                                                {opp.status}
+                                            </span>
                                         </div>
                                         <Button variant="glass" style={{ pointerEvents: 'auto' }}>View Status</Button>
                                     </div>
@@ -412,8 +417,8 @@ export default function DashboardPage() {
                                 <Card variant="elevated" style={{ height: '100%', pointerEvents: 'none', position: 'relative', overflow: 'hidden' }}>
                                     <div style={{
                                         position: 'absolute', top: 0, right: 0, padding: '4px 12px',
-                                        background: opp.status === 'Completed' ? '#E8F5E9' : '#FFEBEE',
-                                        color: opp.status === 'Completed' ? '#2E7D32' : '#C62828',
+                                        background: (opp.status === 'Completed' || opp.status === 'Selected') ? '#E8F5E9' : opp.status === 'Rejected' ? '#FFEBEE' : '#F3F4F6',
+                                        color: (opp.status === 'Completed' || opp.status === 'Selected') ? '#2E7D32' : opp.status === 'Rejected' ? '#C62828' : '#374151',
                                         borderBottomLeftRadius: '12px', fontSize: '0.8rem', fontWeight: 600
                                     }}>
                                         {opp.status}
@@ -530,10 +535,20 @@ export default function DashboardPage() {
 
                                     {/* Status Section for Past Opps */}
                                     {selectedId.startsWith('past') && (
-                                        <div style={{ marginBottom: '2rem', padding: '1rem', background: opp.status === 'Completed' ? '#E8F5E9' : '#FFEBEE', borderRadius: '12px' }}>
+                                        <div style={{
+                                            marginBottom: '2rem',
+                                            padding: '1rem',
+                                            background: (opp.status === 'Completed' || opp.status === 'Selected') ? '#E8F5E9' : opp.status === 'Rejected' ? '#FFEBEE' : '#F3F4F6',
+                                            borderRadius: '12px'
+                                        }}>
                                             <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', fontWeight: 600 }}>Outcome</h3>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                                <span style={{ fontWeight: 600, color: opp.status === 'Completed' ? '#2E7D32' : '#C62828' }}>{opp.status}</span>
+                                                <span style={{
+                                                    fontWeight: 600,
+                                                    color: (opp.status === 'Completed' || opp.status === 'Selected') ? '#2E7D32' : opp.status === 'Rejected' ? '#C62828' : '#374151'
+                                                }}>
+                                                    {opp.status}
+                                                </span>
                                                 <span style={{ color: 'var(--md-sys-color-secondary)', fontSize: '0.9rem' }}>- Closed on {new Date(opp.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                             </div>
                                         </div>
