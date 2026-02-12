@@ -2,7 +2,19 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
-from CRUD import create_student_profile, update_user_verification, StudentProfile, User
+from CRUD import (
+    create_student_profile, 
+    update_user_verification, 
+    StudentProfile, 
+    User,
+    StudentSkills,
+    update_student_skills,
+    get_student_skills,
+    StudentProjects,
+    update_student_projects,
+    get_student_projects,
+    SkillItem
+)
 from login import get_current_active_user, UserPublic
 
 router = APIRouter()
@@ -30,3 +42,24 @@ async def create_profile(profile: StudentProfile, current_user: User = Depends(g
     update_user_verification(current_user.username, True)
     
     return new_profile
+
+@router.get("/student/skills", response_model=StudentSkills)
+async def get_skills(current_user: User = Depends(get_current_active_user)):
+    skills = get_student_skills(str(current_user.id))
+    if not skills:
+        return StudentSkills(user_id=str(current_user.id), skills=[])
+    return skills
+
+@router.post("/student/skills", response_model=StudentSkills)
+async def update_skills(skills_list: List[str], current_user: User = Depends(get_current_active_user)):
+    # Convert list of strings to SkillItem objects
+    skill_items = [SkillItem(name=s) for s in skills_list]
+    skills_data = StudentSkills(user_id=str(current_user.id), skills=skill_items)
+    return update_student_skills(str(current_user.id), skills_data)
+
+@router.get("/student/projects", response_model=StudentProjects)
+async def get_projects(current_user: User = Depends(get_current_active_user)):
+    projects = get_student_projects(str(current_user.id))
+    if not projects:
+        return StudentProjects(user_id=str(current_user.id), projects=[])
+    return projects

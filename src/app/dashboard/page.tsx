@@ -116,28 +116,77 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const token = localStorage.getItem('token');
+            if (!token) return;
 
-            // Set data from mock response
-            setAppliedOpportunities(mockApiResponse.applied);
-            setPastOpportunities(mockApiResponse.past);
-            setSkills(mockApiResponse.skills);
-            setProjects(mockApiResponse.projects);
-            setLoading(false);
+            setLoading(true);
+            try {
+                // Fetch Skills
+                const skillResp = await fetch('http://127.0.0.1:8000/student/skills', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (skillResp.ok) {
+                    const data = await skillResp.json();
+                    setSkills(data.skills.map((s: any, idx: number) => ({
+                        id: s.id || `s-${idx}`,
+                        name: s.name,
+                        verified: !!s.verified
+                    })));
+                }
+
+                // Fetch Projects
+                const projResp = await fetch('http://127.0.0.1:8000/student/projects', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (projResp.ok) {
+                    const data = await projResp.json();
+                    setProjects(data.projects.map((p: any, idx: number) => ({
+                        id: p.id || `p-${idx}`,
+                        title: p.title,
+                        description: p.description,
+                        verified: !!p.verified,
+                        technologies: p.project_link ? ['Link Available'] : [] // Mapping for display
+                    })));
+                }
+
+                // Keep mock data for others until endpoints exist
+                setAppliedOpportunities(mockApiResponse.applied);
+                setPastOpportunities(mockApiResponse.past);
+            } catch (error) {
+                console.error("Failed to fetch dashboard data:", error);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchData();
     }, []);
 
-    const updateSkills = (newSkillNames: string[]) => {
-        // In a real app, this would be an API call
-        const updatedSkills = newSkillNames.map((name, idx) => {
-            const existing = skills.find(s => s.name === name);
-            return existing || { id: `new-${idx}`, name, verified: false };
-        });
-        setSkills(updatedSkills);
+    const updateSkills = async (newSkillNames: string[]) => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/student/skills', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(newSkillNames)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setSkills(data.skills.map((s: any, idx: number) => ({
+                    id: s.id || `s-${idx}`,
+                    name: s.name,
+                    verified: !!s.verified
+                })));
+            }
+        } catch (error) {
+            console.error("Failed to update skills:", error);
+        }
     };
 
     if (loading) {
