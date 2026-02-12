@@ -118,7 +118,7 @@ class SkillItem(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     verified: Optional[str] = None # Faculty ID who verified
-    verification_status: Literal["Pending", "Verified", "Rejected"] = "Pending"
+    verification_status: Literal["Pending", "Verified", "Rejected", "Approved"] = "Pending"
 
 class StudentSkills(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
@@ -133,7 +133,7 @@ class ProjectItem(BaseModel):
     project_link: Optional[str] = None
     category: Literal["Project", "Internship"] = "Project"
     verified: Optional[str] = None # Faculty ID who verified
-    verification_status: Literal["Pending", "Verified", "Rejected"] = "Pending"
+    verification_status: Literal["Pending", "Verified", "Rejected", "Approved"] = "Pending"
 
 class StudentProjects(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
@@ -172,7 +172,7 @@ class AppliedJob(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
     user_id: str # student user_id
     job_id: str
-    status: Literal["applied", "shortlisted", "rejected", "selected"] = "applied"
+    status: Literal["applied", "shortlisted", "rejected", "selected", "screening"] = "applied"
     applied_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 

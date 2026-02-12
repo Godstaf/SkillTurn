@@ -82,8 +82,8 @@ export default function DashboardPage() {
                         const mappedSkills = data.skills.map((s: any) => ({
                             id: s.id,
                             name: s.name,
-                            verified: s.verification_status === 'Verified',
-                            verification_status: s.verification_status
+                            verified: s.verification_status === 'Verified' || s.verification_status === 'Approved',
+                            verification_status: s.verification_status === 'Approved' ? 'Verified' : s.verification_status
                         }));
                         setSkills(mappedSkills);
 
@@ -92,8 +92,8 @@ export default function DashboardPage() {
                             id: p.id,
                             title: p.title,
                             description: p.description,
-                            verified: p.is_verified || p.verification_status === 'Verified',
-                            verification_status: p.verification_status || (p.is_verified ? 'Verified' : 'Pending'),
+                            verified: p.is_verified || p.verification_status === 'Verified' || p.verification_status === 'Approved',
+                            verification_status: (p.verification_status === 'Approved' ? 'Verified' : p.verification_status) || (p.is_verified ? 'Verified' : 'Pending'),
                             technologies: p.technologies || []
                         }));
                         setProjects(mappedProjects);
