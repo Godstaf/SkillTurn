@@ -172,7 +172,7 @@ class AppliedJob(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
     user_id: str # student user_id
     job_id: str
-    status: Literal["applied", "shortlisted", "rejected", "selected", "screening"] = "applied"
+    status: Literal["applied", "shortlisted", "screening", "interview", "offer", "rejected", "selected"] = "applied"
     applied_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
