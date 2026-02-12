@@ -38,60 +38,8 @@ export default function DashboardPage() {
     const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
     const [profile, setProfile] = useState<any>(null);
 
-    // Mock JSON Data simulating API response
+    // Mock JSON Data simulating API response (skills/projects handled by real endpoints above)
     const mockApiResponse = {
-        applied: [
-            {
-                id: '1',
-                title: 'AI-Driven Traffic Management System',
-                type: 'Project',
-                organization: 'Dr. Sarah Smith (CS Dept)',
-                description: 'Developing a reinforcement learning model to optimize traffic signal timings in real-time using camera feeds.',
-                skills: ['Python', 'PyTorch', 'Computer Vision'],
-                postedDate: '2025-11-20',
-                deadline: '2025-12-15',
-                status: 'Under Review',
-                submittedDate: '2025-11-25'
-            },
-            {
-                id: '4',
-                title: 'Data Science Intern',
-                type: 'Internship',
-                organization: 'DataMinds Corp',
-                description: 'Analyze large datasets to identify market trends. Proficiency in SQL and Pandas required.',
-                skills: ['Python', 'SQL', 'Pandas', 'Tableau'],
-                postedDate: '2025-11-22',
-                deadline: '2025-12-05',
-                status: 'Shortlisted',
-                submittedDate: '2025-11-28'
-            }
-        ],
-        past: [
-            {
-                id: '2',
-                title: 'Frontend Developer Intern',
-                type: 'Internship',
-                organization: 'TechFlow Solutions',
-                description: 'Work on our core product dashboard using React and Next.js.',
-                skills: ['React', 'Next.js', 'TypeScript', 'CSS'],
-                postedDate: '2025-10-15',
-                deadline: '2025-11-01',
-                status: 'Rejected',
-                submittedDate: '2025-10-20'
-            },
-            {
-                id: '3',
-                title: 'Library Management System',
-                type: 'Project',
-                organization: 'Central Library',
-                description: 'Build a web application to manage book issues and returns.',
-                skills: ['Node.js', 'MongoDB', 'Express'],
-                postedDate: '2025-09-01',
-                deadline: '2025-09-15',
-                status: 'Completed',
-                submittedDate: '2025-09-10'
-            }
-        ],
         skills: [
             { id: 's1', name: 'React', verified: true },
             { id: 's2', name: 'TypeScript', verified: true },
@@ -175,9 +123,17 @@ export default function DashboardPage() {
                         setProfile(data);
                     }
 
-                    // Keep mock data for others until endpoints exist
-                    setAppliedOpportunities(mockApiResponse.applied);
-                    setPastOpportunities(mockApiResponse.past);
+                    // Fetch real applications from backend
+                    const appsResp = await fetch('http://127.0.0.1:8000/student/applications', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (appsResp.ok) {
+                        const apps = await appsResp.json();
+                        const active = apps.filter((a: any) => ['Applied', 'Shortlisted'].includes(a.status));
+                        const past = apps.filter((a: any) => ['Rejected', 'Selected', 'Completed'].includes(a.status));
+                        setAppliedOpportunities(active);
+                        setPastOpportunities(past);
+                    }
                 } catch (error) {
                     console.error("Failed to fetch dashboard data:", error);
                 } finally {

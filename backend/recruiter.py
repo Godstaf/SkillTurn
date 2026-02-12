@@ -35,7 +35,8 @@ from CRUD import (
     AppliedJob,
     get_student_profile,
     get_student_skills,
-    get_student_projects
+    get_student_projects,
+    get_user_by_id
 )
 
 router = APIRouter()
@@ -143,35 +144,37 @@ async def get_dashboard(current_user: User = Depends(get_current_active_user)):
     # Map applications to Candidate interface
     candidates_data = []
     for app in applications:
-        student_user = UserPublic(**app.user_id) # Need to fetch student details. simplified for now
-        # Fetch detailed student info
-        # This is n+1 problem, should be optimized in production with aggregation
+        # Fetch student user account for name and email
+        student_user = get_user_by_id(app.user_id)
         student_profile = get_student_profile(app.user_id)
         student_skills = get_student_skills(app.user_id)
         
-        # User details from users collection? We only have user_id in app.
-        # Need a helper to get user basic info by ID. 
-        # For MVP, let's assume we can fetch it.
-        # Ideally we join in mongo.
+        student_name = "Unknown Student"
+        student_email = "N/A"
+        avatar_initials = "??"
         
-        # Mocking student name/email retrieval via get_user_by_id if it existed
-        # We will use placeholder if not available easily without heavy refactor
+        if student_user:
+            student_name = student_user.full_name or student_user.username
+            student_email = student_user.email or "N/A"
+            # Build initials from name
+            parts = student_name.split()
+            avatar_initials = "".join([p[0].upper() for p in parts[:2]]) if parts else "??"
         
         candidates_data.append({
             "id": app.id,
             "studentId": app.user_id,
-            "name": "Student Name", # Placeholder or fetch real
-            "email": "student@example.com", # Placeholder
+            "name": student_name,
+            "email": student_email,
             "appliedRole": next((o.title for o in opportunities if o.id == app.job_id), "Unknown"),
             "status": app.status.capitalize() if app.status != "applied" else "New",
             "institution": student_profile.college if student_profile else "Unknown",
             "program": student_profile.degree if student_profile else "Unknown",
             "branch": student_profile.branch if student_profile else "Unknown",
             "skills": [s.name for s in student_skills.skills] if student_skills else [],
-            "resumeLink": "#", # Placeholder
-            "matchScore": 85, # Logic to calculate match?
+            "resumeLink": "#",
+            "matchScore": 85,
             "appliedDate": app.applied_at.strftime("%Y-%m-%d"),
-            "avatarInitials": "ST"
+            "avatarInitials": avatar_initials
         })
         
     return {

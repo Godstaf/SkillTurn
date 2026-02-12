@@ -19,7 +19,9 @@ from CRUD import (
     AppliedJob,
     apply_for_job,
     get_application_by_student_and_job,
-    get_all_full_student_profiles
+    get_all_full_student_profiles,
+    get_student_applications,
+    get_opportunity
 )
 from login import get_current_active_user, UserPublic
 
@@ -111,6 +113,32 @@ async def apply_opportunity(application: AppliedJob, current_user: User = Depend
     application.status = "applied"
     
     return apply_for_job(application)
+
+@router.get("/student/applications")
+async def get_my_applications(current_user: User = Depends(get_current_active_user)):
+    if current_user.role != "student":
+        raise HTTPException(status_code=403, detail="Only students can view applications")
+    
+    applications = get_student_applications(str(current_user.id))
+    
+    # Enrich each application with opportunity details
+    enriched = []
+    for app in applications:
+        opp = get_opportunity(app.job_id)
+        enriched.append({
+            "id": app.id,
+            "job_id": app.job_id,
+            "status": app.status.capitalize(),
+            "applied_at": app.applied_at.isoformat() if app.applied_at else None,
+            "title": opp.title if opp else "Unknown Opportunity",
+            "type": opp.type if opp else "Unknown",
+            "organization": opp.organization if opp else "Unknown",
+            "description": opp.description if opp else "",
+            "skills": opp.skills if opp else [],
+            "location": opp.location if opp else "",
+        })
+    
+    return enriched
 
 @router.get("/students")
 async def get_all_students(current_user: User = Depends(get_current_active_user)):

@@ -253,6 +253,15 @@ def retrieve_user(username: str):
         return User(**fix_mongo_id(user))
     return None
 
+def get_user_by_id(user_id: str):
+    try:
+        user = users_collection.find_one({"_id": ObjectId(user_id)})
+        if user:
+            return User(**fix_mongo_id(user))
+    except:
+        pass
+    return None
+
 def update_user_verification(username: str, status: bool):
     users_collection.update_one(
         {"username": username},
@@ -409,6 +418,26 @@ def update_application_status(app_id: str, new_status: str):
 # Enrollment
 def enroll_student(enrollment_data: Enrollment):
     return create_item(enrollments_collection, enrollment_data)
+
+# Saved Jobs
+def save_job(saved_job: SavedJob):
+    # Check if already saved
+    existing = saved_jobs_collection.find_one({
+        "user_id": saved_job.user_id,
+        "job_id": saved_job.job_id
+    })
+    if existing:
+        return SavedJob(**fix_mongo_id(existing))
+    return create_item(saved_jobs_collection, saved_job)
+
+def get_saved_jobs(user_id: str):
+    items = []
+    for item in saved_jobs_collection.find({"user_id": user_id}):
+        items.append(SavedJob(**fix_mongo_id(item)))
+    return items
+
+def check_saved_job(user_id: str, job_id: str):
+    return saved_jobs_collection.find_one({"user_id": user_id, "job_id": job_id}) is not None
 
 # Opportunities
 def create_opportunity(opportunity: Opportunity):
