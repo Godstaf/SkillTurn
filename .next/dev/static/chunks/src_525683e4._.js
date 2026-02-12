@@ -481,7 +481,7 @@ const Navbar = ()=>{
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                         href: "/",
                         className: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$layout$2f$Navbar$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__["default"].logo,
-                        children: "StudentPortal"
+                        children: "SkillTurn"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
                         lineNumber: 29,
@@ -843,7 +843,7 @@ const Navbar = ()=>{
                         children: "Opportunities"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 228,
+                        lineNumber: 227,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     user?.role == "faculty" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -853,7 +853,7 @@ const Navbar = ()=>{
                         children: "Profile"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 237,
+                        lineNumber: 236,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     user?.role == "recruiter" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -863,7 +863,7 @@ const Navbar = ()=>{
                         children: "posted_jobs"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 246,
+                        lineNumber: 245,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     user?.role == "faculty" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -873,7 +873,7 @@ const Navbar = ()=>{
                         children: "Dashboard"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 255,
+                        lineNumber: 254,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     user?.role == "recruiter" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -883,7 +883,7 @@ const Navbar = ()=>{
                         children: "Dashboard"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 264,
+                        lineNumber: 263,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     user?.role == "student" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -893,7 +893,7 @@ const Navbar = ()=>{
                         children: "Dashboard"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 273,
+                        lineNumber: 272,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     !user && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -903,7 +903,7 @@ const Navbar = ()=>{
                         children: "Dashboard"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 282,
+                        lineNumber: 281,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     !user && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -913,12 +913,12 @@ const Navbar = ()=>{
                         children: "Opportunities"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 291,
+                        lineNumber: 290,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$ThemeToggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ThemeToggle"], {}, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 299,
+                        lineNumber: 298,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -937,7 +937,7 @@ const Navbar = ()=>{
                                 children: "Logout"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/layout/Navbar.tsx",
-                                lineNumber: 302,
+                                lineNumber: 301,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -967,7 +967,7 @@ const Navbar = ()=>{
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/layout/Navbar.tsx",
-                                lineNumber: 316,
+                                lineNumber: 315,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
@@ -982,12 +982,12 @@ const Navbar = ()=>{
                             children: "Login"
                         }, void 0, false, {
                             fileName: "[project]/src/components/layout/Navbar.tsx",
-                            lineNumber: 342,
+                            lineNumber: 341,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/Navbar.tsx",
-                        lineNumber: 341,
+                        lineNumber: 340,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]

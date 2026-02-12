@@ -166,16 +166,28 @@ function StudentFormPage() {
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    student_id: "temp",
-                    major: formData.branch,
-                    year: parseInt(formData.yearOfStudy) || 1,
-                    gpa: 0.0,
-                    skills: []
+                    user_id: "temp",
+                    college: formData.collegeName,
+                    degree: formData.degree,
+                    branch: formData.branch,
+                    year_of_study: parseInt(formData.yearOfStudy) || 1,
+                    expected_graduation_year: parseInt(formData.expectedGraduationYear),
+                    roll_no: formData.rollNumber,
+                    college_email: formData.collegeEmail,
+                    gpa: 0.0
                 })
             });
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.detail || "Failed to submit profile");
+                let errorMessage = "Failed to submit profile";
+                if (errorData.detail) {
+                    if (Array.isArray(errorData.detail)) {
+                        errorMessage = errorData.detail.map((err)=>`${err.loc.join(".")}: ${err.msg}`).join("\n");
+                    } else {
+                        errorMessage = errorData.detail;
+                    }
+                }
+                throw new Error(errorMessage);
             }
             router.push("/dashboard");
         } catch (error) {
@@ -215,7 +227,7 @@ function StudentFormPage() {
                             children: "Student Registration"
                         }, void 0, false, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 175,
+                            lineNumber: 172,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -225,13 +237,13 @@ function StudentFormPage() {
                             children: "Please fill in your academic details"
                         }, void 0, false, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 184,
+                            lineNumber: 181,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/studentForm/page.tsx",
-                    lineNumber: 174,
+                    lineNumber: 171,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -261,13 +273,13 @@ function StudentFormPage() {
                                             children: "*"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/studentForm/page.tsx",
-                                            lineNumber: 203,
+                                            lineNumber: 200,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 194,
+                                    lineNumber: 191,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -289,7 +301,7 @@ function StudentFormPage() {
                                     onChange: handleChange
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 205,
+                                    lineNumber: 202,
                                     columnNumber: 13
                                 }, this),
                                 errors.collegeName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -301,13 +313,13 @@ function StudentFormPage() {
                                     children: errors.collegeName
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 226,
+                                    lineNumber: 223,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 193,
+                            lineNumber: 190,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -329,13 +341,13 @@ function StudentFormPage() {
                                             children: "*"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/studentForm/page.tsx",
-                                            lineNumber: 248,
+                                            lineNumber: 245,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 239,
+                                    lineNumber: 236,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -360,7 +372,7 @@ function StudentFormPage() {
                                             children: "Select degree"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/studentForm/page.tsx",
-                                            lineNumber: 269,
+                                            lineNumber: 266,
                                             columnNumber: 15
                                         }, this),
                                         degrees.map((degree)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -368,13 +380,13 @@ function StudentFormPage() {
                                                 children: degree
                                             }, degree, false, {
                                                 fileName: "[project]/src/app/studentForm/page.tsx",
-                                                lineNumber: 271,
+                                                lineNumber: 268,
                                                 columnNumber: 17
                                             }, this))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 250,
+                                    lineNumber: 247,
                                     columnNumber: 13
                                 }, this),
                                 errors.degree && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -386,13 +398,13 @@ function StudentFormPage() {
                                     children: errors.degree
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 277,
+                                    lineNumber: 274,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 238,
+                            lineNumber: 235,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -414,13 +426,13 @@ function StudentFormPage() {
                                             children: "*"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/studentForm/page.tsx",
-                                            lineNumber: 299,
+                                            lineNumber: 296,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 290,
+                                    lineNumber: 287,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -442,7 +454,7 @@ function StudentFormPage() {
                                     onChange: handleChange
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 301,
+                                    lineNumber: 298,
                                     columnNumber: 13
                                 }, this),
                                 errors.branch && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -454,13 +466,13 @@ function StudentFormPage() {
                                     children: errors.branch
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 322,
+                                    lineNumber: 319,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 289,
+                            lineNumber: 286,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -482,13 +494,13 @@ function StudentFormPage() {
                                             children: "*"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/studentForm/page.tsx",
-                                            lineNumber: 344,
+                                            lineNumber: 341,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 335,
+                                    lineNumber: 332,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -513,7 +525,7 @@ function StudentFormPage() {
                                             children: "Select year"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/studentForm/page.tsx",
-                                            lineNumber: 365,
+                                            lineNumber: 362,
                                             columnNumber: 15
                                         }, this),
                                         years.map((year)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -524,13 +536,13 @@ function StudentFormPage() {
                                                 ]
                                             }, year, true, {
                                                 fileName: "[project]/src/app/studentForm/page.tsx",
-                                                lineNumber: 367,
+                                                lineNumber: 364,
                                                 columnNumber: 17
                                             }, this))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 346,
+                                    lineNumber: 343,
                                     columnNumber: 13
                                 }, this),
                                 errors.yearOfStudy && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -542,13 +554,13 @@ function StudentFormPage() {
                                     children: errors.yearOfStudy
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 373,
+                                    lineNumber: 370,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 334,
+                            lineNumber: 331,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -570,13 +582,13 @@ function StudentFormPage() {
                                             children: "*"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/studentForm/page.tsx",
-                                            lineNumber: 395,
+                                            lineNumber: 392,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 386,
+                                    lineNumber: 383,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -600,7 +612,7 @@ function StudentFormPage() {
                                     onChange: handleChange
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 397,
+                                    lineNumber: 394,
                                     columnNumber: 13
                                 }, this),
                                 errors.expectedGraduationYear && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -612,13 +624,13 @@ function StudentFormPage() {
                                     children: errors.expectedGraduationYear
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 420,
+                                    lineNumber: 417,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 385,
+                            lineNumber: 382,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -640,13 +652,13 @@ function StudentFormPage() {
                                             children: "*"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/studentForm/page.tsx",
-                                            lineNumber: 442,
+                                            lineNumber: 439,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 433,
+                                    lineNumber: 430,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -668,7 +680,7 @@ function StudentFormPage() {
                                     onChange: handleChange
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 444,
+                                    lineNumber: 441,
                                     columnNumber: 13
                                 }, this),
                                 errors.rollNumber && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -680,13 +692,13 @@ function StudentFormPage() {
                                     children: errors.rollNumber
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 465,
+                                    lineNumber: 462,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 432,
+                            lineNumber: 429,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -708,13 +720,13 @@ function StudentFormPage() {
                                             children: "*"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/studentForm/page.tsx",
-                                            lineNumber: 487,
+                                            lineNumber: 484,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 478,
+                                    lineNumber: 475,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -736,7 +748,7 @@ function StudentFormPage() {
                                     onChange: handleChange
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 489,
+                                    lineNumber: 486,
                                     columnNumber: 13
                                 }, this),
                                 errors.collegeEmail && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -748,7 +760,7 @@ function StudentFormPage() {
                                     children: errors.collegeEmail
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 510,
+                                    lineNumber: 507,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -760,13 +772,13 @@ function StudentFormPage() {
                                     children: "Must end with .edu, .ac.in, or similar educational domain"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/studentForm/page.tsx",
-                                    lineNumber: 520,
+                                    lineNumber: 517,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 477,
+                            lineNumber: 474,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -781,24 +793,24 @@ function StudentFormPage() {
                             children: isLoading ? "Submitting..." : "Submit"
                         }, void 0, false, {
                             fileName: "[project]/src/app/studentForm/page.tsx",
-                            lineNumber: 531,
+                            lineNumber: 528,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/studentForm/page.tsx",
-                    lineNumber: 189,
+                    lineNumber: 186,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/studentForm/page.tsx",
-            lineNumber: 171,
+            lineNumber: 168,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/studentForm/page.tsx",
-        lineNumber: 162,
+        lineNumber: 159,
         columnNumber: 5
     }, this);
 }
