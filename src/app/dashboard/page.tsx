@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { StudentSkillModal } from "@/components/StudentSkillModal";
 
 interface Skill {
     id: string;
@@ -30,6 +31,7 @@ export default function DashboardPage() {
     const [skills, setSkills] = useState<Skill[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
 
     // Mock JSON Data simulating API response
     const mockApiResponse = {
@@ -129,6 +131,15 @@ export default function DashboardPage() {
         fetchData();
     }, []);
 
+    const updateSkills = (newSkillNames: string[]) => {
+        // In a real app, this would be an API call
+        const updatedSkills = newSkillNames.map((name, idx) => {
+            const existing = skills.find(s => s.name === name);
+            return existing || { id: `new-${idx}`, name, verified: false };
+        });
+        setSkills(updatedSkills);
+    };
+
     if (loading) {
         return (
             <main style={{ padding: '2rem 24px', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -196,9 +207,13 @@ export default function DashboardPage() {
                                 <span style={{ width: '6px', height: '24px', background: 'var(--md-sys-color-tertiary)', borderRadius: '3px' }}></span>
                                 My Skills
                             </h2>
-                            <Link href="/add-skill">
-                                <Button variant="outlined" style={{ padding: '8px 16px', fontSize: '0.9rem' }}>+ Add New Skill</Button>
-                            </Link>
+                            <Button
+                                variant="outlined"
+                                style={{ padding: '8px 16px', fontSize: '0.9rem' }}
+                                onClick={() => setIsSkillModalOpen(true)}
+                            >
+                                + Add New Skill
+                            </Button>
                         </div>
                         <Card variant="outlined" style={{ padding: '2rem' }}>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
@@ -491,6 +506,13 @@ export default function DashboardPage() {
                     </>
                 )}
             </AnimatePresence>
+
+            <StudentSkillModal
+                isOpen={isSkillModalOpen}
+                onClose={() => setIsSkillModalOpen(false)}
+                currentSkills={skills.map(s => s.name)}
+                onUpdate={updateSkills}
+            />
         </main>
     );
 }

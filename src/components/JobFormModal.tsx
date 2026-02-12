@@ -6,6 +6,14 @@ import { FormInput } from "@/components/ui/FormInput";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "@/app/recruiter_dashboard/dashboard.module.css"; // Reuse dashboard styles for consistency
 
+const PREDEFINED_SKILLS = [
+    "JavaScript", "TypeScript", "React", "Next.js", "Node.js",
+    "Python", "C++", "C", "Java", "Go", "SQL", "MongoDB",
+    "Figma", "Adobe XD", "UI/UX Design", "Machine Learning",
+    "Data Analysis", "Project Management", "Agile", "Scrum",
+    "HTML", "CSS", "Tailwind CSS", "Docker", "AWS", "Git"
+].sort();
+
 export interface JobData {
     position: string;
     company: string;
@@ -13,6 +21,7 @@ export interface JobData {
     location: string;
     salary: string;
     description: string;
+    skills: string[];
 }
 
 interface JobFormModalProps {
@@ -38,25 +47,34 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
         tenure: '',
         location: '',
         salary: '',
-        description: ''
+        description: '',
+        skills: []
     });
+
+    const [skillSearch, setSkillSearch] = useState('');
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
     // Reset or populate form when opening/changing data
     useEffect(() => {
         if (isOpen) {
             if (initialData) {
-                setFormData(initialData);
+                setFormData({
+                    ...initialData,
+                    skills: initialData.skills || []
+                });
             } else {
-                // Reset for new job
                 setFormData({
                     position: '',
                     company: 'TechFlow Industries',
                     tenure: '',
                     location: '',
                     salary: '',
-                    description: ''
+                    description: '',
+                    skills: []
                 });
             }
+            setSkillSearch('');
+            setShowSuggestions(false);
         }
     }, [isOpen, initialData]);
 
@@ -65,11 +83,27 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const toggleSkill = (skill: string) => {
+        setFormData(prev => {
+            const isSelected = prev.skills.includes(skill);
+            return {
+                ...prev,
+                skills: isSelected
+                    ? prev.skills.filter(s => s !== skill)
+                    : [...prev.skills, skill]
+            };
+        });
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData);
         onClose();
     };
+
+    const filteredSuggestions = PREDEFINED_SKILLS.filter(s =>
+        s.toLowerCase().includes(skillSearch.toLowerCase()) && !formData.skills.includes(s)
+    );
 
     return (
         <AnimatePresence>
@@ -86,7 +120,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
                         style={{
-                            width: '90%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto',
+                            width: '90%', maxWidth: '800px', maxHeight: '95vh', overflowY: 'auto',
                             background: 'var(--md-sys-color-surface)', borderRadius: '24px',
                             boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', position: 'relative'
                         }}
@@ -124,6 +158,102 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                                 />
                             </div>
 
+                            {/* Skills Selection Section */}
+                            <div className={styles.fullWidth} style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 500, color: 'var(--md-sys-color-on-surface)', marginBottom: '0.5rem' }}>
+                                    Required Skills
+                                </label>
+
+                                <div style={{ position: 'relative' }}>
+                                    <div style={{
+                                        display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '8px',
+                                        border: '1px solid var(--md-sys-color-outline)', borderRadius: '12px',
+                                        background: 'var(--md-sys-color-surface)', minHeight: '52px', alignItems: 'center'
+                                    }}>
+                                        {formData.skills.map((skill, index) => (
+                                            <div key={index} style={{
+                                                display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px',
+                                                borderRadius: '100px', background: 'var(--md-sys-color-primary)',
+                                                color: 'var(--md-sys-color-on-primary)', fontSize: '0.85rem'
+                                            }}>
+                                                {skill}
+                                                <span
+                                                    onClick={() => toggleSkill(skill)}
+                                                    style={{ cursor: 'pointer', opacity: 0.8, fontWeight: 'bold' }}
+                                                >✕</span>
+                                            </div>
+                                        ))}
+                                        <input
+                                            type="text"
+                                            value={skillSearch}
+                                            onChange={(e) => {
+                                                setSkillSearch(e.target.value);
+                                                setShowSuggestions(true);
+                                            }}
+                                            onFocus={() => setShowSuggestions(true)}
+                                            placeholder={formData.skills.length === 0 ? "Search and select skills..." : ""}
+                                            style={{
+                                                flex: 1, border: 'none', background: 'transparent', outline: 'none',
+                                                color: 'var(--md-sys-color-on-surface)', padding: '4px', minWidth: '120px'
+                                            }}
+                                        />
+                                        <div
+                                            onClick={() => setShowSuggestions(!showSuggestions)}
+                                            style={{
+                                                width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(0,0,0,0.05)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                                                fontSize: '1.2rem', transition: 'all 0.2s',
+                                                transform: showSuggestions ? 'rotate(45deg)' : 'rotate(0deg)'
+                                            }}
+                                        >
+                                            +
+                                        </div>
+                                    </div>
+
+                                    {/* Suggestions Dropdown */}
+                                    <AnimatePresence>
+                                        {showSuggestions && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                                                style={{
+                                                    position: 'absolute', top: '110%', left: 0, right: 0,
+                                                    maxHeight: '200px', overflowY: 'auto', background: 'var(--md-sys-color-surface)',
+                                                    borderRadius: '12px', border: '1px solid var(--md-sys-color-outline)',
+                                                    zIndex: 2000, boxShadow: '0 4px 20px rgba(0,0,0,0.15)', padding: '8px'
+                                                }}
+                                            >
+                                                {filteredSuggestions.length > 0 ? (
+                                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '4px' }}>
+                                                        {filteredSuggestions.map(skill => (
+                                                            <div
+                                                                key={skill}
+                                                                onClick={() => {
+                                                                    toggleSkill(skill);
+                                                                    setSkillSearch('');
+                                                                }}
+                                                                style={{
+                                                                    padding: '8px 12px', borderRadius: '8px', cursor: 'pointer',
+                                                                    fontSize: '0.9rem', color: 'var(--md-sys-color-on-surface)',
+                                                                    transition: 'all 0.2s'
+                                                                }}
+                                                                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.05)'}
+                                                                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                                                            >
+                                                                {skill}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div style={{ padding: '12px', textAlign: 'center', color: 'var(--md-sys-color-secondary)', fontSize: '0.9rem' }}>
+                                                        No more matching skills found.
+                                                    </div>
+                                                )}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            </div>
+
                             <div className={styles.fullWidth} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                 <label style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--md-sys-color-on-surface)' }}>Job Description</label>
                                 <textarea
@@ -135,7 +265,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                                     style={{
                                         padding: '0.75rem', borderRadius: '12px', border: '1px solid var(--md-sys-color-outline)',
                                         background: 'var(--md-sys-color-surface)', color: 'var(--md-sys-color-on-surface)',
-                                        minHeight: '150px', resize: 'vertical', fontFamily: 'inherit'
+                                        minHeight: '120px', resize: 'vertical', fontFamily: 'inherit'
                                     }}
                                 />
                             </div>
