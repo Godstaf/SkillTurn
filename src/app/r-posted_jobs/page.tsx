@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -58,6 +58,36 @@ export default function PostedJobsPage() {
         return job.status === activeTab;
     });
 
+    // Load posted interns from localStorage on mount
+    useEffect(() => {
+        try {
+            const stored = JSON.parse(localStorage.getItem('postedInterns') || '[]');
+            if (stored.length > 0) {
+                const newJobs: Job[] = stored.map((item: Record<string, string | number>) => ({
+                    id: item.id as string,
+                    title: item.title as string || item.position as string,
+                    position: item.position as string,
+                    company: item.company as string,
+                    location: item.location as string,
+                    type: item.type as string || item.tenure as string,
+                    tenure: item.tenure as string,
+                    salary: item.salary as string || '',
+                    description: item.description as string || '',
+                    postedDate: item.postedDate as string || 'Just now',
+                    expirationDate: item.expirationDate as string || 'In 30 days',
+                    status: (item.status as 'Active' | 'Expired') || 'Active',
+                    applicants: (item.applicants as number) || 0,
+                    views: (item.views as number) || 0,
+                }));
+                setJobs(prev => {
+                    const existingIds = new Set(prev.map(j => j.id));
+                    const unique = newJobs.filter(j => !existingIds.has(j.id));
+                    return [...prev, ...unique];
+                });
+            }
+        } catch { /* ignore parse errors */ }
+    }, []);
+
     const handleManageClick = (job: Job) => {
         setEditingJob(job);
         setIsModalOpen(true);
@@ -77,7 +107,7 @@ export default function PostedJobsPage() {
         setIsModalOpen(false);
         setEditingJob(null);
         // Optional: Add toast notification here
-        alert("Job Updated Successfully!");
+        alert("Intern Updated Successfully!");
     };
 
     const handleJobDelete = () => {
@@ -100,7 +130,7 @@ export default function PostedJobsPage() {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>Posted Jobs</h1>
+                        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>Posted Interns</h1>
                         <p style={{ color: 'var(--md-sys-color-secondary)', marginTop: '0.5rem' }}>
                             Manage your active listings and view past history.
                         </p>
@@ -132,7 +162,7 @@ export default function PostedJobsPage() {
                 ))}
             </div>
 
-            {/* Job Grid */}
+            {/* Intern Grid */}
             <motion.div
                 layout
                 style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.5rem' }}
@@ -190,11 +220,11 @@ export default function PostedJobsPage() {
 
             {filteredJobs.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--md-sys-color-secondary)' }}>
-                    <p>No jobs found in this category.</p>
+                    <p>No interns found in this category.</p>
                 </div>
             )}
 
-            {/* Edit Job Modal */}
+            {/* Edit Intern Modal */}
             <JobFormModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}

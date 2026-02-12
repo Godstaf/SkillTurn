@@ -578,6 +578,38 @@ function PostedJobsPage() {
         if (activeTab === 'All') return true;
         return job.status === activeTab;
     });
+    // Load posted interns from localStorage on mount
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        try {
+            const stored = JSON.parse(localStorage.getItem('postedInterns') || '[]');
+            if (stored.length > 0) {
+                const newJobs = stored.map((item)=>({
+                        id: item.id,
+                        title: item.title || item.position,
+                        position: item.position,
+                        company: item.company,
+                        location: item.location,
+                        type: item.type || item.tenure,
+                        tenure: item.tenure,
+                        salary: item.salary || '',
+                        description: item.description || '',
+                        postedDate: item.postedDate || 'Just now',
+                        expirationDate: item.expirationDate || 'In 30 days',
+                        status: item.status || 'Active',
+                        applicants: item.applicants || 0,
+                        views: item.views || 0
+                    }));
+                setJobs((prev)=>{
+                    const existingIds = new Set(prev.map((j)=>j.id));
+                    const unique = newJobs.filter((j)=>!existingIds.has(j.id));
+                    return [
+                        ...prev,
+                        ...unique
+                    ];
+                });
+            }
+        } catch  {}
+    }, []);
     const handleManageClick = (job)=>{
         setEditingJob(job);
         setIsModalOpen(true);
@@ -594,7 +626,7 @@ function PostedJobsPage() {
         setIsModalOpen(false);
         setEditingJob(null);
         // Optional: Add toast notification here
-        alert("Job Updated Successfully!");
+        alert("Intern Updated Successfully!");
     };
     const handleJobDelete = ()=>{
         if (!editingJob) return;
@@ -632,12 +664,12 @@ function PostedJobsPage() {
                             children: "← Back to Dashboard"
                         }, void 0, false, {
                             fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                            lineNumber: 96,
+                            lineNumber: 126,
                             columnNumber: 21
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                        lineNumber: 95,
+                        lineNumber: 125,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -656,10 +688,10 @@ function PostedJobsPage() {
                                         fontWeight: 'bold',
                                         margin: 0
                                     },
-                                    children: "Posted Jobs"
+                                    children: "Posted Interns"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                    lineNumber: 103,
+                                    lineNumber: 133,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -670,24 +702,24 @@ function PostedJobsPage() {
                                     children: "Manage your active listings and view past history."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                    lineNumber: 104,
+                                    lineNumber: 134,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                            lineNumber: 102,
+                            lineNumber: 132,
                             columnNumber: 21
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                        lineNumber: 101,
+                        lineNumber: 131,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                lineNumber: 94,
+                lineNumber: 124,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -723,12 +755,12 @@ function PostedJobsPage() {
                         ]
                     }, tab, true, {
                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                        lineNumber: 114,
+                        lineNumber: 144,
                         columnNumber: 21
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                lineNumber: 112,
+                lineNumber: 142,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -784,7 +816,7 @@ function PostedJobsPage() {
                                                         children: job.title
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                        lineNumber: 153,
+                                                        lineNumber: 183,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -795,13 +827,13 @@ function PostedJobsPage() {
                                                         children: job.company
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 184,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                lineNumber: 152,
+                                                lineNumber: 182,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -816,13 +848,13 @@ function PostedJobsPage() {
                                                 children: job.status
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                lineNumber: 156,
+                                                lineNumber: 186,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                        lineNumber: 151,
+                                        lineNumber: 181,
                                         columnNumber: 33
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -840,7 +872,7 @@ function PostedJobsPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                lineNumber: 167,
+                                                lineNumber: 197,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -850,7 +882,7 @@ function PostedJobsPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                lineNumber: 168,
+                                                lineNumber: 198,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -860,13 +892,13 @@ function PostedJobsPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                lineNumber: 169,
+                                                lineNumber: 199,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                        lineNumber: 166,
+                                        lineNumber: 196,
                                         columnNumber: 33
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -894,13 +926,13 @@ function PostedJobsPage() {
                                                                 children: job.applicants
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                                lineNumber: 174,
+                                                                lineNumber: 204,
                                                                 columnNumber: 69
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                        lineNumber: 174,
+                                                        lineNumber: 204,
                                                         columnNumber: 41
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -911,19 +943,19 @@ function PostedJobsPage() {
                                                                 children: job.views
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                                lineNumber: 175,
+                                                                lineNumber: 205,
                                                                 columnNumber: 65
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                        lineNumber: 175,
+                                                        lineNumber: 205,
                                                         columnNumber: 41
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                lineNumber: 173,
+                                                lineNumber: 203,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -936,34 +968,34 @@ function PostedJobsPage() {
                                                 children: "Manage"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                                lineNumber: 177,
+                                                lineNumber: 207,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                        lineNumber: 172,
+                                        lineNumber: 202,
                                         columnNumber: 33
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                                lineNumber: 150,
+                                lineNumber: 180,
                                 columnNumber: 29
                             }, this)
                         }, job.id, false, {
                             fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                            lineNumber: 142,
+                            lineNumber: 172,
                             columnNumber: 25
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                    lineNumber: 140,
+                    lineNumber: 170,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                lineNumber: 136,
+                lineNumber: 166,
                 columnNumber: 13
             }, this),
             filteredJobs.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -973,15 +1005,15 @@ function PostedJobsPage() {
                     color: 'var(--md-sys-color-secondary)'
                 },
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                    children: "No jobs found in this category."
+                    children: "No interns found in this category."
                 }, void 0, false, {
                     fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                    lineNumber: 193,
+                    lineNumber: 223,
                     columnNumber: 21
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                lineNumber: 192,
+                lineNumber: 222,
                 columnNumber: 17
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$JobFormModal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["JobFormModal"], {
@@ -992,13 +1024,13 @@ function PostedJobsPage() {
                 onDelete: handleJobDelete
             }, void 0, false, {
                 fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-                lineNumber: 198,
+                lineNumber: 228,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/r-posted_jobs/page.tsx",
-        lineNumber: 91,
+        lineNumber: 121,
         columnNumber: 9
     }, this);
 }

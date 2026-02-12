@@ -29,7 +29,7 @@ interface Candidate {
     email: string;
     phone: string;
     appliedRole: string; // Linking to JobPosition.title or ID
-    status: 'New' | 'Screening' | 'Interview' | 'Offer' | 'Rejected';
+    status: 'New' | 'Screening' | 'Interview' | 'Offer' | 'Rejected' | 'Selected';
     experience: string;
     education: string;
     skills: string[];
@@ -106,17 +106,18 @@ export default function RecruiterDashboardPage() {
     const [jobs, setJobs] = useState<JobPosition[]>(INITIAL_JOBS);
     const [candidates, setCandidates] = useState<Candidate[]>(INITIAL_CANDIDATES);
     const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
-    const [filterStatus, setFilterStatus] = useState<'All' | 'New' | 'Screening' | 'Interview'>('All');
-    const [selectedJobFilter, setSelectedJobFilter] = useState<string | null>(null); // null means 'All Jobs'
+    const [filterStatus, setFilterStatus] = useState<'All' | 'New' | 'Screening' | 'Interview' | 'Selected'>('All');
+    const [selectedJobFilter, setSelectedJobFilter] = useState<string | null>(null); // null means 'All Interns'
 
     // --- Derived Stats ---
     const totalApplications = candidates.length;
     const interviewsScheduled = candidates.filter(c => c.status === 'Interview').length;
     const activePositions = jobs.filter(j => j.status === 'Active').length;
+    const selectedStudents = candidates.filter(c => c.status === 'Selected').length;
 
     // --- Filter Logic ---
     const filteredCandidates = candidates.filter(c => {
-        const matchesStatus = filterStatus === 'All' || c.status === filterStatus;
+        const matchesStatus = filterStatus === 'All' ? c.status !== 'Rejected' : c.status === filterStatus;
         const matchesJob = selectedJobFilter === null || c.appliedRole === selectedJobFilter;
         return matchesStatus && matchesJob;
     });
@@ -130,9 +131,49 @@ export default function RecruiterDashboardPage() {
     const [showJobModal, setShowJobModal] = useState(false);
 
     const handleJobSubmit = (data: JobData) => {
-        console.log("Job Posted:", data);
+        // Save to localStorage so r-posted_jobs and opportunities pages can read it
+        const existing = JSON.parse(localStorage.getItem('postedInterns') || '[]');
+        const newId = `posted-${Date.now()}`;
+        const now = new Date();
+        const postedDate = now.toISOString().split('T')[0];
+        const deadline = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+        const newIntern = {
+            id: newId,
+            position: data.position,
+            company: data.company,
+            tenure: data.tenure,
+            location: data.location,
+            salary: data.salary,
+            description: data.description,
+            title: data.position,
+            type: data.tenure,
+            postedDate,
+            expirationDate: `In 30 days`,
+            status: 'Active',
+            applicants: 0,
+            views: 0,
+            deadline,
+        };
+
+        existing.push(newIntern);
+        localStorage.setItem('postedInterns', JSON.stringify(existing));
+
+        // Also add to the local dashboard jobs list
+        setJobs(prev => [...prev, {
+            id: newId,
+            title: data.position,
+            department: data.company,
+            location: data.location,
+            type: data.tenure as 'Full-time' | 'Internship' | 'Contract',
+            postedString: 'Just now',
+            applicantsCount: 0,
+            status: 'Active'
+        }]);
+
+        console.log("Intern Posted:", data);
         setShowJobModal(false);
-        alert("Job Posted Successfully!");
+        alert("Intern Posted Successfully!");
     };
 
     return (
@@ -165,8 +206,8 @@ export default function RecruiterDashboardPage() {
                     </div>
                     <div className={styles.actionButtonWrapper} style={{ display: 'flex', gap: '1rem' }}>
                         <Button variant="outlined" style={{ marginTop: '0.5rem' }} onClick={() => router.push('/studentProfiles')}>Search Candidates</Button>
-                        <Button variant="outlined" style={{ marginTop: '0.5rem' }} onClick={() => router.push('/recruiterAnalytics')}>📊 Job Analytics</Button>
-                        <Button variant="filled" style={{ marginTop: '0.5rem' }} onClick={() => setShowJobModal(true)}>+ Post New Job</Button>
+                        <Button variant="outlined" style={{ marginTop: '0.5rem' }} onClick={() => router.push('/recruiterAnalytics')}>📊 Intern Analytics</Button>
+                        <Button variant="filled" style={{ marginTop: '0.5rem' }} onClick={() => setShowJobModal(true)}>+ Post New Intern</Button>
                     </div>
                 </div>
             </header>
@@ -191,17 +232,22 @@ export default function RecruiterDashboardPage() {
                         <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--md-sys-color-primary)' }}>{activePositions}</div>
                         <div style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-secondary)' }}>Expiring in 5 days: 1</div>
                     </Card>
+                    <Card variant="elevated">
+                        <h3 style={{ fontSize: '1rem', color: 'var(--md-sys-color-secondary)', marginBottom: '0.5rem' }}>Selected Students</h3>
+                        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'green' }}>{selectedStudents}</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-secondary)' }}>Hired this cycle</div>
+                    </Card>
                 </section>
             </ScrollReveal>
 
             <div className={styles.dashboardGrid}>
 
-                {/* Left Column: Job Positions */}
+                {/* Left Column: Intern Positions */}
                 <div className={styles.stickyColumn}>
                     <ScrollReveal width="100%" delay={0.2}>
                         <section>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Active Jobs</h3>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Active Interns</h3>
                                 <Link href="/r-posted_jobs" style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-primary)', cursor: 'pointer', textDecoration: 'none' }}>View All</Link>
                             </div>
 
@@ -244,7 +290,7 @@ export default function RecruiterDashboardPage() {
                     <section>
                         {/* Filters */}
                         <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-                            {(['All', 'New', 'Screening', 'Interview'] as const).map(status => (
+                            {(['All', 'New', 'Screening', 'Interview', 'Selected'] as const).map(status => (
                                 <div
                                     key={status}
                                     onClick={() => setFilterStatus(status)}
@@ -294,9 +340,11 @@ export default function RecruiterDashboardPage() {
                                                     <span style={{
                                                         fontSize: '0.75rem', padding: '2px 8px', borderRadius: '4px', fontWeight: 600,
                                                         background: candidate.status === 'New' ? 'var(--md-sys-color-primary-container)' :
-                                                            candidate.status === 'Interview' ? 'var(--md-sys-color-tertiary-container)' : '#e0e0e0',
+                                                            candidate.status === 'Interview' ? 'var(--md-sys-color-tertiary-container)' :
+                                                                candidate.status === 'Selected' ? '#c8e6c9' : '#e0e0e0',
                                                         color: candidate.status === 'New' ? 'var(--md-sys-color-on-primary-container)' :
-                                                            candidate.status === 'Interview' ? 'var(--md-sys-color-on-tertiary-container)' : '#333'
+                                                            candidate.status === 'Interview' ? 'var(--md-sys-color-on-tertiary-container)' :
+                                                                candidate.status === 'Selected' ? '#1b5e20' : '#333'
                                                     }}>
                                                         {candidate.status}
                                                     </span>
@@ -434,7 +482,16 @@ export default function RecruiterDashboardPage() {
                                                 variant="filled" style={{ width: '100%', marginBottom: '0.75rem' }}
                                                 onClick={() => { handleStatusUpdate(selectedCandidate.id, 'Interview'); setSelectedCandidateId(null); }}
                                             >
-                                                Schedule Interview
+                                                Approve for Interview
+                                            </Button>
+                                        )}
+
+                                        {selectedCandidate.status === 'Interview' && (
+                                            <Button
+                                                variant="filled" style={{ width: '100%', marginBottom: '0.75rem', background: 'green' }}
+                                                onClick={() => { handleStatusUpdate(selectedCandidate.id, 'Selected'); setSelectedCandidateId(null); }}
+                                            >
+                                                ✓ Select Candidate
                                             </Button>
                                         )}
 
@@ -460,7 +517,7 @@ export default function RecruiterDashboardPage() {
                     </motion.div>
                 )}
 
-                {/* Job Post Modal */}
+                {/* Intern Post Modal */}
                 <JobFormModal
                     isOpen={showJobModal}
                     onClose={() => setShowJobModal(false)}

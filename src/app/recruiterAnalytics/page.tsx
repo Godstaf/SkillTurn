@@ -123,7 +123,7 @@ const KPI = [
     { label: "Total Applicants", value: "2,450", change: "+18%", positive: true },
     { label: "Avg. Time to Hire", value: "14 days", change: "-3 days", positive: false },
     { label: "Offer Acceptance", value: "82%", change: "+5%", positive: true },
-    { label: "Active Roles", value: "12", change: "+2", positive: true },
+    { label: "Active Interns", value: "12", change: "+2", positive: true },
 ];
 
 // ═══════════════════════════════════════════════
