@@ -65,35 +65,35 @@ const INITIAL_CANDIDATES: Candidate[] = [
         id: 'c1', name: 'Alex Johnson', email: 'alex.j@example.com', phone: '+1 (555) 123-4567',
         appliedRole: 'Senior Frontend Engineer', status: 'New',
         experience: '5 years at TechFlow', education: 'BS CS, Stanford',
-        skills: ['React', 'TypeScript', 'Node.js'], resumeLink: 'alex_resume.pdf',
+        skills: ['React', 'TypeScript', 'Node.js'], resumeLink: 'https://drive.google.com/file/d/alex_resume/view',
         matchScore: 92, appliedDate: '2 hours ago', avatarInitials: 'AJ'
     },
     {
         id: 'c2', name: 'Samantha Lee', email: 'sam.lee@example.com', phone: '+1 (555) 987-6543',
         appliedRole: 'UX Designer Intern', status: 'Screening',
         experience: 'Freelance Designer', education: 'BFA Design, RISD',
-        skills: ['Figma', 'Adobe XD', 'Prototyping'], resumeLink: 'sam_portfolio.pdf',
+        skills: ['Figma', 'Adobe XD', 'Prototyping'], resumeLink: 'https://drive.google.com/file/d/sam_portfolio/view',
         matchScore: 88, appliedDate: '1 day ago', avatarInitials: 'SL'
     },
     {
         id: 'c3', name: 'Michael Chen', email: 'm.chen@example.com', phone: '+1 (555) 456-7890',
         appliedRole: 'Senior Frontend Engineer', status: 'New',
         experience: '3 years at StartUp Inc', education: 'MS CS, MIT',
-        skills: ['Vue.js', 'JavaScript', 'AWS'], resumeLink: 'mike_cv.pdf',
+        skills: ['Vue.js', 'JavaScript', 'AWS'], resumeLink: 'https://drive.google.com/file/d/mike_cv/view',
         matchScore: 75, appliedDate: '3 hours ago', avatarInitials: 'MC'
     },
     {
         id: 'c4', name: 'Emily Davis', email: 'emily.d@example.com', phone: '+1 (555) 222-3333',
         appliedRole: 'Product Manager', status: 'Interview',
         experience: '4 years Product Owner', education: 'MBA, Wharton',
-        skills: ['Agile', 'JIRA', 'Roadmapping'], resumeLink: 'emily_pm.pdf',
+        skills: ['Agile', 'JIRA', 'Roadmapping'], resumeLink: 'https://drive.google.com/file/d/emily_pm/view',
         matchScore: 95, appliedDate: '2 days ago', avatarInitials: 'ED'
     },
     {
         id: 'c5', name: 'David Wilson', email: 'david.w@example.com', phone: '+1 (555) 777-8888',
         appliedRole: 'UX Designer Intern', status: 'Rejected',
         experience: 'Student', education: 'BA Arts',
-        skills: ['Photoshop', 'Sketch'], resumeLink: 'david_res.pdf',
+        skills: ['Photoshop', 'Sketch'], resumeLink: 'https://drive.google.com/file/d/david_res/view',
         matchScore: 45, appliedDate: '4 days ago', avatarInitials: 'DW'
     },
 ];
@@ -505,10 +505,11 @@ export default function RecruiterDashboardPage() {
 
                                     <div style={{ padding: '1.5rem', border: '1px solid var(--glass-border)', borderRadius: '16px' }}>
                                         <h4 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Resume</h4>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--md-sys-color-primary)', cursor: 'pointer' }}>
+                                        <a href={selectedCandidate.resumeLink} target="_blank" rel="noopener noreferrer"
+                                            style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--md-sys-color-primary)', textDecoration: 'none' }}>
                                             <span>📄</span>
-                                            <span style={{ textDecoration: 'underline' }}>{selectedCandidate.resumeLink}</span>
-                                        </div>
+                                            <span style={{ textDecoration: 'underline' }}>View on Drive ↗</span>
+                                        </a>
                                     </div>
                                 </div>
 
