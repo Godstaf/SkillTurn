@@ -21,7 +21,11 @@ from CRUD import (
     get_application_by_student_and_job,
     get_all_full_student_profiles,
     get_student_applications,
-    get_opportunity
+    get_opportunity,
+    StudentProject,
+    create_project,
+    get_projects_by_student,
+    get_user_by_id
 )
 from login import get_current_active_user, UserPublic
 
@@ -72,31 +76,50 @@ async def add_skill(skill: SkillItem, current_user: User = Depends(get_current_a
     update_student_skills(user_id, student_skills)
     return student_skills
 
-@router.post("/student/projects", response_model=StudentProjects)
-async def add_project(project: ProjectItem, current_user: User = Depends(get_current_active_user)):
+@router.post("/student/projects")
+async def add_project(project: StudentProject, current_user: User = Depends(get_current_active_user)):
     if current_user.role != "student":
         raise HTTPException(status_code=403, detail="Only students can add projects")
 
     user_id = str(current_user.id)
-    student_projects = get_student_projects(user_id)
-    if not student_projects:
-        student_projects = StudentProjects(user_id=user_id, projects=[])
+    project.user_id = user_id
+    project.is_verified = False  # Always start as unverified
     
-    student_projects.projects.append(project)
-    update_student_projects(user_id, student_projects)
-    return student_projects
+    created = create_project(project)
+    return created
 
 @router.get("/student/full-profile")
 async def get_full_profile(current_user: User = Depends(get_current_active_user)):
     user_id = str(current_user.id)
     profile = get_student_profile(user_id)
     skills = get_student_skills(user_id)
-    projects = get_student_projects(user_id)
+    projects = get_projects_by_student(user_id)
+    
+    # Format projects for frontend
+    projects_list = []
+    for p in projects:
+        # Resolve verified_by user_id to faculty name
+        faculty_name = None
+        if p.verified_by:
+            faculty_user = get_user_by_id(p.verified_by)
+            faculty_name = faculty_user.full_name if faculty_user else p.verified_by
+        projects_list.append({
+            "id": p.id,
+            "title": p.title,
+            "description": p.description or "",
+            "project_link": p.project_link or "",
+            "technologies": p.technologies,
+            "is_verified": p.is_verified,
+            "verification_status": "Verified" if p.is_verified else "Pending",
+            "verified_by": faculty_name,
+            "verified_at": p.verified_at.isoformat() if p.verified_at else None,
+            "created_at": p.created_at.isoformat() if p.created_at else None,
+        })
     
     return {
         "profile": profile,
         "skills": skills.skills if skills else [],
-        "projects": projects.projects if projects else []
+        "projects": projects_list
     }
 
 @router.post("/student/apply")

@@ -141,6 +141,20 @@ class StudentProjects(BaseModel):
     projects: List[ProjectItem] = []
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+# --- New Standalone StudentProject Model (individual docs per project) ---
+class StudentProject(BaseModel):
+    id: Optional[str] = Field(None, alias="_id")
+    user_id: str  # student who owns this project
+    title: str
+    description: Optional[str] = None
+    project_link: Optional[str] = None  # cloud URL — GitHub, GDrive, etc.
+    technologies: List[str] = []
+    is_verified: bool = False
+    verified_by: Optional[str] = None  # faculty user_id
+    verified_at: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
 # --- Jobs & Applications ---
 
 class Job(BaseModel):
@@ -317,6 +331,58 @@ def get_student_projects(user_id: str):
         return StudentProjects(**fix_mongo_id(projects))
     return None
 
+# --- New StudentProject CRUD (individual docs) ---
+def create_project(project: StudentProject):
+    """Insert a new project as an individual document."""
+    proj_dict = project.dict(exclude={"id"}, by_alias=True)
+    proj_dict.pop("_id", None)
+    result = student_projects_collection.insert_one(proj_dict)
+    proj_dict["_id"] = str(result.inserted_id)
+    return StudentProject(**proj_dict)
+
+def get_projects_by_student(user_id: str) -> List[StudentProject]:
+    """Get all projects for a student as individual documents."""
+    projects = student_projects_collection.find({"user_id": user_id})
+    result = []
+    for proj in projects:
+        # Skip old-format embedded docs (those with a "projects" array field)
+        if "projects" in proj:
+            continue
+        result.append(StudentProject(**fix_mongo_id(proj)))
+    return result
+
+def update_project_verification(project_id: str, is_verified: bool, verified_by: str):
+    """Update the verification status of a project."""
+    from bson import ObjectId
+    update_data = {
+        "is_verified": is_verified,
+        "verified_by": verified_by,
+        "verified_at": datetime.utcnow(),
+        "updated_at": datetime.utcnow()
+    }
+    result = student_projects_collection.update_one(
+        {"_id": ObjectId(project_id)},
+        {"$set": update_data}
+    )
+    if result.modified_count == 0:
+        return None
+    # Return updated project
+    updated = student_projects_collection.find_one({"_id": ObjectId(project_id)})
+    if updated:
+        return StudentProject(**fix_mongo_id(updated))
+    return None
+
+def get_project_by_id(project_id: str):
+    """Look up a single project by its MongoDB _id."""
+    from bson import ObjectId
+    try:
+        doc = student_projects_collection.find_one({"_id": ObjectId(project_id)})
+    except Exception:
+        return None
+    if doc and "projects" not in doc:  # skip old-format embedded docs
+        return StudentProject(**fix_mongo_id(doc))
+    return None
+
 # 3. Faculty Panel
 def create_faculty_profile(profile: FacultyProfile):
     return create_item(faculty_profiles_collection, profile)
@@ -478,7 +544,7 @@ def get_application_by_student_and_job(user_id: str, job_id: str):
 
 def get_all_full_student_profiles():
     """
-    Aggregates data from Users, StudentProfiles, and StudentSkills
+    Aggregates data from Users, StudentProfiles, StudentSkills, and StudentProjects
     to return a comprehensive list of student profiles for the frontend.
     """
     students = []
@@ -498,7 +564,28 @@ def get_all_full_student_profiles():
         skills_data = StudentSkills(**fix_mongo_id(skills_doc)) if skills_doc else None
         skills_list = [s.name for s in skills_data.skills] if skills_data else []
         
-        # 4. Construct Aggregated Object
+        # 4. Get Projects (new standalone model)
+        student_projects = get_projects_by_student(user_id)
+        projects_list = []
+        for p in student_projects:
+            # Resolve verified_by user_id to faculty name
+            faculty_name = None
+            if p.verified_by:
+                faculty_user = get_user_by_id(p.verified_by)
+                faculty_name = faculty_user.full_name if faculty_user else p.verified_by
+            projects_list.append({
+                "id": p.id,
+                "title": p.title,
+                "description": p.description or "",
+                "project_link": p.project_link or "",
+                "technologies": p.technologies,
+                "is_verified": p.is_verified,
+                "verification_status": "Verified" if p.is_verified else "Pending",
+                "verified_by": faculty_name,
+                "verified_at": p.verified_at.isoformat() if p.verified_at else None
+            })
+        
+        # 5. Construct Aggregated Object
         # Defaults if profile missing
         student_data = {
             "id": user_id,
@@ -509,6 +596,7 @@ def get_all_full_student_profiles():
             "year": f"{profile.year_of_study}th Year" if profile and profile.year_of_study else "Unknown Year",
             "cgpa": profile.gpa if profile else 0.0,
             "skills": skills_list,
+            "projects": projects_list,
             "phone": "+91 98765 43210", # Placeholder
             "location": "India", # Placeholder
             "bio": f"Student at {profile.college}" if profile and profile.college else "Student",
