@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { StudentSkillModal } from "@/components/StudentSkillModal";
+import { ResumeModal } from "@/components/ResumeModal";
 
 interface Skill {
     id: string;
@@ -32,6 +33,8 @@ export default function DashboardPage() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
+    const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+    const [profile, setProfile] = useState<any>(null);
 
     // Mock JSON Data simulating API response
     const mockApiResponse = {
@@ -149,6 +152,15 @@ export default function DashboardPage() {
                     })));
                 }
 
+                // Fetch Full Profile
+                const profileResp = await fetch('http://127.0.0.1:8000/student/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (profileResp.ok) {
+                    const data = await profileResp.json();
+                    setProfile(data);
+                }
+
                 // Keep mock data for others until endpoints exist
                 setAppliedOpportunities(mockApiResponse.applied);
                 setPastOpportunities(mockApiResponse.past);
@@ -241,6 +253,24 @@ export default function DashboardPage() {
                         <p style={{ fontSize: '1.1rem', color: 'var(--md-sys-color-secondary)' }}>
                             Here's an overview of your profile and applications.
                         </p>
+                    </div>
+
+                    <div style={{ marginLeft: 'auto' }}>
+                        <Button
+                            variant="filled"
+                            style={{
+                                background: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)',
+                                padding: '12px 24px',
+                                borderRadius: '16px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                boxShadow: '0 10px 25px rgba(126, 34, 206, 0.3)'
+                            }}
+                            onClick={() => setIsResumeModalOpen(true)}
+                        >
+                            <span>✨ View AI Resume</span>
+                        </Button>
                     </div>
                 </header>
             </ScrollReveal>
@@ -562,6 +592,22 @@ export default function DashboardPage() {
                 currentSkills={skills.map(s => s.name)}
                 onUpdate={updateSkills}
             />
+
+            {profile && (
+                <ResumeModal
+                    isOpen={isResumeModalOpen}
+                    onClose={() => setIsResumeModalOpen(false)}
+                    data={{
+                        name: user?.full_name || 'Student',
+                        email: user?.email || '',
+                        college: profile.college || 'University',
+                        degree: profile.degree || 'B.Tech',
+                        branch: profile.branch || 'CSE',
+                        skills: skills.map(s => s.name),
+                        projects: projects.map(p => ({ title: p.title, description: p.description }))
+                    }}
+                />
+            )}
         </main>
     );
 }

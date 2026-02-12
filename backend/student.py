@@ -13,11 +13,19 @@ from CRUD import (
     StudentProjects,
     update_student_projects,
     get_student_projects,
-    SkillItem
+    SkillItem,
+    get_student_profile
 )
 from login import get_current_active_user, UserPublic
 
 router = APIRouter()
+
+@router.get("/student/profile", response_model=StudentProfile)
+async def get_profile(current_user: User = Depends(get_current_active_user)):
+    profile = get_student_profile(str(current_user.id))
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return profile
 
 @router.post("/student/profile", response_model=StudentProfile)
 async def create_profile(profile: StudentProfile, current_user: User = Depends(get_current_active_user)):
