@@ -27,23 +27,23 @@ interface Job extends JobData {
 const INITIAL_JOBS: Job[] = [
     {
         id: '1', title: 'Senior Frontend Engineer', position: 'Senior Frontend Engineer', company: 'TechFlow Industries', location: 'Remote',
-        type: 'Full-time', tenure: 'Full-time', salary: '$120k - $160k', description: 'Great role...', postedDate: '2 days ago', expirationDate: 'In 28 days', status: 'Active', applicants: 45, views: 1200
+        type: 'Full-time', tenure: 'Full-time', salary: '$120k - $160k', description: 'Great role...', skills: ['React', 'TypeScript', 'Next.js'], postedDate: '2 days ago', expirationDate: 'In 28 days', status: 'Active', applicants: 45, views: 1200
     },
     {
         id: '2', title: 'Product Designer', position: 'Product Designer', company: 'TechFlow Industries', location: 'New York, NY',
-        type: 'Full-time', tenure: 'Full-time', salary: '$100k - $140k', description: 'Design things...', postedDate: '5 days ago', expirationDate: 'In 25 days', status: 'Active', applicants: 23, views: 850
+        type: 'Full-time', tenure: 'Full-time', salary: '$100k - $140k', description: 'Design things...', skills: ['Figma', 'Prototyping'], postedDate: '5 days ago', expirationDate: 'In 25 days', status: 'Active', applicants: 23, views: 850
     },
     {
         id: '3', title: 'Backend Developer (Go)', position: 'Backend Developer (Go)', company: 'TechFlow Industries', location: 'Remote',
-        type: 'Contract', tenure: 'Contract', salary: '$80/hr', description: 'Go code...', postedDate: '1 week ago', expirationDate: 'In 20 days', status: 'Active', applicants: 12, views: 500
+        type: 'Contract', tenure: 'Contract', salary: '$80/hr', description: 'Go code...', skills: ['Go', 'PostgreSQL', 'Docker'], postedDate: '1 week ago', expirationDate: 'In 20 days', status: 'Active', applicants: 12, views: 500
     },
     {
         id: '4', title: 'Marketing Intern', position: 'Marketing Intern', company: 'TechFlow Industries', location: 'San Francisco, CA',
-        type: 'Internship', tenure: 'Internship', salary: '$25/hr', description: 'Internship...', postedDate: '2 months ago', expirationDate: 'Expired', status: 'Expired', applicants: 156, views: 3200
+        type: 'Internship', tenure: 'Internship', salary: '$25/hr', description: 'Internship...', skills: ['Social Media', 'Content Creation'], postedDate: '2 months ago', expirationDate: 'Expired', status: 'Expired', applicants: 156, views: 3200
     },
     {
         id: '5', title: 'Data Scientist', position: 'Data Scientist', company: 'TechFlow Industries', location: 'Boston, MA',
-        type: 'Full-time', tenure: 'Full-time', salary: '$130k - $170k', description: 'Data analysis...', postedDate: '3 months ago', expirationDate: 'Expired', status: 'Expired', applicants: 89, views: 2400
+        type: 'Full-time', tenure: 'Full-time', salary: '$130k - $170k', description: 'Data analysis...', skills: ['Python', 'SQL', 'Machine Learning'], postedDate: '3 months ago', expirationDate: 'Expired', status: 'Expired', applicants: 89, views: 2400
     }
 ];
 
@@ -188,6 +188,17 @@ export default function PostedJobsPage() {
                                     <p>📍 {job.location}</p>
                                     <p>💼 {job.type}</p>
                                     <p>🕒 Posted {job.postedDate}</p>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '12px' }}>
+                                        {job.skills?.map((skill, idx) => (
+                                            <span key={idx} style={{
+                                                fontSize: '0.75rem', padding: '2px 8px', borderRadius: '4px',
+                                                background: 'rgba(var(--md-sys-color-primary-rgb), 0.1)',
+                                                color: 'var(--md-sys-color-primary)', border: '1px solid rgba(var(--md-sys-color-primary-rgb), 0.2)'
+                                            }}>
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid var(--glass-border)' }}>

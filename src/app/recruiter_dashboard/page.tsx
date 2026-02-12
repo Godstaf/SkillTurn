@@ -21,17 +21,18 @@ interface JobPosition {
     postedString: string;
     applicantsCount: number;
     status: 'Active' | 'Closed' | 'Draft';
+    skills?: string[];
 }
 
 interface Candidate {
     id: string;
     name: string;
     email: string;
-    phone: string;
     appliedRole: string; // Linking to JobPosition.title or ID
     status: 'New' | 'Screening' | 'Interview' | 'Offer' | 'Rejected' | 'Selected';
-    experience: string;
-    education: string;
+    institution: string;
+    program: string;
+    branch: string;
     skills: string[];
     resumeLink: string;
     matchScore: number; // 0-100
@@ -44,55 +45,59 @@ interface Candidate {
 const INITIAL_JOBS: JobPosition[] = [
     {
         id: 'j1', title: 'Senior Frontend Engineer', department: 'Engineering', location: 'Remote',
-        type: 'Full-time', postedString: '2 days ago', applicantsCount: 45, status: 'Active'
+        type: 'Full-time', postedString: '2 days ago', applicantsCount: 45, status: 'Active',
+        skills: ['React', 'TypeScript', 'Next.js']
     },
     {
         id: 'j2', title: 'UX Designer Intern', department: 'Design', location: 'New York, NY',
-        type: 'Internship', postedString: '1 week ago', applicantsCount: 128, status: 'Active'
+        type: 'Internship', postedString: '1 week ago', applicantsCount: 128, status: 'Active',
+        skills: ['Figma', 'Prototyping']
     },
     {
         id: 'j3', title: 'Product Manager', department: 'Product', location: 'San Francisco, CA',
-        type: 'Full-time', postedString: '3 days ago', applicantsCount: 32, status: 'Active'
+        type: 'Full-time', postedString: '3 days ago', applicantsCount: 32, status: 'Active',
+        skills: ['Agile', 'Roadmapping']
     },
     {
         id: 'j4', title: 'Backend Developer', department: 'Engineering', location: 'Remote',
-        type: 'Contract', postedString: '5 days ago', applicantsCount: 18, status: 'Active'
+        type: 'Contract', postedString: '5 days ago', applicantsCount: 18, status: 'Active',
+        skills: ['Node.js', 'PostgreSQL']
     },
 ];
 
 const INITIAL_CANDIDATES: Candidate[] = [
     {
-        id: 'c1', name: 'Alex Johnson', email: 'alex.j@example.com', phone: '+1 (555) 123-4567',
+        id: 'c1', name: 'Alex Johnson', email: 'alex.j@example.com',
         appliedRole: 'Senior Frontend Engineer', status: 'New',
-        experience: '5 years at TechFlow', education: 'BS CS, Stanford',
+        institution: 'IIT Bombay', program: 'B.Tech', branch: 'Computer Science and Engineering',
         skills: ['React', 'TypeScript', 'Node.js'], resumeLink: 'https://drive.google.com/file/d/alex_resume/view',
         matchScore: 92, appliedDate: '2 hours ago', avatarInitials: 'AJ'
     },
     {
-        id: 'c2', name: 'Samantha Lee', email: 'sam.lee@example.com', phone: '+1 (555) 987-6543',
+        id: 'c2', name: 'Samantha Lee', email: 'sam.lee@example.com',
         appliedRole: 'UX Designer Intern', status: 'Screening',
-        experience: 'Freelance Designer', education: 'BFA Design, RISD',
+        institution: 'NID Ahmedabad', program: 'B.Des', branch: 'Interaction Design',
         skills: ['Figma', 'Adobe XD', 'Prototyping'], resumeLink: 'https://drive.google.com/file/d/sam_portfolio/view',
         matchScore: 88, appliedDate: '1 day ago', avatarInitials: 'SL'
     },
     {
-        id: 'c3', name: 'Michael Chen', email: 'm.chen@example.com', phone: '+1 (555) 456-7890',
+        id: 'c3', name: 'Michael Chen', email: 'm.chen@example.com',
         appliedRole: 'Senior Frontend Engineer', status: 'New',
-        experience: '3 years at StartUp Inc', education: 'MS CS, MIT',
+        institution: 'IIIT Hyderabad', program: 'M.Tech', branch: 'Computer Science',
         skills: ['Vue.js', 'JavaScript', 'AWS'], resumeLink: 'https://drive.google.com/file/d/mike_cv/view',
         matchScore: 75, appliedDate: '3 hours ago', avatarInitials: 'MC'
     },
     {
-        id: 'c4', name: 'Emily Davis', email: 'emily.d@example.com', phone: '+1 (555) 222-3333',
+        id: 'c4', name: 'Emily Davis', email: 'emily.d@example.com',
         appliedRole: 'Product Manager', status: 'Interview',
-        experience: '4 years Product Owner', education: 'MBA, Wharton',
+        institution: 'IIM Bangalore', program: 'MBA', branch: 'General Management',
         skills: ['Agile', 'JIRA', 'Roadmapping'], resumeLink: 'https://drive.google.com/file/d/emily_pm/view',
         matchScore: 95, appliedDate: '2 days ago', avatarInitials: 'ED'
     },
     {
-        id: 'c5', name: 'David Wilson', email: 'david.w@example.com', phone: '+1 (555) 777-8888',
+        id: 'c5', name: 'David Wilson', email: 'david.w@example.com',
         appliedRole: 'UX Designer Intern', status: 'Rejected',
-        experience: 'Student', education: 'BA Arts',
+        institution: 'NIT Trichy', program: 'B.Tech', branch: 'Electrical Engineering',
         skills: ['Photoshop', 'Sketch'], resumeLink: 'https://drive.google.com/file/d/david_res/view',
         matchScore: 45, appliedDate: '4 days ago', avatarInitials: 'DW'
     },
@@ -434,10 +439,11 @@ export default function RecruiterDashboardPage() {
                                 {/* Left Content */}
                                 <div>
                                     <div style={{ marginBottom: '2rem' }}>
-                                        <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--md-sys-color-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Professional Summary</h3>
+                                        <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--md-sys-color-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Academic Details</h3>
                                         <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.03)', borderRadius: '12px' }}>
-                                            <p style={{ marginBottom: '0.5rem' }}><strong>Experience:</strong> {selectedCandidate.experience}</p>
-                                            <p><strong>Education:</strong> {selectedCandidate.education}</p>
+                                            <p style={{ marginBottom: '0.5rem' }}><strong>Institution:</strong> {selectedCandidate.institution}</p>
+                                            <p style={{ marginBottom: '0.5rem' }}><strong>Program:</strong> {selectedCandidate.program}</p>
+                                            <p><strong>Branch:</strong> {selectedCandidate.branch}</p>
                                         </div>
                                     </div>
 
@@ -459,7 +465,6 @@ export default function RecruiterDashboardPage() {
                                     <div>
                                         <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--md-sys-color-secondary)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Contact</h3>
                                         <p>📧 {selectedCandidate.email}</p>
-                                        <p>📞 {selectedCandidate.phone}</p>
                                     </div>
                                 </div>
 
