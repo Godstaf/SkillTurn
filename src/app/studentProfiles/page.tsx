@@ -13,7 +13,7 @@ interface StudentProfile {
     id: string;
     name: string;
     college: string;
-    branch: string; // Department
+    branch: string;
     year: string;
     cgpa: number;
     skills: string[];
@@ -24,6 +24,7 @@ interface StudentProfile {
     linkedIn?: string;
     github?: string;
     avatarInitials: string;
+    resumeLink: string;
 }
 
 const COLLEGES = [
@@ -56,49 +57,49 @@ const MOCK_STUDENTS: StudentProfile[] = [
         id: '1', name: 'Aarav Patel', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'TE',
         cgpa: 9.2, skills: ['React', 'Node.js', 'Python'], email: 'aarav.p@example.com', phone: '+91 98765 43210',
         location: 'Pune, India', bio: 'Passionate full-stack developer looking for internship opportunities.',
-        avatarInitials: 'AP'
+        avatarInitials: 'AP', resumeLink: 'https://drive.google.com/file/d/aarav_resume/view'
     },
     {
         id: '2', name: 'Ishita Sharma', college: 'Global Engineering College', branch: 'Information Technology', year: 'BE',
         cgpa: 8.9, skills: ['Java', 'Spring Boot', 'SQL'], email: 'ishita.s@example.com', phone: '+91 98765 43211',
         location: 'Mumbai, India', bio: 'Aspiring software engineer with a strong foundation in backend systems.',
-        avatarInitials: 'IS'
+        avatarInitials: 'IS', resumeLink: 'https://drive.google.com/file/d/ishita_resume/view'
     },
     {
         id: '3', name: 'Rohan Gupta', college: 'City University', branch: 'Electronics & Telecommunication', year: 'TE',
         cgpa: 7.8, skills: ['Embedded C', 'IoT', 'Arduino'], email: 'rohan.g@example.com', phone: '+91 98765 43212',
         location: 'Bangalore, India', bio: 'IoT enthusiast working on smart home automation projects.',
-        avatarInitials: 'RG'
+        avatarInitials: 'RG', resumeLink: 'https://drive.google.com/file/d/rohan_resume/view'
     },
     {
         id: '4', name: 'Meera Singh', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'SE',
         cgpa: 8.5, skills: ['C++', 'Data Structures', 'Algorithms'], email: 'meera.s@example.com', phone: '+91 98765 43213',
         location: 'Pune, India', bio: 'Competitive programmer and algorithm lover.',
-        avatarInitials: 'MS'
+        avatarInitials: 'MS', resumeLink: 'https://drive.google.com/file/d/meera_resume/view'
     },
     {
         id: '5', name: 'Vikram Malhotra', college: 'State Technical Institute', branch: 'Mechanical Engineering', year: 'BE',
         cgpa: 7.2, skills: ['AutoCAD', 'SolidWorks', 'Thermodynamics'], email: 'vikram.m@example.com', phone: '+91 98765 43214',
         location: 'Delhi, India', bio: 'Mechanical engineer interested in automotive design.',
-        avatarInitials: 'VM'
+        avatarInitials: 'VM', resumeLink: 'https://drive.google.com/file/d/vikram_resume/view'
     },
     {
         id: '6', name: 'Ananya Desai', college: 'Global Engineering College', branch: 'Information Technology', year: 'TE',
         cgpa: 9.5, skills: ['Machine Learning', 'Python', 'TensorFlow'], email: 'ananya.d@example.com', phone: '+91 98765 43215',
         location: 'Hyderabad, India', bio: 'AI/ML researcher working on NLP projects.',
-        avatarInitials: 'AD'
+        avatarInitials: 'AD', resumeLink: 'https://drive.google.com/file/d/ananya_resume/view'
     },
     {
         id: '7', name: 'Kabir Joshi', college: 'City University', branch: 'Civil Engineering', year: 'SE',
         cgpa: 6.8, skills: ['AutoCAD', 'Structural Analysis'], email: 'kabir.j@example.com', phone: '+91 98765 43216',
         location: 'Chennai, India', bio: 'Future civil engineer.',
-        avatarInitials: 'KJ'
+        avatarInitials: 'KJ', resumeLink: 'https://drive.google.com/file/d/kabir_resume/view'
     },
     {
         id: '8', name: 'Sana Khan', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'BE',
         cgpa: 9.8, skills: ['Cloud Computing', 'AWS', 'Docker'], email: 'sana.k@example.com', phone: '+91 98765 43217',
         location: 'Pune, India', bio: 'Cloud native developer.',
-        avatarInitials: 'SK'
+        avatarInitials: 'SK', resumeLink: 'https://drive.google.com/file/d/sana_resume/view'
     }
 ];
 
@@ -537,7 +538,9 @@ export default function StudentProfilesPage() {
                                         {/* Actions */}
                                         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                                             <Button variant="filled" style={{ flex: 1 }}>Send Message</Button>
-                                            <Button variant="outlined" style={{ flex: 1 }}>View Resume</Button>
+                                            <a href={selectedStudent.resumeLink} target="_blank" rel="noopener noreferrer" style={{ flex: 1, textDecoration: 'none' }}>
+                                                <Button variant="outlined" style={{ width: '100%' }}>View Resume ↗</Button>
+                                            </a>
                                         </div>
 
                                     </div>
