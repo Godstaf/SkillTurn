@@ -8,11 +8,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { StudentSkillModal } from "@/components/StudentSkillModal";
+import { ResumeModal } from "@/components/ResumeModal";
 
 interface Skill {
     id: string;
     name: string;
     verified: boolean;
+    verification_status?: string;
 }
 
 interface Project {
@@ -20,6 +22,7 @@ interface Project {
     title: string;
     description: string;
     verified: boolean;
+    verification_status?: string;
     technologies: string[];
 }
 
@@ -32,61 +35,11 @@ export default function DashboardPage() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
+    const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+    const [profile, setProfile] = useState<any>(null);
 
-    // Mock JSON Data simulating API response
+    // Mock JSON Data simulating API response (skills/projects handled by real endpoints above)
     const mockApiResponse = {
-        applied: [
-            {
-                id: '1',
-                title: 'AI-Driven Traffic Management System',
-                type: 'Project',
-                organization: 'Dr. Sarah Smith (CS Dept)',
-                description: 'Developing a reinforcement learning model to optimize traffic signal timings in real-time using camera feeds.',
-                skills: ['Python', 'PyTorch', 'Computer Vision'],
-                postedDate: '2025-11-20',
-                deadline: '2025-12-15',
-                status: 'Under Review',
-                submittedDate: '2025-11-25'
-            },
-            {
-                id: '4',
-                title: 'Data Science Intern',
-                type: 'Internship',
-                organization: 'DataMinds Corp',
-                description: 'Analyze large datasets to identify market trends. Proficiency in SQL and Pandas required.',
-                skills: ['Python', 'SQL', 'Pandas', 'Tableau'],
-                postedDate: '2025-11-22',
-                deadline: '2025-12-05',
-                status: 'Shortlisted',
-                submittedDate: '2025-11-28'
-            }
-        ],
-        past: [
-            {
-                id: '2',
-                title: 'Frontend Developer Intern',
-                type: 'Internship',
-                organization: 'TechFlow Solutions',
-                description: 'Work on our core product dashboard using React and Next.js.',
-                skills: ['React', 'Next.js', 'TypeScript', 'CSS'],
-                postedDate: '2025-10-15',
-                deadline: '2025-11-01',
-                status: 'Rejected',
-                submittedDate: '2025-10-20'
-            },
-            {
-                id: '3',
-                title: 'Library Management System',
-                type: 'Project',
-                organization: 'Central Library',
-                description: 'Build a web application to manage book issues and returns.',
-                skills: ['Node.js', 'MongoDB', 'Express'],
-                postedDate: '2025-09-01',
-                deadline: '2025-09-15',
-                status: 'Completed',
-                submittedDate: '2025-09-10'
-            }
-        ],
         skills: [
             { id: 's1', name: 'React', verified: true },
             { id: 's2', name: 'TypeScript', verified: true },
@@ -116,28 +69,102 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const token = localStorage.getItem('token');
+            if (token) {
+                setLoading(true);
+                try {
+                    const res = await fetch('http://127.0.0.1:8000/student/full-profile', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        // Map Skills
+                        const mappedSkills = data.skills.map((s: any) => ({
+                            id: s.id,
+                            name: s.name,
+                            verified: s.verification_status === 'Verified' || s.verification_status === 'Approved',
+                            verification_status: s.verification_status === 'Approved' ? 'Verified' : s.verification_status
+                        }));
+                        setSkills(mappedSkills);
 
-            // Set data from mock response
-            setAppliedOpportunities(mockApiResponse.applied);
-            setPastOpportunities(mockApiResponse.past);
-            setSkills(mockApiResponse.skills);
-            setProjects(mockApiResponse.projects);
-            setLoading(false);
+                        // Map Projects
+                        const mappedProjects = data.projects.map((p: any) => ({
+                            id: p.id,
+                            title: p.title,
+                            description: p.description,
+                            verified: p.is_verified || p.verification_status === 'Verified' || p.verification_status === 'Approved',
+                            verification_status: (p.verification_status === 'Approved' ? 'Verified' : p.verification_status) || (p.is_verified ? 'Verified' : 'Pending'),
+                            technologies: p.technologies || []
+                        }));
+                        setProjects(mappedProjects);
+                    }
+
+                    // Fetch Full Profile
+                    const profileResp = await fetch('http://127.0.0.1:8000/student/profile', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (profileResp.ok) {
+                        const data = await profileResp.json();
+                        setProfile(data);
+                    }
+
+                    // Fetch real applications from backend
+                    const appsResp = await fetch('http://127.0.0.1:8000/student/applications', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (appsResp.ok) {
+                        const apps = await appsResp.json();
+                        const active = apps.filter((a: any) => ['Applied', 'Shortlisted', 'Screening', 'Interview', 'Offer'].includes(a.status));
+                        const past = apps.filter((a: any) => ['Rejected', 'Selected', 'Completed'].includes(a.status));
+                        setAppliedOpportunities(active);
+                        setPastOpportunities(past);
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch dashboard data:", error);
+                } finally {
+                    setLoading(false);
+                }
+            }
         };
 
         fetchData();
     }, []);
 
-    const updateSkills = (newSkillNames: string[]) => {
-        // In a real app, this would be an API call
-        const updatedSkills = newSkillNames.map((name, idx) => {
-            const existing = skills.find(s => s.name === name);
-            return existing || { id: `new-${idx}`, name, verified: false };
-        });
-        setSkills(updatedSkills);
+    const updateSkills = async (newSkillNames: string[]) => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const currentNames = skills.map(s => s.name);
+        const toAdd = newSkillNames.filter(n => !currentNames.includes(n));
+
+        for (const name of toAdd) {
+            try {
+                const res = await fetch('http://127.0.0.1:8000/student/skills', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name })
+                });
+
+                if (res.ok) {
+                    // Update local state optimistically or refetch
+                    const saved = await res.json();
+                    // The response is the full StudentSkills object or just the new skill?
+                    // My endpoint returns StudentSkills object (list of all skills).
+                    const newSkillList = saved.skills.map((s: any) => ({
+                        id: s.id,
+                        name: s.name,
+                        verified: s.verification_status === 'Verified',
+                        verification_status: s.verification_status
+                    }));
+                    setSkills(newSkillList);
+                }
+            } catch (e) {
+                console.error("Failed to add skill", name, e);
+            }
+        }
     };
 
     if (loading) {
@@ -193,6 +220,24 @@ export default function DashboardPage() {
                             Here's an overview of your profile and applications.
                         </p>
                     </div>
+
+                    <div style={{ marginLeft: 'auto' }}>
+                        <Button
+                            variant="filled"
+                            style={{
+                                background: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)',
+                                padding: '12px 24px',
+                                borderRadius: '16px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                boxShadow: '0 10px 25px rgba(126, 34, 206, 0.3)'
+                            }}
+                            onClick={() => setIsResumeModalOpen(true)}
+                        >
+                            <span>✨ View AI Resume</span>
+                        </Button>
+                    </div>
                 </header>
             </ScrollReveal>
 
@@ -220,7 +265,7 @@ export default function DashboardPage() {
                                 {skills.map(skill => (
                                     <div
                                         key={skill.id}
-                                        title={skill.verified ? "Verified by Faculty" : "Pending Verification"}
+                                        title={skill.verification_status || "Pending"}
                                         style={{
                                             padding: '8px 16px',
                                             borderRadius: '24px',
@@ -229,14 +274,16 @@ export default function DashboardPage() {
                                             gap: '8px',
                                             fontSize: '1rem',
                                             fontWeight: 500,
-                                            background: skill.verified ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 193, 7, 0.1)',
-                                            border: `1px solid ${skill.verified ? '#4CAF50' : '#FFC107'}`,
+                                            background: skill.verification_status === 'Verified' ? 'rgba(76, 175, 80, 0.1)' : skill.verification_status === 'Rejected' ? 'rgba(244, 67, 54, 0.1)' : 'rgba(255, 193, 7, 0.1)',
+                                            border: `1px solid ${skill.verification_status === 'Verified' ? '#4CAF50' : skill.verification_status === 'Rejected' ? '#F44336' : '#FFC107'}`,
                                             color: 'var(--md-sys-color-on-surface)'
                                         }}
                                     >
                                         {skill.name}
-                                        {skill.verified ? (
+                                        {skill.verification_status === 'Verified' ? (
                                             <span style={{ color: '#4CAF50', fontSize: '1.1rem' }}>✓</span>
+                                        ) : skill.verification_status === 'Rejected' ? (
+                                            <span style={{ color: '#F44336', fontSize: '1.1rem' }}>✕</span>
                                         ) : (
                                             <span style={{ color: '#FFC107', fontSize: '1.1rem' }}>●</span>
                                         )}
@@ -264,18 +311,18 @@ export default function DashboardPage() {
                                 <Card key={project.id} variant="elevated" style={{ padding: '1.5rem', position: 'relative' }}>
                                     <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem' }}>
                                         <span
-                                            title={project.verified ? "Verified Project" : "Pending Verification"}
+                                            title={project.verification_status || "Pending"}
                                             style={{
                                                 fontSize: '0.8rem',
                                                 padding: '4px 10px',
                                                 borderRadius: '8px',
                                                 fontWeight: 600,
-                                                background: project.verified ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 193, 7, 0.1)',
-                                                border: `1px solid ${project.verified ? '#4CAF50' : '#FFC107'}`,
-                                                color: project.verified ? '#2E7D32' : '#F57F17'
+                                                background: project.verification_status === 'Verified' ? 'rgba(76, 175, 80, 0.1)' : project.verification_status === 'Rejected' ? 'rgba(244, 67, 54, 0.1)' : 'rgba(255, 193, 7, 0.1)',
+                                                border: `1px solid ${project.verification_status === 'Verified' ? '#4CAF50' : project.verification_status === 'Rejected' ? '#F44336' : '#FFC107'}`,
+                                                color: project.verification_status === 'Verified' ? '#2E7D32' : project.verification_status === 'Rejected' ? '#C62828' : '#F57F17'
                                             }}
                                         >
-                                            {project.verified ? 'Verified' : 'Pending'}
+                                            {project.verification_status || 'Pending'}
                                         </span>
                                     </div>
                                     <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem', paddingRight: '5rem' }}>{project.title}</h3>
@@ -320,7 +367,16 @@ export default function DashboardPage() {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
                                         <div style={{ textAlign: 'right' }}>
                                             <span style={{ display: 'block', fontSize: '0.875rem', color: 'var(--md-sys-color-secondary)' }}>Status</span>
-                                            <span style={{ fontWeight: 600, color: opp.status === 'Shortlisted' ? '#4CAF50' : 'var(--md-sys-color-primary)' }}>{opp.status}</span>
+                                            <span style={{
+                                                fontWeight: 600,
+                                                color: (opp.status === 'Shortlisted' || opp.status === 'Selected' || opp.status === 'Offer')
+                                                    ? '#4CAF50'
+                                                    : (opp.status === 'Screening' || opp.status === 'Interview')
+                                                        ? 'var(--md-sys-color-tertiary)'
+                                                        : 'var(--md-sys-color-primary)'
+                                            }}>
+                                                {opp.status}
+                                            </span>
                                         </div>
                                         <Button variant="glass" style={{ pointerEvents: 'auto' }}>View Status</Button>
                                     </div>
@@ -350,8 +406,8 @@ export default function DashboardPage() {
                                 <Card variant="elevated" style={{ height: '100%', pointerEvents: 'none', position: 'relative', overflow: 'hidden' }}>
                                     <div style={{
                                         position: 'absolute', top: 0, right: 0, padding: '4px 12px',
-                                        background: opp.status === 'Completed' ? '#E8F5E9' : '#FFEBEE',
-                                        color: opp.status === 'Completed' ? '#2E7D32' : '#C62828',
+                                        background: (opp.status === 'Completed' || opp.status === 'Selected') ? '#E8F5E9' : opp.status === 'Rejected' ? '#FFEBEE' : '#F3F4F6',
+                                        color: (opp.status === 'Completed' || opp.status === 'Selected') ? '#2E7D32' : opp.status === 'Rejected' ? '#C62828' : '#374151',
                                         borderBottomLeftRadius: '12px', fontSize: '0.8rem', fontWeight: 600
                                     }}>
                                         {opp.status}
@@ -468,10 +524,24 @@ export default function DashboardPage() {
 
                                     {/* Status Section for Past Opps */}
                                     {selectedId.startsWith('past') && (
-                                        <div style={{ marginBottom: '2rem', padding: '1rem', background: opp.status === 'Completed' ? '#E8F5E9' : '#FFEBEE', borderRadius: '12px' }}>
+                                        <div style={{
+                                            marginBottom: '2rem',
+                                            padding: '1rem',
+                                            background: (opp.status === 'Completed' || opp.status === 'Selected') ? '#E8F5E9' : opp.status === 'Rejected' ? '#FFEBEE' : '#F3F4F6',
+                                            borderRadius: '12px'
+                                        }}>
                                             <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', fontWeight: 600 }}>Outcome</h3>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                                <span style={{ fontWeight: 600, color: opp.status === 'Completed' ? '#2E7D32' : '#C62828' }}>{opp.status}</span>
+                                                <span style={{
+                                                    fontWeight: 600,
+                                                    color: (opp.status === 'Completed' || opp.status === 'Selected' || opp.status === 'Offer' || opp.status === 'Shortlisted')
+                                                        ? '#2E7D32'
+                                                        : (opp.status === 'Screening' || opp.status === 'Interview')
+                                                            ? 'var(--md-sys-color-tertiary)'
+                                                            : opp.status === 'Rejected' ? '#C62828' : '#374151'
+                                                }}>
+                                                    {opp.status}
+                                                </span>
                                                 <span style={{ color: 'var(--md-sys-color-secondary)', fontSize: '0.9rem' }}>- Closed on {new Date(opp.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                             </div>
                                         </div>
@@ -513,6 +583,22 @@ export default function DashboardPage() {
                 currentSkills={skills.map(s => s.name)}
                 onUpdate={updateSkills}
             />
+
+            {profile && (
+                <ResumeModal
+                    isOpen={isResumeModalOpen}
+                    onClose={() => setIsResumeModalOpen(false)}
+                    data={{
+                        name: user?.full_name || 'Student',
+                        email: user?.email || '',
+                        college: profile.college || 'University',
+                        degree: profile.degree || 'B.Tech',
+                        branch: profile.branch || 'CSE',
+                        skills: skills.map(s => s.name),
+                        projects: projects.map(p => ({ title: p.title, description: p.description }))
+                    }}
+                />
+            )}
         </main>
     );
 }

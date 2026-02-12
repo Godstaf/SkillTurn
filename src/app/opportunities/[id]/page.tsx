@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { GlassContainer } from "@/components/ui/GlassContainer";
+import { OpportunityActions } from "@/components/OpportunityActions";
 import { opportunities } from "@/data/opportunities";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -8,7 +9,33 @@ import { notFound } from "next/navigation";
 // This is a server component
 export default async function OpportunityDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const opportunity = opportunities.find((opp) => opp.id === id);
+
+    // Attempt to fetch from backend
+    let opportunity: any = null;
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/opportunities/${id}`, { cache: 'no-store' });
+        if (response.ok) {
+            const data = await response.json();
+            opportunity = {
+                id: data.id || data._id,
+                title: data.title,
+                type: data.type === 'Job' ? 'Internship' : data.type,
+                organization: data.organization,
+                description: data.description,
+                skills: data.skills || [],
+                postedDate: new Date(data.posted_date).toISOString().split('T')[0],
+                deadline: data.deadline || 'No deadline'
+            };
+        }
+    } catch (e) {
+        console.error("Failed to fetch opportunity", e);
+    }
+
+    // Fallback to static data if not found in backend (for demo/legacy items)
+    if (!opportunity) {
+        opportunity = opportunities.find((opp) => opp.id === id);
+    }
+
 
     if (!opportunity) {
         notFound();
@@ -63,7 +90,7 @@ export default async function OpportunityDetailsPage({ params }: { params: Promi
                 <section style={{ marginBottom: '3rem' }}>
                     <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--md-sys-color-on-surface)' }}>Required Skills</h3>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                        {opportunity.skills.map(skill => (
+                        {opportunity.skills.map((skill: string) => (
                             <span key={skill} style={{
                                 fontSize: '1rem',
                                 padding: '6px 16px',
@@ -77,10 +104,7 @@ export default async function OpportunityDetailsPage({ params }: { params: Promi
                     </div>
                 </section>
 
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-                    <Button variant="outlined">Save for Later</Button>
-                    <Button variant="filled">Apply Now</Button>
-                </div>
+                <OpportunityActions opportunityId={opportunity.id} />
             </GlassContainer>
         </main>
     );

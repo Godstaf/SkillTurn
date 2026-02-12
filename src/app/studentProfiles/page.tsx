@@ -9,6 +9,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 // --- Mock Data ---
 
+interface StudentProject {
+    id: string;
+    title: string;
+    description: string;
+    project_link: string;
+    technologies: string[];
+    is_verified: boolean;
+    verification_status: 'Pending' | 'Verified' | 'Rejected';
+    verified_by: string | null;
+}
+
 interface StudentProfile {
     id: string;
     name: string;
@@ -17,6 +28,7 @@ interface StudentProfile {
     year: string;
     cgpa: number;
     skills: string[];
+    projects?: StudentProject[];
     email: string;
     phone: string;
     location: string;
@@ -52,56 +64,7 @@ const SKILLS_BY_BRANCH: Record<string, string[]> = {
     "Civil Engineering": ["AutoCAD", "Structural Analysis", "Revit", "Staad Pro", "Surveying"],
 };
 
-const MOCK_STUDENTS: StudentProfile[] = [
-    {
-        id: '1', name: 'Aarav Patel', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'TE',
-        cgpa: 9.2, skills: ['React', 'Node.js', 'Python'], email: 'aarav.p@example.com', phone: '+91 98765 43210',
-        location: 'Pune, India', bio: 'Passionate full-stack developer looking for internship opportunities.',
-        avatarInitials: 'AP', resumeLink: 'https://drive.google.com/file/d/aarav_resume/view'
-    },
-    {
-        id: '2', name: 'Ishita Sharma', college: 'Global Engineering College', branch: 'Information Technology', year: 'BE',
-        cgpa: 8.9, skills: ['Java', 'Spring Boot', 'SQL'], email: 'ishita.s@example.com', phone: '+91 98765 43211',
-        location: 'Mumbai, India', bio: 'Aspiring software engineer with a strong foundation in backend systems.',
-        avatarInitials: 'IS', resumeLink: 'https://drive.google.com/file/d/ishita_resume/view'
-    },
-    {
-        id: '3', name: 'Rohan Gupta', college: 'City University', branch: 'Electronics & Telecommunication', year: 'TE',
-        cgpa: 7.8, skills: ['Embedded C', 'IoT', 'Arduino'], email: 'rohan.g@example.com', phone: '+91 98765 43212',
-        location: 'Bangalore, India', bio: 'IoT enthusiast working on smart home automation projects.',
-        avatarInitials: 'RG', resumeLink: 'https://drive.google.com/file/d/rohan_resume/view'
-    },
-    {
-        id: '4', name: 'Meera Singh', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'SE',
-        cgpa: 8.5, skills: ['C++', 'Data Structures', 'Algorithms'], email: 'meera.s@example.com', phone: '+91 98765 43213',
-        location: 'Pune, India', bio: 'Competitive programmer and algorithm lover.',
-        avatarInitials: 'MS', resumeLink: 'https://drive.google.com/file/d/meera_resume/view'
-    },
-    {
-        id: '5', name: 'Vikram Malhotra', college: 'State Technical Institute', branch: 'Mechanical Engineering', year: 'BE',
-        cgpa: 7.2, skills: ['AutoCAD', 'SolidWorks', 'Thermodynamics'], email: 'vikram.m@example.com', phone: '+91 98765 43214',
-        location: 'Delhi, India', bio: 'Mechanical engineer interested in automotive design.',
-        avatarInitials: 'VM', resumeLink: 'https://drive.google.com/file/d/vikram_resume/view'
-    },
-    {
-        id: '6', name: 'Ananya Desai', college: 'Global Engineering College', branch: 'Information Technology', year: 'TE',
-        cgpa: 9.5, skills: ['Machine Learning', 'Python', 'TensorFlow'], email: 'ananya.d@example.com', phone: '+91 98765 43215',
-        location: 'Hyderabad, India', bio: 'AI/ML researcher working on NLP projects.',
-        avatarInitials: 'AD', resumeLink: 'https://drive.google.com/file/d/ananya_resume/view'
-    },
-    {
-        id: '7', name: 'Kabir Joshi', college: 'City University', branch: 'Civil Engineering', year: 'SE',
-        cgpa: 6.8, skills: ['AutoCAD', 'Structural Analysis'], email: 'kabir.j@example.com', phone: '+91 98765 43216',
-        location: 'Chennai, India', bio: 'Future civil engineer.',
-        avatarInitials: 'KJ', resumeLink: 'https://drive.google.com/file/d/kabir_resume/view'
-    },
-    {
-        id: '8', name: 'Sana Khan', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'BE',
-        cgpa: 9.8, skills: ['Cloud Computing', 'AWS', 'Docker'], email: 'sana.k@example.com', phone: '+91 98765 43217',
-        location: 'Pune, India', bio: 'Cloud native developer.',
-        avatarInitials: 'SK', resumeLink: 'https://drive.google.com/file/d/sana_resume/view'
-    }
-];
+const MOCK_STUDENTS: StudentProfile[] = []; // Fetched from API
 
 
 export default function StudentProfilesPage() {
@@ -109,7 +72,30 @@ export default function StudentProfilesPage() {
     const searchParams = useSearchParams();
     const collegeParam = searchParams.get('college');
 
-    const [students] = useState<StudentProfile[]>(MOCK_STUDENTS);
+    const [students, setStudents] = useState<StudentProfile[]>(MOCK_STUDENTS);
+
+    // Fetch Students
+    useEffect(() => {
+        const fetchStudents = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            try {
+                const res = await fetch('http://127.0.0.1:8000/students', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setStudents(data);
+                } else {
+                    console.error("Failed to fetch students");
+                }
+            } catch (err) {
+                console.error("Error fetching students:", err);
+            }
+        };
+        fetchStudents();
+    }, []);
     const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
 
     // Filters State
@@ -543,15 +529,94 @@ export default function StudentProfilesPage() {
                                             </a>
                                         </div>
 
+                                        {/* Projects Section */}
+                                        {selectedStudent.projects && selectedStudent.projects.length > 0 && (
+                                            <div style={{ marginTop: '0.5rem' }}>
+                                                <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.75rem', color: 'var(--md-sys-color-secondary)' }}>PROJECTS</h3>
+                                                <div style={{ display: 'grid', gap: '0.75rem' }}>
+                                                    {selectedStudent.projects.map(project => (
+                                                        <div key={project.id} style={{
+                                                            padding: '1rem 1.25rem',
+                                                            borderRadius: '12px',
+                                                            border: '1px solid var(--md-sys-color-outline-variant)',
+                                                            background: 'var(--md-sys-color-surface-container-low)',
+                                                        }}>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                                <h4 style={{ fontSize: '1rem', fontWeight: 600, margin: 0 }}>{project.title}</h4>
+                                                                {project.is_verified ? (
+                                                                    <span style={{
+                                                                        fontSize: '0.75rem',
+                                                                        padding: '3px 10px',
+                                                                        borderRadius: '12px',
+                                                                        fontWeight: 600,
+                                                                        background: 'rgba(76, 175, 80, 0.15)',
+                                                                        color: '#2E7D32',
+                                                                        border: '1px solid #4CAF50',
+                                                                    }}>
+                                                                        ✓ Verified by {project.verified_by || 'Faculty'}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span style={{
+                                                                        fontSize: '0.75rem',
+                                                                        padding: '3px 10px',
+                                                                        borderRadius: '12px',
+                                                                        fontWeight: 600,
+                                                                        background: 'rgba(158, 158, 158, 0.15)',
+                                                                        color: '#757575',
+                                                                        border: '1px solid #BDBDBD',
+                                                                    }}>
+                                                                        Pending Verification
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            {
+                                                                project.description && (
+                                                                    <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-on-surface-variant)', margin: '0 0 0.5rem 0', lineHeight: 1.4 }}>
+                                                                        {project.description}
+                                                                    </p>
+                                                                )
+                                                            }
+                                                            {
+                                                                project.technologies && project.technologies.length > 0 && (
+                                                                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+                                                                        {project.technologies.map(tech => (
+                                                                            <span key={tech} style={{
+                                                                                fontSize: '0.75rem',
+                                                                                color: 'var(--md-sys-color-outline)',
+                                                                                background: 'var(--md-sys-color-surface-variant)',
+                                                                                padding: '2px 8px',
+                                                                                borderRadius: '6px'
+                                                                            }}>
+                                                                                {tech}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
+                                                                )
+                                                            }
+                                                            {
+                                                                project.project_link && (
+                                                                    <a href={project.project_link} target="_blank" rel="noopener noreferrer"
+                                                                        style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-primary)', textDecoration: 'none' }}>
+                                                                        🔗 View Project ↗
+                                                                    </a>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
                                     </div>
                                 </div>
                             </motion.div>
                         </div>
                     </>
-                )}
-            </AnimatePresence>
+                )
+                }
+            </AnimatePresence >
 
-        </main>
+        </main >
     );
 }
 

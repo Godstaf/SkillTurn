@@ -6,11 +6,13 @@ import { Card } from "@/components/ui/Card";
 import { GlassContainer } from "@/components/ui/GlassContainer";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Student } from "@/context/AuthContext";
 
 // Extended type for Dashboard purposes (Student + Application Request Info)
 interface StudentApplication extends Student {
+  studentId?: string; // Mapped from backend ID
+
   requestId: string;
   category: 'Internship' | 'Project' | 'Skills';
   shortDescription: string;
@@ -34,52 +36,69 @@ interface StudentApplication extends Student {
   certificationUrl?: string;
 }
 
-const INITIAL_APPLICATIONS: StudentApplication[] = [
-  {
-    id: '1', username: 'aaravp', email: 'aarav@example.com', full_name: 'Aarav Patel', role: 'student', is_active: true, is_verified: true, created_at: '2023-01-01',
-    collegeName: 'PICT', degree: 'B.E.', branch: 'Computer Engineering', yearsOfStudy: 3, expectedGraduationYear: 2026, rollNumber: '31101', collegeEmail: 'aarav.p@pict.edu',
+interface PendingProject {
+  project_id: string;
+  student_id: string;
+  student_name: string;
+  student_roll: string;
+  student_branch: string;
+  title: string;
+  description: string;
+  project_link: string;
+  technologies: string[];
+  created_at: string | null;
+}
 
-    requestId: 'req1',
-    category: 'Internship',
-    shortDescription: 'Internship verification',
-    detailedDescription: 'Requesting verification for 6-month web development internship at TechCorp.',
-    documents: ['https://drive.google.com/file/d/abc123/view'],
-    internshipDomain: 'Web Development', companyName: 'TechCorp', duration: '6 Months',
-    approvalStatus: 'Pending'
-  },
-  {
-    id: '2', username: 'ishitas', email: 'ishita@example.com', full_name: 'Ishita Sharma', role: 'student', is_active: true, is_verified: true, created_at: '2023-01-01',
-    collegeName: 'PICT', degree: 'B.E.', branch: 'Information Technology', yearsOfStudy: 4, expectedGraduationYear: 2025, rollNumber: '31102', collegeEmail: 'ishita.s@pict.edu',
-
-    requestId: 'req2',
-    category: 'Project',
-    shortDescription: 'Project completion approval',
-    detailedDescription: 'Requesting approval for completion of Smart Attendance System project using IoT and ML.',
-    documents: ['https://drive.google.com/file/d/def456/view'],
-    projectTitle: 'Smart Attendance System', projectDomain: 'IoT & Machine Learning', teamSize: 4,
-    approvalStatus: 'Approved'
-  },
-  {
-    id: '3', username: 'rohang', email: 'rohan@example.com', full_name: 'Rohan Gupta', role: 'student', is_active: true, is_verified: true, created_at: '2023-01-01',
-    collegeName: 'PICT', degree: 'B.E.', branch: 'EnTC', yearsOfStudy: 3, expectedGraduationYear: 2026, rollNumber: '31103', collegeEmail: 'rohan.g@pict.edu',
-
-    requestId: 'req3',
-    category: 'Skills',
-    shortDescription: 'AWS Cloud Practitioner certification',
-    detailedDescription: 'Requesting verification for AWS Cloud Practitioner certification completed via Coursera.',
-    documents: ['https://drive.google.com/file/d/ghi789/view'],
-    skillName: 'AWS Cloud Practitioner', proficiencyLevel: 'Intermediate', certificationUrl: 'https://www.credly.com/badges/example',
-    approvalStatus: 'Pending'
-  },
-];
+// Removed mock data
 
 export default function FacultyDashboardPage() {
-  const [applications, setApplications] = useState<StudentApplication[]>(INITIAL_APPLICATIONS);
+  const [applications, setApplications] = useState<StudentApplication[]>([]);
+  const [pendingProjects, setPendingProjects] = useState<PendingProject[]>([]);
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
   const [approvalFilter, setApprovalFilter] = useState<'Pending' | 'Approved' | 'Rejected'>('Pending');
   const [showAllStudents, setShowAllStudents] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [verifyingId, setVerifyingId] = useState<string | null>(null);
   const router = useRouter();
+
+  // Fetch Data
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+      try {
+        const [dashRes, pendingRes] = await Promise.all([
+          fetch('http://127.0.0.1:8000/faculty/dashboard', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }),
+          fetch('http://127.0.0.1:8000/faculty/pending-projects', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          })
+        ]);
+
+        if (dashRes.ok) {
+          const data = await dashRes.json();
+          const mapped = data.map((item: any) => ({
+            ...item,
+            id: item.requestId,
+            studentId: item.id
+          }));
+          setApplications(mapped);
+        }
+
+        if (pendingRes.ok) {
+          const pendingData = await pendingRes.json();
+          setPendingProjects(pendingData);
+        }
+      } catch (e) {
+        console.error("Failed to fetch dashboard", e);
+      }
+    };
+    fetchDashboard();
+  }, [router]);
 
   const totalApplications = applications.length;
   const pendingApprovals = applications.filter(s => s.approvalStatus === 'Pending').length;
@@ -91,8 +110,43 @@ export default function FacultyDashboardPage() {
   );
   const displayedApplications = showAllStudents ? filteredDirectory : filteredDirectory.slice(0, 6);
 
-  const handleApproval = (id: string, status: 'Approved' | 'Rejected') => {
-    setApplications(prev => prev.map(s => s.id === id ? { ...s, approvalStatus: status } : s));
+  const handleApproval = async (id: string, status: 'Approved' | 'Rejected') => {
+    const app = applications.find(s => s.id === id);
+    if (!app || !app.studentId) return;
+
+    const token = localStorage.getItem('token');
+    let endpoint: string;
+    let method: string;
+
+    if (app.category === 'Skills') {
+      endpoint = `http://127.0.0.1:8000/faculty/verify/skill/${app.studentId}/${app.requestId}?status=${status}`;
+      method = 'POST';
+    } else {
+      endpoint = `http://127.0.0.1:8000/faculty/verify-project/${app.requestId}`;
+      method = 'PATCH';
+    }
+
+    try {
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (res.ok) {
+        // Backend maps Approved→Verified, so update local state accordingly
+        const displayStatus = status === 'Approved' ? 'Approved' : 'Rejected';
+        setApplications(prev => prev.map(s => s.id === id ? { ...s, approvalStatus: displayStatus } : s));
+        // Also remove from pending list if it was a project
+        if (app.category === 'Project') {
+          setPendingProjects(prev => prev.filter(p => p.project_id !== app.requestId));
+        }
+      } else {
+        const err = await res.json().catch(() => null);
+        alert(err?.detail || 'Verification failed');
+      }
+    } catch (e) {
+      console.error("Verification failed", e);
+    }
   };
 
   const selectedApp = applications.find(s => s.id === selectedAppId);
@@ -133,6 +187,99 @@ export default function FacultyDashboardPage() {
           </Card>
         </section>
       </ScrollReveal>
+
+      {/* Pending Verifications Section */}
+      {pendingProjects.length > 0 && (
+        <ScrollReveal width="100%" delay={0.15}>
+          <section style={{ marginBottom: '4rem' }}>
+            <h2 style={{ fontSize: '1.75rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style={{ width: '8px', height: '32px', background: 'var(--md-sys-color-error)', borderRadius: '4px' }}></span>
+              Pending Verifications
+              <span style={{
+                fontSize: '0.9rem', fontWeight: 600, padding: '4px 12px', borderRadius: '16px',
+                background: 'rgba(244, 67, 54, 0.1)', color: 'var(--md-sys-color-error)'
+              }}>
+                {pendingProjects.length}
+              </span>
+            </h2>
+
+            <div style={{ display: 'grid', gap: '1rem' }}>
+              {pendingProjects.map(proj => (
+                <motion.div key={proj.project_id} layout>
+                  <GlassContainer style={{
+                    display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+                    padding: '1.25rem 1.5rem', flexWrap: 'wrap', gap: '1rem'
+                  }}>
+                    <div style={{ flex: 1, minWidth: '250px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.4rem' }}>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', margin: 0 }}>{proj.title}</h3>
+                        <span style={{
+                          fontSize: '0.7rem', padding: '2px 8px', borderRadius: '12px', fontWeight: 600,
+                          background: 'rgba(255, 193, 7, 0.15)', color: '#F57F17', border: '1px solid #FFC107'
+                        }}>
+                          ⏳ Pending
+                        </span>
+                      </div>
+                      <p style={{ fontSize: '0.95rem', color: 'var(--md-sys-color-secondary)', marginBottom: '0.3rem' }}>
+                        👤 {proj.student_name} • {proj.student_roll} • {proj.student_branch}
+                      </p>
+                      {proj.description && (
+                        <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-on-surface-variant)', marginBottom: '0.4rem', lineHeight: 1.4 }}>
+                          {proj.description}
+                        </p>
+                      )}
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        {proj.technologies.map(tech => (
+                          <span key={tech} style={{
+                            fontSize: '0.75rem', padding: '2px 8px', borderRadius: '6px',
+                            background: 'var(--md-sys-color-surface-variant)', color: 'var(--md-sys-color-outline)'
+                          }}>
+                            {tech}
+                          </span>
+                        ))}
+                        {proj.project_link && (
+                          <a href={proj.project_link} target="_blank" rel="noopener noreferrer"
+                            style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-primary)', textDecoration: 'none', marginLeft: '0.25rem' }}>
+                            🔗 View Project ↗
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignSelf: 'center' }}>
+                      <Button
+                        variant="filled"
+                        onClick={async () => {
+                          setVerifyingId(proj.project_id);
+                          const token = localStorage.getItem('token');
+                          try {
+                            const res = await fetch(
+                              `http://127.0.0.1:8000/faculty/verify-project/${proj.project_id}`,
+                              { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } }
+                            );
+                            if (res.ok) {
+                              setPendingProjects(prev => prev.filter(p => p.project_id !== proj.project_id));
+                            } else {
+                              const err = await res.json().catch(() => null);
+                              alert(err?.detail || 'Verification failed');
+                            }
+                          } catch (e) {
+                            console.error('Verify failed', e);
+                          } finally {
+                            setVerifyingId(null);
+                          }
+                        }}
+                        style={{ minWidth: '100px' }}
+                      >
+                        {verifyingId === proj.project_id ? '...' : '✓ Verify'}
+                      </Button>
+                    </div>
+                  </GlassContainer>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        </ScrollReveal>
+      )}
 
       {/* Approval Section */}
       <ScrollReveal width="100%" delay={0.2}>

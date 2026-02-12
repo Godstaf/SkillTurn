@@ -114,7 +114,7 @@ export default function StudentFormPage() {
         throw new Error("No authentication token found. Please login.");
       }
 
-      const response = await fetch("http://localhost:8000/student/profile", {
+      const response = await fetch("http://127.0.0.1:8000/student/profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

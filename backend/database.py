@@ -5,7 +5,7 @@ import certifi
 # You should move this to a .env file for security
 MONGO_DETAILS = "mongodb+srv://chaurasiakanishk666_db_user:LJa6SC9xjAJARmLi@internportal.wkf9jx4.mongodb.net/" 
 
-client = MongoClient(MONGO_DETAILS, tlsCAFile=certifi.where())
+client = MongoClient(MONGO_DETAILS, tlsCAFile=certifi.where(), serverSelectionTimeoutMS=10000)
 
 # --- Defining 4 Separate Databases ---
 # 1. Admin DB: Authentication, User Accounts, System Config
