@@ -28,7 +28,8 @@ enrollments_collection = faculty_db.get_collection("enrollments") # Enrollments 
 
 # 4. Recruiter DB: Company Profiles, Jobs, Applications
 recruiter_db = client.recruiter_panel_db
-company_profiles_collection = recruiter_db.get_collection("profiles")
+recruiter_profiles_collection = recruiter_db.get_collection("recruiter_profiles") # Renamed from profiles for clarity
+companies_collection = recruiter_db.get_collection("companies") # NEW: Company entities
 jobs_collection = recruiter_db.get_collection("jobs")
 applications_collection = recruiter_db.get_collection("applications")
 assignments_collection = faculty_db.get_collection("assignments") # Assignments belong to courses (faculty domain)

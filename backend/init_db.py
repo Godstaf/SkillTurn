@@ -5,7 +5,9 @@ from database import (
     student_profiles_collection, 
     student_skills_collection,
     faculty_profiles_collection, 
-    company_profiles_collection
+    faculty_profiles_collection, 
+    recruiter_profiles_collection,
+    companies_collection
 )
 from login import get_password_hash
 
@@ -131,12 +133,28 @@ def init_db():
         recruiter_uid = str(recruiter_user["_id"])
         print("Recruiter user already exists.")
 
-    recruiter_profile = company_profiles_collection.find_one({"user_id": recruiter_uid})
+    recruiter_profile = recruiter_profiles_collection.find_one({"user_id": recruiter_uid})
     if not recruiter_profile:
         print("Creating sample recruiter profile...")
-        company_profiles_collection.insert_one({
+        
+        # Create company first
+        company_name = "Tech Corp"
+        company = companies_collection.find_one({"name": company_name})
+        if not company:
+             res = companies_collection.insert_one({
+                "name": company_name,
+                "website": "http://techcorp.com",
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+             })
+             company_id = str(res.inserted_id)
+        else:
+             company_id = str(company["_id"])
+
+        recruiter_profiles_collection.insert_one({
             "user_id": recruiter_uid,
-            "company_name": "Tech Corp",
+            "company_id": company_id,
+            "full_name": "Jane Recruiter",
             "designation": "Senior HR",
             "work_email": "jane@techcorp.com",
             "created_at": datetime.utcnow(),
