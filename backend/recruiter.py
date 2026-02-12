@@ -46,6 +46,7 @@ from CRUD import (
     get_student_projects,
     get_user_by_id
 )
+from ai_utils import calculate_match_score
 
 router = APIRouter()
 
@@ -160,7 +161,6 @@ async def get_dashboard(current_user: User = Depends(get_current_active_user)):
         student_name = "Unknown Student"
         student_email = "N/A"
         avatar_initials = "??"
-        
         if student_user:
             student_name = student_user.full_name or student_user.username
             student_email = student_user.email or "N/A"
@@ -168,19 +168,36 @@ async def get_dashboard(current_user: User = Depends(get_current_active_user)):
             parts = student_name.split()
             avatar_initials = "".join([p[0].upper() for p in parts[:2]]) if parts else "??"
         
+        # 4. Calculate Dynamic Match Score
+        # Construct Candidate Text
+        candidate_text = f"Name: {student_name}. "
+        if student_profile:
+            candidate_text += f"Education: {student_profile.degree} in {student_profile.branch} from {student_profile.college}. "
+        if student_skills:
+            candidate_text += f"Skills: {', '.join([s.name for s in student_skills.skills])}. "
+        
+        # Get Job Description
+        job_opp = next((o for o in opportunities if o.id == app.job_id), None)
+        job_text = job_opp.description if job_opp else ""
+        if job_opp and job_opp.skills:
+             job_text += f" Required Skills: {', '.join(job_opp.skills)}"
+        
+        # Calculate Score
+        final_match_score = calculate_match_score(candidate_text, job_text) if job_text else 50.0
+
         candidates_data.append({
             "id": app.id,
             "studentId": app.user_id,
             "name": student_name,
             "email": student_email,
-            "appliedRole": next((o.title for o in opportunities if o.id == app.job_id), "Unknown"),
+            "appliedRole": job_opp.title if job_opp else "Unknown",
             "status": app.status.capitalize() if app.status != "applied" else "New",
             "institution": student_profile.college if student_profile else "Unknown",
             "program": student_profile.degree if student_profile else "Unknown",
             "branch": student_profile.branch if student_profile else "Unknown",
             "skills": [s.name for s in student_skills.skills] if student_skills else [],
             "resumeLink": "#",
-            "matchScore": 85,
+            "matchScore": final_match_score,
             "appliedDate": app.applied_at.strftime("%Y-%m-%d"),
             "avatarInitials": avatar_initials
         })
