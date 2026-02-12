@@ -8,7 +8,11 @@ from database import (
     student_projects_collection,
     saved_jobs_collection,
     faculty_profiles_collection, 
-    company_profiles_collection,
+    student_projects_collection,
+    saved_jobs_collection,
+    faculty_profiles_collection, 
+    recruiter_profiles_collection, # Renamed
+    companies_collection, # New
     jobs_collection,
     applications_collection,
     courses_collection, 
@@ -69,17 +73,41 @@ class FacultyProfile(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+class Company(BaseModel):
+    id: Optional[str] = Field(None, alias="_id")
+    name: str
+    website: Optional[str] = None
+    industry: Optional[str] = None
+    company_size: Optional[str] = None
+    description: Optional[str] = None
+    logo_url: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
 class RecruiterProfile(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
     user_id: str   # ref users._id
-    company_name: str
+    company_id: str # ref companies._id
+    full_name: str
     designation: Optional[str] = None
     work_email: Optional[str] = None
-    company_website: Optional[str] = None
-    hiring_domain: Optional[str] = None
     linkedin_profile: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+# For flat frontend payload
+class RecruiterRegistrationRequest(BaseModel):
+    user_id: str
+    full_name: str
+    designation: str
+    work_email: str
+    linkedin_profile: Optional[str] = None
+    # Company details
+    company_id: Optional[str] = None # Added for explicit linking
+    company_name: str
+    company_website: Optional[str] = None
+    company_size: Optional[str] = None
+    hiring_domain: Optional[str] = None
 
 # --- Student Extra Details ---
 
@@ -268,11 +296,29 @@ def retrieve_courses():
     return retrieve_all_items(courses_collection, Course)
 
 # 4. Recruiter Panel
+# 4. Recruiter Panel
+
+def create_company(company: Company):
+    # Check if company exists by name (simple check)
+    existing = companies_collection.find_one({"name": company.name})
+    if existing:
+        return fix_mongo_id(existing)
+    return create_item(companies_collection, company)
+
+def get_company_by_name(name: str):
+    company = companies_collection.find_one({"name": name})
+    if company:
+        return Company(**fix_mongo_id(company))
+    return None
+
+def get_company_by_id(company_id: str):
+    return retrieve_item(companies_collection, company_id, Company)
+
 def create_recruiter_profile(profile: RecruiterProfile):
-    return create_item(company_profiles_collection, profile)
+    return create_item(recruiter_profiles_collection, profile)
 
 def get_recruiter_profile(user_id: str):
-    profile = company_profiles_collection.find_one({"user_id": user_id})
+    profile = recruiter_profiles_collection.find_one({"user_id": user_id})
     if profile:
         return RecruiterProfile(**fix_mongo_id(profile))
     return None

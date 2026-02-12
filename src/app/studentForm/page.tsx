@@ -121,12 +121,12 @@ export default function StudentFormPage() {
           "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
-          user_id: "temp",
+          user_id: "temp", // Required by Pydantic, overwritten by backend
           college: formData.collegeName,
           degree: formData.degree,
           branch: formData.branch,
           year_of_study: parseInt(formData.yearOfStudy) || 1,
-          expected_graduation_year: parseInt(formData.expectedGraduationYear) || new Date().getFullYear(),
+          expected_graduation_year: parseInt(formData.expectedGraduationYear),
           roll_no: formData.rollNumber,
           college_email: formData.collegeEmail,
           gpa: 0.0,
@@ -134,15 +134,16 @@ export default function StudentFormPage() {
       });
 
       if (!response.ok) {
+        const errorData = await response.json();
         let errorMessage = "Failed to submit profile";
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.detail || errorMessage;
-        } catch {
-          // If JSON parsing fails, use a generic message or status text
-          errorMessage = `Failed to submit profile: ${response.statusText}`;
+        if (errorData.detail) {
+          if (Array.isArray(errorData.detail)) {
+            errorMessage = errorData.detail.map((err: any) => `${err.loc.join(".")}: ${err.msg}`).join("\n");
+          } else {
+            errorMessage = errorData.detail;
+          }
         }
-        alert(errorMessage);
+        throw new Error(errorMessage);
       }
 
       router.push("/dashboard");

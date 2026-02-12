@@ -8,6 +8,8 @@ import { GlassContainer } from "@/components/ui/GlassContainer";
 import { motion, AnimatePresence } from "framer-motion";
 import { JobFormModal, JobData } from "@/components/JobFormModal";
 
+import styles from "./PostedJobs.module.css";
+
 // --- Mock Data ---
 
 interface Job extends JobData {
@@ -92,11 +94,6 @@ export default function PostedJobsPage() {
 
             {/* Header */}
             <header style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2rem' }}>
-                <Link href="/recruiter_dashboard" style={{ textDecoration: 'none' }}>
-                    <Button variant="glass" style={{ alignSelf: 'flex-start', paddingLeft: '0.75rem' }}>
-                        ← Back to Dashboard
-                    </Button>
-                </Link>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
@@ -109,26 +106,17 @@ export default function PostedJobsPage() {
             </header>
 
             {/* Tabs */}
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--md-sys-color-outline-variant)' }}>
+            <div className={styles.tabsContainer}>
                 {(['All', 'Active', 'Expired'] as const).map(tab => (
-                    <button
+                    <motion.div
                         key={tab}
+                        className={`${styles.tabButton} ${activeTab === tab ? styles.activeTab : ''}`}
                         onClick={() => setActiveTab(tab)}
-                        style={{
-                            padding: '0.75rem 1.5rem',
-                            background: 'none',
-                            border: 'none',
-                            borderBottom: activeTab === tab ? '3px solid var(--md-sys-color-primary)' : '3px solid transparent',
-                            color: activeTab === tab ? 'var(--md-sys-color-primary)' : 'var(--md-sys-color-secondary)',
-                            fontWeight: activeTab === tab ? 600 : 400,
-                            cursor: 'pointer',
-                            fontSize: '1rem',
-                            transition: 'all 0.2s',
-                            marginBottom: '-1px'
-                        }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                     >
                         {tab} ({jobs.filter(j => tab === 'All' || j.status === tab).length})
-                    </button>
+                    </motion.div>
                 ))}
             </div>
 
