@@ -165,6 +165,7 @@ export default function RecruiterDashboardPage() {
                     </div>
                     <div className={styles.actionButtonWrapper} style={{ display: 'flex', gap: '1rem' }}>
                         <Button variant="outlined" style={{ marginTop: '0.5rem' }} onClick={() => router.push('/studentProfiles')}>Search Candidates</Button>
+                        <Button variant="outlined" style={{ marginTop: '0.5rem' }} onClick={() => router.push('/recruiterAnalytics')}>📊 Job Analytics</Button>
                         <Button variant="filled" style={{ marginTop: '0.5rem' }} onClick={() => setShowJobModal(true)}>+ Post New Job</Button>
                     </div>
                 </div>

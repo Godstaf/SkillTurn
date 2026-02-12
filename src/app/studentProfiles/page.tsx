@@ -34,10 +34,10 @@ interface StudentProfile {
 }
 
 const COLLEGES = [
-    "TechFlow Institute of Technology",
-    "Global Engineering College",
-    "City University",
-    "State Technical Institute"
+    "IIIT Pune",
+    "COEP",
+    "PICT",
+    "VIT Pune"
 ];
 
 const BRANCHES = [
@@ -61,7 +61,7 @@ const SKILLS_BY_BRANCH: Record<string, string[]> = {
 
 const MOCK_STUDENTS: StudentProfile[] = [
     {
-        id: '1', name: 'Aarav Patel', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'Third Year',
+        id: '1', name: 'Aarav Patel', college: 'IIIT Pune', branch: 'Computer Engineering', year: 'Third Year',
         cgpa: 9.2, skills: ['React', 'Node.js', 'Python'], email: 'aarav.p@example.com', phone: '+91 98765 43210',
         location: 'Pune, India', bio: 'Passionate full-stack developer looking for internship opportunities.',
         avatarInitials: 'AP',
@@ -71,7 +71,7 @@ const MOCK_STUDENTS: StudentProfile[] = [
         ]
     },
     {
-        id: '2', name: 'Ishita Sharma', college: 'Global Engineering College', branch: 'Information Technology', year: 'Final Year',
+        id: '2', name: 'Ishita Sharma', college: 'COEP', branch: 'Information Technology', year: 'Final Year',
         cgpa: 8.9, skills: ['Java', 'Spring Boot', 'SQL'], email: 'ishita.s@example.com', phone: '+91 98765 43211',
         location: 'Mumbai, India', bio: 'Aspiring software engineer with a strong foundation in backend systems.',
         avatarInitials: 'IS',
@@ -80,7 +80,7 @@ const MOCK_STUDENTS: StudentProfile[] = [
         ]
     },
     {
-        id: '3', name: 'Rohan Gupta', college: 'City University', branch: 'Electronics & Telecommunication', year: 'Third Year',
+        id: '3', name: 'Rohan Gupta', college: 'PICT', branch: 'Electronics & Telecommunication', year: 'Third Year',
         cgpa: 7.8, skills: ['Embedded C', 'IoT', 'Arduino'], email: 'rohan.g@example.com', phone: '+91 98765 43212',
         location: 'Bangalore, India', bio: 'IoT enthusiast working on smart home automation projects.',
         avatarInitials: 'RG',
@@ -89,13 +89,13 @@ const MOCK_STUDENTS: StudentProfile[] = [
         ]
     },
     {
-        id: '4', name: 'Meera Singh', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'Second Year',
+        id: '4', name: 'Meera Singh', college: 'IIIT Pune', branch: 'Computer Engineering', year: 'Second Year',
         cgpa: 8.5, skills: ['C++', 'Data Structures', 'Algorithms'], email: 'meera.s@example.com', phone: '+91 98765 43213',
         location: 'Pune, India', bio: 'Competitive programmer and algorithm lover.',
         avatarInitials: 'MS'
     },
     {
-        id: '5', name: 'Vikram Malhotra', college: 'State Technical Institute', branch: 'Mechanical Engineering', year: 'Final Year',
+        id: '5', name: 'Vikram Malhotra', college: 'VIT Pune', branch: 'Mechanical Engineering', year: 'Final Year',
         cgpa: 7.2, skills: ['AutoCAD', 'SolidWorks', 'Thermodynamics'], email: 'vikram.m@example.com', phone: '+91 98765 43214',
         location: 'Delhi, India', bio: 'Mechanical engineer interested in automotive design.',
         avatarInitials: 'VM',
@@ -105,7 +105,7 @@ const MOCK_STUDENTS: StudentProfile[] = [
         ]
     },
     {
-        id: '6', name: 'Ananya Desai', college: 'Global Engineering College', branch: 'Information Technology', year: 'Third Year',
+        id: '6', name: 'Ananya Desai', college: 'COEP', branch: 'Information Technology', year: 'Third Year',
         cgpa: 9.5, skills: ['Machine Learning', 'Python', 'TensorFlow'], email: 'ananya.d@example.com', phone: '+91 98765 43215',
         location: 'Hyderabad, India', bio: 'AI/ML researcher working on NLP projects.',
         avatarInitials: 'AD',
@@ -114,13 +114,13 @@ const MOCK_STUDENTS: StudentProfile[] = [
         ]
     },
     {
-        id: '7', name: 'Kabir Joshi', college: 'City University', branch: 'Civil Engineering', year: 'Second Year',
+        id: '7', name: 'Kabir Joshi', college: 'PICT', branch: 'Civil Engineering', year: 'Second Year',
         cgpa: 6.8, skills: ['AutoCAD', 'Structural Analysis'], email: 'kabir.j@example.com', phone: '+91 98765 43216',
         location: 'Chennai, India', bio: 'Future civil engineer.',
         avatarInitials: 'KJ'
     },
     {
-        id: '8', name: 'Sana Khan', college: 'TechFlow Institute of Technology', branch: 'Computer Engineering', year: 'Final Year',
+        id: '8', name: 'Sana Khan', college: 'IIIT Pune', branch: 'Computer Engineering', year: 'Final Year',
         cgpa: 9.8, skills: ['Cloud Computing', 'AWS', 'Docker'], email: 'sana.k@example.com', phone: '+91 98765 43217',
         location: 'Pune, India', bio: 'Cloud native developer.',
         avatarInitials: 'SK',

@@ -951,6 +951,18 @@ function RecruiterDashboardPage() {
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                        variant: "outlined",
+                                        style: {
+                                            marginTop: '0.5rem'
+                                        },
+                                        onClick: ()=>router.push('/recruiterAnalytics'),
+                                        children: "📊 Job Analytics"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
+                                        lineNumber: 168,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                         variant: "filled",
                                         style: {
                                             marginTop: '0.5rem'
@@ -959,7 +971,7 @@ function RecruiterDashboardPage() {
                                         children: "+ Post New Job"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                        lineNumber: 168,
+                                        lineNumber: 169,
                                         columnNumber: 25
                                     }, this)
                                 ]
@@ -1003,7 +1015,7 @@ function RecruiterDashboardPage() {
                                     children: "Total Applications"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 177,
+                                    lineNumber: 178,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1015,7 +1027,7 @@ function RecruiterDashboardPage() {
                                     children: totalApplications
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 178,
+                                    lineNumber: 179,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1031,7 +1043,7 @@ function RecruiterDashboardPage() {
                                             children: "▲ 12%"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                            lineNumber: 180,
+                                            lineNumber: 181,
                                             columnNumber: 29
                                         }, this),
                                         " ",
@@ -1042,19 +1054,19 @@ function RecruiterDashboardPage() {
                                             children: "vs last week"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                            lineNumber: 180,
+                                            lineNumber: 181,
                                             columnNumber: 48
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 179,
+                                    lineNumber: 180,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                            lineNumber: 176,
+                            lineNumber: 177,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1069,7 +1081,7 @@ function RecruiterDashboardPage() {
                                     children: "Interviews Scheduled"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 184,
+                                    lineNumber: 185,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1081,7 +1093,7 @@ function RecruiterDashboardPage() {
                                     children: interviewsScheduled
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 185,
+                                    lineNumber: 186,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1092,13 +1104,13 @@ function RecruiterDashboardPage() {
                                     children: "4 today"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 186,
+                                    lineNumber: 187,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                            lineNumber: 183,
+                            lineNumber: 184,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1113,7 +1125,7 @@ function RecruiterDashboardPage() {
                                     children: "Active Positions"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 189,
+                                    lineNumber: 190,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1125,7 +1137,7 @@ function RecruiterDashboardPage() {
                                     children: activePositions
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 190,
+                                    lineNumber: 191,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1136,24 +1148,24 @@ function RecruiterDashboardPage() {
                                     children: "Expiring in 5 days: 1"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 191,
+                                    lineNumber: 192,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                            lineNumber: 188,
+                            lineNumber: 189,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                    lineNumber: 175,
+                    lineNumber: 176,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                lineNumber: 174,
+                lineNumber: 175,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1182,7 +1194,7 @@ function RecruiterDashboardPage() {
                                                 children: "Active Jobs"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                lineNumber: 203,
+                                                lineNumber: 204,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1196,13 +1208,13 @@ function RecruiterDashboardPage() {
                                                 children: "View All"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                lineNumber: 204,
+                                                lineNumber: 205,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                        lineNumber: 202,
+                                        lineNumber: 203,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1240,7 +1252,7 @@ function RecruiterDashboardPage() {
                                                                     children: job.title
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 221,
+                                                                    lineNumber: 222,
                                                                     columnNumber: 49
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1254,13 +1266,13 @@ function RecruiterDashboardPage() {
                                                                     children: job.type
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 222,
+                                                                    lineNumber: 223,
                                                                     columnNumber: 49
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 220,
+                                                            lineNumber: 221,
                                                             columnNumber: 45
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1276,7 +1288,7 @@ function RecruiterDashboardPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 226,
+                                                            lineNumber: 227,
                                                             columnNumber: 45
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1295,52 +1307,52 @@ function RecruiterDashboardPage() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 230,
+                                                                    lineNumber: 231,
                                                                     columnNumber: 49
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                     children: job.postedString
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 231,
+                                                                    lineNumber: 232,
                                                                     columnNumber: 49
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 229,
+                                                            lineNumber: 230,
                                                             columnNumber: 45
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                    lineNumber: 215,
+                                                    lineNumber: 216,
                                                     columnNumber: 41
                                                 }, this)
                                             }, job.id, false, {
                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                lineNumber: 209,
+                                                lineNumber: 210,
                                                 columnNumber: 37
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                        lineNumber: 207,
+                                        lineNumber: 208,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                lineNumber: 201,
+                                lineNumber: 202,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                            lineNumber: 200,
+                            lineNumber: 201,
                             columnNumber: 21
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                        lineNumber: 199,
+                        lineNumber: 200,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$ScrollReveal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1377,12 +1389,12 @@ function RecruiterDashboardPage() {
                                             children: status
                                         }, status, false, {
                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                            lineNumber: 247,
+                                            lineNumber: 248,
                                             columnNumber: 33
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 245,
+                                    lineNumber: 246,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1407,20 +1419,20 @@ function RecruiterDashboardPage() {
                                                 children: "No candidates found"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                lineNumber: 267,
+                                                lineNumber: 268,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 children: "Try adjusting your search or filters."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                lineNumber: 268,
+                                                lineNumber: 269,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                        lineNumber: 266,
+                                        lineNumber: 267,
                                         columnNumber: 33
                                     }, this) : filteredCandidates.map((candidate)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
                                             layoutId: `candidate-${candidate.id}`,
@@ -1456,7 +1468,7 @@ function RecruiterDashboardPage() {
                                                         children: candidate.avatarInitials
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                        lineNumber: 281,
+                                                        lineNumber: 282,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1481,7 +1493,7 @@ function RecruiterDashboardPage() {
                                                                         children: candidate.name
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                        lineNumber: 292,
+                                                                        lineNumber: 293,
                                                                         columnNumber: 53
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1496,13 +1508,13 @@ function RecruiterDashboardPage() {
                                                                         children: candidate.status
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                        lineNumber: 293,
+                                                                        lineNumber: 294,
                                                                         columnNumber: 53
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                lineNumber: 291,
+                                                                lineNumber: 292,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1520,19 +1532,19 @@ function RecruiterDashboardPage() {
                                                                         children: candidate.appliedRole
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                        lineNumber: 303,
+                                                                        lineNumber: 304,
                                                                         columnNumber: 136
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                lineNumber: 303,
+                                                                lineNumber: 304,
                                                                 columnNumber: 49
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                        lineNumber: 290,
+                                                        lineNumber: 291,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1555,7 +1567,7 @@ function RecruiterDashboardPage() {
                                                                         children: "Match"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                        lineNumber: 309,
+                                                                        lineNumber: 310,
                                                                         columnNumber: 53
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1570,13 +1582,13 @@ function RecruiterDashboardPage() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                        lineNumber: 310,
+                                                                        lineNumber: 311,
                                                                         columnNumber: 53
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                lineNumber: 308,
+                                                                lineNumber: 309,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1593,46 +1605,46 @@ function RecruiterDashboardPage() {
                                                                 children: "➔"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                lineNumber: 312,
+                                                                lineNumber: 313,
                                                                 columnNumber: 49
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                        lineNumber: 307,
+                                                        lineNumber: 308,
                                                         columnNumber: 45
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                lineNumber: 279,
+                                                lineNumber: 280,
                                                 columnNumber: 41
                                             }, this)
                                         }, candidate.id, false, {
                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                            lineNumber: 272,
+                                            lineNumber: 273,
                                             columnNumber: 37
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 264,
+                                    lineNumber: 265,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                            lineNumber: 243,
+                            lineNumber: 244,
                             columnNumber: 21
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                        lineNumber: 242,
+                        lineNumber: 243,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                lineNumber: 196,
+                lineNumber: 197,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AnimatePresence"], {
@@ -1660,7 +1672,7 @@ function RecruiterDashboardPage() {
                         }
                     }, "backdrop", false, {
                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                        lineNumber: 327,
+                        lineNumber: 328,
                         columnNumber: 21
                     }, this),
                     selectedCandidateId && selectedCandidate && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -1707,7 +1719,7 @@ function RecruiterDashboardPage() {
                                             children: "✕"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                            lineNumber: 360,
+                                            lineNumber: 361,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1733,7 +1745,7 @@ function RecruiterDashboardPage() {
                                                     children: selectedCandidate.avatarInitials
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                    lineNumber: 366,
+                                                    lineNumber: 367,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1747,7 +1759,7 @@ function RecruiterDashboardPage() {
                                                             children: selectedCandidate.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 374,
+                                                            lineNumber: 375,
                                                             columnNumber: 41
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1769,31 +1781,31 @@ function RecruiterDashboardPage() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 376,
+                                                                    lineNumber: 377,
                                                                     columnNumber: 79
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 375,
+                                                            lineNumber: 376,
                                                             columnNumber: 41
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                    lineNumber: 373,
+                                                    lineNumber: 374,
                                                     columnNumber: 37
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                            lineNumber: 365,
+                                            lineNumber: 366,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 359,
+                                    lineNumber: 360,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1818,7 +1830,7 @@ function RecruiterDashboardPage() {
                                                             children: "Professional Summary"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 388,
+                                                            lineNumber: 389,
                                                             columnNumber: 41
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1837,7 +1849,7 @@ function RecruiterDashboardPage() {
                                                                             children: "Experience:"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                            lineNumber: 390,
+                                                                            lineNumber: 391,
                                                                             columnNumber: 83
                                                                         }, this),
                                                                         " ",
@@ -1845,7 +1857,7 @@ function RecruiterDashboardPage() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 390,
+                                                                    lineNumber: 391,
                                                                     columnNumber: 45
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1854,7 +1866,7 @@ function RecruiterDashboardPage() {
                                                                             children: "Education:"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                            lineNumber: 391,
+                                                                            lineNumber: 392,
                                                                             columnNumber: 48
                                                                         }, this),
                                                                         " ",
@@ -1862,19 +1874,19 @@ function RecruiterDashboardPage() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 391,
+                                                                    lineNumber: 392,
                                                                     columnNumber: 45
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 389,
+                                                            lineNumber: 390,
                                                             columnNumber: 41
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                    lineNumber: 387,
+                                                    lineNumber: 388,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1894,7 +1906,7 @@ function RecruiterDashboardPage() {
                                                             children: "Skills"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 396,
+                                                            lineNumber: 397,
                                                             columnNumber: 41
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1914,18 +1926,18 @@ function RecruiterDashboardPage() {
                                                                     children: skill
                                                                 }, skill, false, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 399,
+                                                                    lineNumber: 400,
                                                                     columnNumber: 49
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 397,
+                                                            lineNumber: 398,
                                                             columnNumber: 41
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                    lineNumber: 395,
+                                                    lineNumber: 396,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1942,7 +1954,7 @@ function RecruiterDashboardPage() {
                                                             children: "Contact"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 411,
+                                                            lineNumber: 412,
                                                             columnNumber: 41
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1952,7 +1964,7 @@ function RecruiterDashboardPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 412,
+                                                            lineNumber: 413,
                                                             columnNumber: 41
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1962,19 +1974,19 @@ function RecruiterDashboardPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 413,
+                                                            lineNumber: 414,
                                                             columnNumber: 41
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                    lineNumber: 410,
+                                                    lineNumber: 411,
                                                     columnNumber: 37
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                            lineNumber: 386,
+                                            lineNumber: 387,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1996,7 +2008,7 @@ function RecruiterDashboardPage() {
                                                             children: "Actions"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 420,
+                                                            lineNumber: 421,
                                                             columnNumber: 41
                                                         }, this),
                                                         selectedCandidate.status === 'New' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2012,7 +2024,7 @@ function RecruiterDashboardPage() {
                                                             children: "Shortlist for Screening"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 423,
+                                                            lineNumber: 424,
                                                             columnNumber: 45
                                                         }, this),
                                                         selectedCandidate.status === 'Screening' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2028,7 +2040,7 @@ function RecruiterDashboardPage() {
                                                             children: "Schedule Interview"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 432,
+                                                            lineNumber: 433,
                                                             columnNumber: 45
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$Button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2045,13 +2057,13 @@ function RecruiterDashboardPage() {
                                                             children: "Reject Candidate"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 440,
+                                                            lineNumber: 441,
                                                             columnNumber: 41
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                    lineNumber: 419,
+                                                    lineNumber: 420,
                                                     columnNumber: 37
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2070,7 +2082,7 @@ function RecruiterDashboardPage() {
                                                             children: "Resume"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 449,
+                                                            lineNumber: 450,
                                                             columnNumber: 41
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2086,7 +2098,7 @@ function RecruiterDashboardPage() {
                                                                     children: "📄"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 451,
+                                                                    lineNumber: 452,
                                                                     columnNumber: 45
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2096,42 +2108,42 @@ function RecruiterDashboardPage() {
                                                                     children: selectedCandidate.resumeLink
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                                    lineNumber: 452,
+                                                                    lineNumber: 453,
                                                                     columnNumber: 45
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                            lineNumber: 450,
+                                                            lineNumber: 451,
                                                             columnNumber: 41
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                                    lineNumber: 448,
+                                                    lineNumber: 449,
                                                     columnNumber: 37
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                            lineNumber: 418,
+                                            lineNumber: 419,
                                             columnNumber: 33
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                                    lineNumber: 383,
+                                    lineNumber: 384,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                            lineNumber: 350,
+                            lineNumber: 351,
                             columnNumber: 25
                         }, this)
                     }, "modal-container", false, {
                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                        lineNumber: 340,
+                        lineNumber: 341,
                         columnNumber: 21
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$JobFormModal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["JobFormModal"], {
@@ -2140,13 +2152,13 @@ function RecruiterDashboardPage() {
                         onSubmit: handleJobSubmit
                     }, void 0, false, {
                         fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                        lineNumber: 463,
+                        lineNumber: 464,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/recruiter_dashboard/page.tsx",
-                lineNumber: 325,
+                lineNumber: 326,
                 columnNumber: 13
             }, this)
         ]
