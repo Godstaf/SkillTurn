@@ -78,7 +78,7 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
         }
     }, [isOpen, initialData]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
@@ -144,9 +144,30 @@ export const JobFormModal: React.FC<JobFormModalProps> = ({
                                 label="Company Name" name="company" value={formData.company} onChange={handleChange} required placeholder="e.g. TechFlow Industries"
                             />
 
-                            <FormInput
-                                label="Job Tenure" name="tenure" value={formData.tenure} onChange={handleChange} placeholder="e.g. Full-time, Contract" required
-                            />
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <label style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--md-sys-color-on-surface)' }}>
+                                    Job Type <span style={{ color: 'var(--md-sys-color-error)' }}>*</span>
+                                </label>
+                                <select
+                                    name="tenure"
+                                    value={formData.tenure}
+                                    onChange={handleChange}
+                                    required
+                                    style={{
+                                        padding: '0.75rem', borderRadius: '12px',
+                                        border: '1px solid var(--md-sys-color-outline)',
+                                        background: 'var(--md-sys-color-surface)',
+                                        color: 'var(--md-sys-color-on-surface)',
+                                        fontFamily: 'inherit', fontSize: '0.95rem',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    <option value="" disabled>Select type...</option>
+                                    <option value="Internship">Internship</option>
+                                    <option value="Project">Project</option>
+                                    <option value="Job">Full-time Job</option>
+                                </select>
+                            </div>
 
                             <FormInput
                                 label="Location" name="location" value={formData.location} onChange={handleChange} placeholder="e.g. Remote, New York, NY" required

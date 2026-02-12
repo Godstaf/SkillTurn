@@ -151,6 +151,14 @@ export default function RecruiterDashboardPage() {
         if (!token) return;
 
         try {
+            // Map tenure to a valid backend type
+            const tenureMap: Record<string, string> = {
+                'full-time': 'Job', 'fulltime': 'Job', 'job': 'Job', 'contract': 'Job',
+                'internship': 'Internship', 'intern': 'Internship',
+                'project': 'Project', 'freelance': 'Project'
+            };
+            const mappedType = tenureMap[data.tenure.toLowerCase().trim()] || 'Internship';
+
             const res = await fetch('http://127.0.0.1:8000/recruiter/opportunities', {
                 method: 'POST',
                 headers: {
@@ -159,20 +167,20 @@ export default function RecruiterDashboardPage() {
                 },
                 body: JSON.stringify({
                     title: data.position,
-                    type: data.tenure,
+                    type: mappedType,
+                    organization: data.company, // Required by backend
                     description: data.description,
-                    skills: data.skills || [], // Use skills from form data
+                    skills: data.skills || [],
                     location: data.location,
                     salary: data.salary,
-                    deadline: "2026-12-31" // Placeholder
+                    deadline: "2026-12-31"
                 })
             });
 
             if (res.ok) {
                 const newOpp = await res.json();
-                // Refresh dashboard or append to local state
                 setJobs(prev => [...prev, {
-                    id: newOpp.id,
+                    id: newOpp.id || newOpp._id,
                     title: newOpp.title,
                     department: newOpp.organization,
                     location: newOpp.location,
@@ -182,10 +190,15 @@ export default function RecruiterDashboardPage() {
                     status: 'Active'
                 }]);
                 setShowJobModal(false);
-                alert("Opportunity Posted Successfully!");
+                alert("✅ Opportunity Posted Successfully!");
+            } else {
+                const errData = await res.json().catch(() => null);
+                const detail = errData?.detail || `Server error (${res.status})`;
+                alert(`❌ Failed to post: ${detail}`);
             }
         } catch (e) {
             console.error("Failed to post opportunity", e);
+            alert("❌ Network error — could not reach the server.");
         }
     };
 
