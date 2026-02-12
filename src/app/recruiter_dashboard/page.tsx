@@ -55,37 +55,56 @@ export default function RecruiterDashboardPage() {
     const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
     const [filterStatus, setFilterStatus] = useState<'All' | 'New' | 'Screening' | 'Interview' | 'Selected'>('All');
     const [selectedJobFilter, setSelectedJobFilter] = useState<string | null>(null); // null means 'All Interns'
+    const [selectedJobDetail, setSelectedJobDetail] = useState<JobPosition | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [recruiterName, setRecruiterName] = useState("Recruiter");
     const [companyName, setCompanyName] = useState("Company");
 
+    // --- Fetch Real Data ---
+    const fetchDashboardData = async (isInitial = false) => {
+        if (isInitial) setIsLoading(true);
+        const token = localStorage.getItem('token');
+        if (!token) {
+            router.push('/login');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/recruiter/dashboard', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Map backend opportunities to JobPosition (or use data.jobs directly if format matches)
+                const dbJobs: JobPosition[] = data.jobs.map((j: any) => ({
+                    id: j.id,
+                    title: j.title,
+                    department: j.department || j.organization,
+                    location: j.location,
+                    type: j.type as any,
+                    postedString: j.postedString || new Date().toLocaleDateString(),
+                    applicantsCount: j.applicantsCount || 0,
+                    status: j.status || 'Active',
+                    skills: j.skills || []
+                }));
+
+                setJobs(dbJobs);
+                setCandidates(data.candidates);
+                setRecruiterName(data.recruiterName || "Recruiter");
+                setCompanyName(data.companyName || "Company");
+            }
+        } catch (error) {
+            console.error("Error fetching dashboard data:", error);
+        } finally {
+            if (isInitial) setIsLoading(false);
+        }
+    };
+
     // Fetch Dashboard Data
     useEffect(() => {
-        const fetchDashboard = async () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                router.push('/login');
-                return;
-            }
-
-            try {
-                const res = await fetch('http://127.0.0.1:8000/recruiter/dashboard', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    setJobs(data.jobs);
-                    setCandidates(data.candidates);
-                    setRecruiterName(data.recruiterName);
-                    setCompanyName(data.companyName);
-                } else {
-                    console.error("Failed to fetch dashboard");
-                }
-            } catch (err) {
-                console.error("Error fetching dashboard:", err);
-            }
-        };
-        fetchDashboard();
+        fetchDashboardData(true);
     }, [router]);
 
     // --- Derived Stats ---
@@ -499,10 +518,10 @@ export default function RecruiterDashboardPage() {
 
                                     <div style={{ padding: '1.5rem', border: '1px solid var(--glass-border)', borderRadius: '16px' }}>
                                         <h4 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Resume</h4>
-                                        <a href={selectedCandidate.resumeLink} target="_blank" rel="noopener noreferrer"
+                                        <a href={`/resume/${selectedCandidate.id}`} target="_blank" rel="noopener noreferrer"
                                             style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--md-sys-color-primary)', textDecoration: 'none' }}>
                                             <span>📄</span>
-                                            <span style={{ textDecoration: 'underline' }}>View on Drive ↗</span>
+                                            <span style={{ textDecoration: 'underline' }}>View Resume ↗</span>
                                         </a>
                                     </div>
                                 </div>
