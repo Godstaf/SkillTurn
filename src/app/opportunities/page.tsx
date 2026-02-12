@@ -2,31 +2,62 @@
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+<<<<<<< HEAD
 import { Opportunity, opportunities } from "@/data/opportunities";
+=======
+import { opportunities as staticOpportunities, Opportunity } from "@/data/opportunities";
+>>>>>>> 34ba7deb9f930432eee8d3444c437838e589cdd0
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 
 export default function OpportunitiesPage() {
+  const [allOpportunities, setAllOpportunities] = useState<Opportunity[]>(staticOpportunities);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<"All" | "Project" | "Internship">("All");
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
+<<<<<<< HEAD
+=======
+  // Load posted interns from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('postedInterns') || '[]');
+      if (stored.length > 0) {
+        const newOpps: Opportunity[] = stored.map((item: Record<string, string>) => ({
+          id: `opp-${item.id}`,
+          title: item.title || item.position,
+          type: 'Internship' as const,
+          organization: item.company,
+          description: item.description || `${item.tenure} position at ${item.company}. Location: ${item.location}. Salary: ${item.salary || 'Not specified'}.`,
+          skills: [],
+          postedDate: item.postedDate || new Date().toISOString().split('T')[0],
+          deadline: item.deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        }));
+        setAllOpportunities(prev => {
+          const existingIds = new Set(prev.map(o => o.id));
+          const unique = newOpps.filter(o => !existingIds.has(o.id));
+          return [...prev, ...unique];
+        });
+      }
+    } catch { /* ignore parse errors */ }
+  }, []);
+>>>>>>> 34ba7deb9f930432eee8d3444c437838e589cdd0
 
   // Extract all unique skills from opportunities
   const allSkills = useMemo(() => {
     const skillsSet = new Set<string>();
-    opportunities.forEach(opp => {
+    allOpportunities.forEach(opp => {
       opp.skills.forEach(skill => skillsSet.add(skill));
     });
     return Array.from(skillsSet).sort();
-  }, []);
+  }, [allOpportunities]);
 
   // Filter opportunities based on search and filters
   const filteredOpportunities = useMemo(() => {
-    return opportunities.filter(opp => {
+    return allOpportunities.filter(opp => {
       // Filter by search query
       const matchesSearch = searchQuery === "" ||
         opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -42,7 +73,7 @@ export default function OpportunitiesPage() {
 
       return matchesSearch && matchesType && matchesSkills;
     });
-  }, [searchQuery, selectedType, selectedSkills]);
+  }, [searchQuery, selectedType, selectedSkills, allOpportunities]);
 
   const toggleSkill = (skill: string) => {
     setSelectedSkills(prev =>
@@ -611,7 +642,7 @@ export default function OpportunitiesPage() {
                 pointerEvents: "none",
               }}
             >
-              {opportunities
+              {allOpportunities
                 .filter((item) => item.id === selectedId)
                 .map((opp) => (
                   <motion.div

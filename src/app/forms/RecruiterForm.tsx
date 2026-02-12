@@ -7,6 +7,7 @@ import { FormInput } from "@/components/ui/FormInput";
 export default function RecruiterForm() {
   const [form, setForm] = useState({
     fullName: "",
+    companyId: "",
     companyName: "",
     jobTitle: "",
     workEmail: "",
@@ -60,6 +61,7 @@ export default function RecruiterForm() {
         body: JSON.stringify({
           user_id: "temp",
           full_name: form.fullName,
+          company_id: form.companyId || null,
           company_name: form.companyName,
           designation: form.jobTitle,
           work_email: form.workEmail,
@@ -89,6 +91,13 @@ export default function RecruiterForm() {
         required
         value={form.fullName}
         onChange={handleChange}
+      />
+      <FormInput
+        label="Company ID (required if known)"
+        name="companyId"
+        value={form.companyId}
+        onChange={handleChange}
+        placeholder="Enter Company ID if you have it"
       />
       <FormInput
         label="Company name"
