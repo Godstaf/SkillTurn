@@ -2,11 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-<<<<<<< HEAD
-import { Opportunity, opportunities } from "@/data/opportunities";
-=======
 import { opportunities as staticOpportunities, Opportunity } from "@/data/opportunities";
->>>>>>> 34ba7deb9f930432eee8d3444c437838e589cdd0
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
@@ -19,8 +15,6 @@ export default function OpportunitiesPage() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
-<<<<<<< HEAD
-=======
   // Load posted interns from localStorage on mount
   useEffect(() => {
     try {
@@ -44,7 +38,6 @@ export default function OpportunitiesPage() {
       }
     } catch { /* ignore parse errors */ }
   }, []);
->>>>>>> 34ba7deb9f930432eee8d3444c437838e589cdd0
 
   // Extract all unique skills from opportunities
   const allSkills = useMemo(() => {
