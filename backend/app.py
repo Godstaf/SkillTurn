@@ -25,6 +25,6 @@ app.include_router(student_router)
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Student Portal API"}
+    return {"message": "Welcome to the SkillTurn API"}
 
 

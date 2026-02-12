@@ -1,0 +1,42 @@
+/* [project]/src/components/ui/FormInput.module.css [app-client] (css) */
+.FormInput-module__JRRGMW__inputGroup {
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 18px;
+  display: flex;
+}
+
+.FormInput-module__JRRGMW__label {
+  color: var(--md-sys-color-on-surface);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.FormInput-module__JRRGMW__input {
+  border: 1px solid var(--input-border);
+  background: var(--input-background);
+  color: var(--input-color);
+  border-radius: 8px;
+  outline: none;
+  padding: 8px 14px;
+  font-size: 1rem;
+  transition: border .2s;
+}
+
+.FormInput-module__JRRGMW__input:focus {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 1px var(--md-sys-color-primary);
+}
+
+.FormInput-module__JRRGMW__required {
+  color: var(--md-sys-color-error);
+  margin-left: 4px;
+}
+
+.FormInput-module__JRRGMW__error {
+  color: var(--md-sys-color-error);
+  margin-top: 2px;
+  font-size: .92em;
+}
+
+/*# sourceMappingURL=src_components_ui_FormInput_module_css_bad6b30c._.single.css.map*/

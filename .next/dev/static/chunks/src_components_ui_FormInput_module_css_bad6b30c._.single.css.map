@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/components/ui/FormInput.module.css"],"sourcesContent":[".inputGroup {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  margin-bottom: 18px;\n}\n.label {\n  color: var(--md-sys-color-on-surface);\n  font-size: 1rem;\n  font-weight: 500;\n}\n.input {\n  padding: 8px 14px;\n  border-radius: 8px;\n  border: 1px solid var(--input-border);\n  background: var(--input-background);\n  color: var(--input-color);\n  font-size: 1rem;\n  outline: none;\n  transition: border 0.2s;\n}\n.input:focus {\n  border-color: var(--md-sys-color-primary);\n  box-shadow: 0 0 0 1px var(--md-sys-color-primary);\n}\n.required {\n  color: var(--md-sys-color-error);\n  margin-left: 4px;\n}\n.error {\n  color: var(--md-sys-color-error);\n  font-size: 0.92em;\n  margin-top: 2px;\n}\n"],"names":[],"mappings":"AAAA;;;;;;;AAMA;;;;;;AAKA;;;;;;;;;;;AAUA;;;;;AAIA;;;;;AAIA"}}]
+}

@@ -1,6 +1,6 @@
 # MongoDB Union Schema Documentation
 
-This document describes the merged schema structure implemented for the Student Portal.
+This document describes the merged schema structure implemented for SkillTurn.
 
 ## 1. Authentication & Users (Admin DB)
 **Collection**: [users](file:///Users/kanishkchaurasia/Documents/studentPortal/backend/login.py#116-119)

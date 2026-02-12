@@ -1,0 +1,59 @@
+/* [project]/src/components/ui/FormInput.module.css [app-client] (css) */
+.FormInput-module__JRRGMW__inputGroup {
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 18px;
+  display: flex;
+}
+
+.FormInput-module__JRRGMW__label {
+  color: var(--md-sys-color-on-surface);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.FormInput-module__JRRGMW__input {
+  border: 1px solid var(--input-border);
+  background: var(--input-background);
+  color: var(--input-color);
+  border-radius: 8px;
+  outline: none;
+  padding: 8px 14px;
+  font-size: 1rem;
+  transition: border .2s;
+}
+
+.FormInput-module__JRRGMW__input:focus {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 1px var(--md-sys-color-primary);
+}
+
+.FormInput-module__JRRGMW__required {
+  color: var(--md-sys-color-error);
+  margin-left: 4px;
+}
+
+.FormInput-module__JRRGMW__error {
+  color: var(--md-sys-color-error);
+  margin-top: 2px;
+  font-size: .92em;
+}
+
+/* [project]/src/components/ui/GlassContainer.module.css [app-client] (css) */
+.GlassContainer-module__y1pM6a__glassContainer {
+  background: var(--glass-background);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  color: var(--md-sys-color-on-surface);
+  border-radius: 16px;
+  padding: 24px;
+  transition: transform .3s, box-shadow .3s;
+}
+
+.GlassContainer-module__y1pM6a__glassContainer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px #1f268773;
+}
+
+/*# sourceMappingURL=src_components_ui_620d4073._.css.map*/

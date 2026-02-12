@@ -1,0 +1,147 @@
+/* [project]/src/app/recruiter_dashboard/dashboard.module.css [app-client] (css) */
+.dashboard-module__2ZAyAG__dashboardGrid {
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 2rem;
+  display: grid;
+}
+
+@media (min-width: 900px) {
+  .dashboard-module__2ZAyAG__dashboardGrid {
+    grid-template-columns: 350px 1fr;
+  }
+}
+
+.dashboard-module__2ZAyAG__stickyColumn {
+  height: auto;
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .dashboard-module__2ZAyAG__stickyColumn {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+.dashboard-module__2ZAyAG__headerContainer {
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  display: flex;
+}
+
+.dashboard-module__2ZAyAG__profileSection {
+  order: 2;
+}
+
+.dashboard-module__2ZAyAG__rightContentWrapper {
+  display: contents;
+}
+
+.dashboard-module__2ZAyAG__titleSection {
+  text-align: center;
+  order: 1;
+}
+
+.dashboard-module__2ZAyAG__actionButtonWrapper {
+  order: 3;
+  justify-content: center;
+  width: 100%;
+  display: flex;
+}
+
+@media (min-width: 900px) {
+  .dashboard-module__2ZAyAG__headerContainer {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dashboard-module__2ZAyAG__profileSection {
+    order: 1;
+  }
+
+  .dashboard-module__2ZAyAG__rightContentWrapper {
+    flex-direction: column;
+    order: 2;
+    align-items: flex-end;
+    gap: .5rem;
+    display: flex;
+  }
+
+  .dashboard-module__2ZAyAG__titleSection {
+    order: unset;
+    text-align: right;
+  }
+
+  .dashboard-module__2ZAyAG__actionButtonWrapper {
+    order: unset;
+    width: auto;
+    display: block;
+  }
+}
+
+.dashboard-module__2ZAyAG__modalGrid {
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  display: flex;
+}
+
+.dashboard-module__2ZAyAG__modalSidebar {
+  flex-direction: column-reverse;
+  gap: 1rem;
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .dashboard-module__2ZAyAG__modalGrid {
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    display: grid;
+  }
+
+  .dashboard-module__2ZAyAG__modalSidebar {
+    flex-direction: column;
+  }
+}
+
+.dashboard-module__2ZAyAG__modalHeader {
+  background: linear-gradient(to right, var(--md-sys-color-secondary-container), var(--md-sys-color-surface));
+  padding: 2rem 4rem 2rem 2rem;
+  position: relative;
+}
+
+.dashboard-module__2ZAyAG__closeButton {
+  z-index: 10;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+}
+
+.dashboard-module__2ZAyAG__formGrid {
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .dashboard-module__2ZAyAG__formGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    display: grid;
+  }
+
+  .dashboard-module__2ZAyAG__fullWidth {
+    grid-column: span 2;
+  }
+}
+
+/*# sourceMappingURL=src_app_recruiter_dashboard_dashboard_module_css_bad6b30c._.single.css.map*/
