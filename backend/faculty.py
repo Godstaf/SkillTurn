@@ -163,6 +163,9 @@ async def verify_project(student_id: str, project_id: str, status: str, current_
         verified_by=str(current_user.id)
     )
     
+    if result is False:
+        raise HTTPException(status_code=400, detail="Cannot verify project with AI score below 50. Project quality is too low.")
+    
     if not result:
         raise HTTPException(status_code=404, detail="Project not found")
 

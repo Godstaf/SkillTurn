@@ -97,7 +97,8 @@ async def add_project(project: StudentProject, current_user: User = Depends(get_
             update_project_ai_results(
                 created.id,
                 ai_result["score"],
-                ai_result["features"]
+                ai_result["features"],
+                ai_result.get("breakdown")
             )
             # Re-fetch to return updated project
             created = get_project_by_id(created.id)
@@ -126,7 +127,8 @@ async def analyze_project_endpoint(project_id: str, current_user: User = Depends
     updated = update_project_ai_results(
         project_id,
         ai_result["score"],
-        ai_result["features"]
+        ai_result["features"],
+        ai_result.get("breakdown")
     )
     return updated or project
 
@@ -140,11 +142,17 @@ async def get_full_profile(current_user: User = Depends(get_current_active_user)
     # Format projects for frontend
     projects_list = []
     for p in projects:
-        # Resolve verified_by user_id to faculty name
-        faculty_name = None
+        # Resolving verification status with dynamic AI threshold rule
+        # Rule: AI Score >= 75 -> Approved
+        # Rule: AI Score >= 50 and Faculty/Admin Verified -> Approved
+        is_approved = p.is_verified or (p.ai_score and p.ai_score >= 75)
+
+        # Resolve verified_by name
+        verifier_name = "AI_SYSTEM" if (p.ai_score and p.ai_score >= 75 and not p.verified_by) else None
         if p.verified_by:
             faculty_user = get_user_by_id(p.verified_by)
-            faculty_name = faculty_user.full_name if faculty_user else p.verified_by
+            verifier_name = faculty_user.full_name if faculty_user else p.verified_by
+
         projects_list.append({
             "id": p.id,
             "title": p.title,
@@ -152,15 +160,16 @@ async def get_full_profile(current_user: User = Depends(get_current_active_user)
             "project_link": p.project_link or "",
             "technologies": p.technologies,
             "features": p.features,
-            "is_verified": p.is_verified,
-            "verification_status": "Verified" if p.is_verified else "Pending",
-            "verified_by": faculty_name,
+            "is_verified": is_approved,
+            "verification_status": "Verified" if is_approved else "Pending",
+            "verified_by_name": verifier_name,
             "verified_at": p.verified_at.isoformat() if p.verified_at else None,
             "created_at": p.created_at.isoformat() if p.created_at else None,
             # AI Verification
             "ai_verified": p.ai_verified,
             "ai_score": p.ai_score,
             "ai_feature_results": p.ai_feature_results,
+            "ai_breakdown": p.ai_breakdown,
         })
     
     return {

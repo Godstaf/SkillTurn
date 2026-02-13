@@ -157,6 +157,7 @@ class StudentProject(BaseModel):
     ai_verified: bool = False
     ai_score: Optional[float] = None  # 0-100 overall score
     ai_feature_results: List[dict] = []  # [{feature, implemented, confidence, remarks}]
+    ai_breakdown: Optional[dict] = None  # {functionality, code_quality, project_structure, responsiveness, documentation}
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -359,10 +360,19 @@ def get_projects_by_student(user_id: str) -> List[StudentProject]:
 def update_project_verification(project_id: str, is_verified: bool, verified_by: str):
     """Update the verification status of a project."""
     from bson import ObjectId
+    
+    # Check AI score gating if trying to verify
+    if is_verified:
+        project = get_project_by_id(project_id)
+        if project and project.ai_score is not None:
+            if project.ai_score < 50:
+                # Disallow verification for low quality projects
+                return False
+
     update_data = {
         "is_verified": is_verified,
         "verified_by": verified_by,
-        "verified_at": datetime.utcnow(),
+        "verified_at": datetime.utcnow() if is_verified else None,
         "updated_at": datetime.utcnow()
     }
     result = student_projects_collection.update_one(
@@ -371,6 +381,7 @@ def update_project_verification(project_id: str, is_verified: bool, verified_by:
     )
     if result.modified_count == 0:
         return None
+    
     # Return updated project
     updated = student_projects_collection.find_one({"_id": ObjectId(project_id)})
     if updated:
@@ -388,15 +399,24 @@ def get_project_by_id(project_id: str):
         return StudentProject(**fix_mongo_id(doc))
     return None
 
-def update_project_ai_results(project_id: str, ai_score: float, ai_feature_results: list):
+def update_project_ai_results(project_id: str, ai_score: float, ai_feature_results: list, ai_breakdown: dict = None):
     """Update a project with AI verification results."""
     from bson import ObjectId
+    # Auto-verify if score is 75 or higher
+    is_verified = ai_score >= 75
+    
     update_data = {
         "ai_verified": True,
         "ai_score": ai_score,
         "ai_feature_results": ai_feature_results,
+        "is_verified": is_verified,  # Auto-verify logic
         "updated_at": datetime.utcnow()
     }
+    if is_verified:
+        update_data["verified_at"] = datetime.utcnow()
+        update_data["verified_by"] = "AI_SYSTEM"
+    if ai_breakdown:
+        update_data["ai_breakdown"] = ai_breakdown
     result = student_projects_collection.update_one(
         {"_id": ObjectId(project_id)},
         {"$set": update_data}

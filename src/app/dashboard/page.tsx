@@ -28,12 +28,20 @@ interface Project {
     // AI Verification
     ai_verified?: boolean;
     ai_score?: number;
+    ai_breakdown?: {
+        functionality: number;
+        code_quality: number;
+        project_structure: number;
+        responsiveness: number;
+        documentation: number;
+    };
     ai_feature_results?: Array<{
         feature: string;
         implemented: boolean;
         confidence: number;
         remarks: string;
     }>;
+    verified_by_name?: string;
 }
 
 export default function DashboardPage() {
@@ -108,7 +116,9 @@ export default function DashboardPage() {
                             project_link: p.project_link || '',
                             ai_verified: p.ai_verified || false,
                             ai_score: p.ai_score,
-                            ai_feature_results: p.ai_feature_results || []
+                            ai_breakdown: p.ai_breakdown,
+                            ai_feature_results: p.ai_feature_results || [],
+                            verified_by_name: p.verified_by_name
                         }));
                         setProjects(mappedProjects);
                     }
@@ -338,7 +348,7 @@ export default function DashboardPage() {
                                                 color: project.verification_status === 'Verified' ? '#2E7D32' : project.verification_status === 'Rejected' ? '#C62828' : '#F57F17'
                                             }}
                                         >
-                                            🎓 {project.verification_status || 'Pending'}
+                                            🎓 {project.verified_by_name === 'AI_SYSTEM' ? 'Auto-Verified' : (project.verification_status || 'Pending')}
                                         </span>
                                         {/* AI Badge */}
                                         {project.ai_verified ? (
@@ -349,9 +359,9 @@ export default function DashboardPage() {
                                                     padding: '4px 10px',
                                                     borderRadius: '8px',
                                                     fontWeight: 600,
-                                                    background: (project.ai_score || 0) >= 60 ? 'rgba(33, 150, 243, 0.1)' : 'rgba(255, 152, 0, 0.1)',
-                                                    border: `1px solid ${(project.ai_score || 0) >= 60 ? '#2196F3' : '#FF9800'}`,
-                                                    color: (project.ai_score || 0) >= 60 ? '#1565C0' : '#E65100'
+                                                    background: (project.ai_score || 0) >= 75 ? 'rgba(76, 175, 80, 0.1)' : (project.ai_score || 0) >= 50 ? 'rgba(255, 152, 0, 0.1)' : 'rgba(244, 67, 54, 0.1)',
+                                                    border: `1px solid ${(project.ai_score || 0) >= 75 ? '#4CAF50' : (project.ai_score || 0) >= 50 ? '#FF9800' : '#F44336'}`,
+                                                    color: (project.ai_score || 0) >= 75 ? '#2E7D32' : (project.ai_score || 0) >= 50 ? '#E65100' : '#C62828'
                                                 }}
                                             >
                                                 🤖 AI: {project.ai_score}%
@@ -389,22 +399,66 @@ export default function DashboardPage() {
                                     {project.ai_feature_results && project.ai_feature_results.length > 0 && (
                                         <div style={{ borderTop: '1px solid var(--md-sys-color-outline-variant)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
                                             <p style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--md-sys-color-on-surface)' }}>📊 AI Feature Analysis</p>
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.5rem', marginBottom: '1rem' }}>
                                                 {project.ai_feature_results.map((fr, idx) => (
                                                     <div key={idx} style={{
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         gap: '0.5rem',
-                                                        fontSize: '0.85rem',
-                                                        padding: '4px 8px',
-                                                        borderRadius: '6px',
-                                                        background: fr.implemented ? 'rgba(76, 175, 80, 0.05)' : 'rgba(244, 67, 54, 0.05)'
+                                                        fontSize: '0.8rem',
+                                                        padding: '6px 10px',
+                                                        borderRadius: '8px',
+                                                        background: fr.implemented ? 'rgba(76, 175, 80, 0.05)' : 'rgba(244, 67, 54, 0.05)',
+                                                        border: `1px solid ${fr.implemented ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)'}`
                                                     }}>
                                                         <span>{fr.implemented ? '✅' : '❌'}</span>
-                                                        <span style={{ fontWeight: 500 }}>{fr.feature}</span>
-                                                        <span style={{ marginLeft: 'auto', color: 'var(--md-sys-color-outline)', fontSize: '0.8rem' }}>
-                                                            {fr.confidence}% &middot; {fr.remarks}
-                                                        </span>
+                                                        <span style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{fr.feature}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Project Quality Scores Breakdown */}
+                                    {project.ai_breakdown && (
+                                        <div style={{ background: 'var(--md-sys-color-surface-container-low)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--md-sys-color-outline-variant)' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                                <p style={{ fontSize: '0.9rem', fontWeight: 700, margin: 0, color: 'var(--md-sys-color-on-surface)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    📈 Quality Breakdown
+                                                </p>
+                                                <div style={{
+                                                    background: (project.ai_score || 0) > 70 ? 'rgba(76, 175, 80, 0.2)' : (project.ai_score || 0) > 40 ? 'rgba(255, 152, 0, 0.2)' : 'rgba(244, 67, 54, 0.2)',
+                                                    padding: '4px 12px',
+                                                    borderRadius: '20px',
+                                                    fontSize: '0.85rem',
+                                                    fontWeight: 800,
+                                                    color: (project.ai_score || 0) > 70 ? '#2E7D32' : (project.ai_score || 0) > 40 ? '#E65100' : '#C62828',
+                                                    border: `1px solid ${(project.ai_score || 0) > 70 ? '#4CAF50' : (project.ai_score || 0) > 40 ? '#FF9800' : '#F44336'}`
+                                                }}>
+                                                    Overall: {project.ai_score}%
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
+                                                {[
+                                                    { label: 'Functionality', val: project.ai_breakdown.functionality, icon: '⚙️' },
+                                                    { label: 'Code Quality', val: project.ai_breakdown.code_quality, icon: '💎' },
+                                                    { label: 'Structure', val: project.ai_breakdown.project_structure, icon: '📁' },
+                                                    { label: 'Responsive', val: project.ai_breakdown.responsiveness, icon: '📱' },
+                                                    { label: 'Docs', val: project.ai_breakdown.documentation, icon: '📄' }
+                                                ].map((item, i) => (
+                                                    <div key={i}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '2px' }}>
+                                                            <span>{item.icon} {item.label}</span>
+                                                            <span style={{ fontWeight: 600 }}>{item.val}%</span>
+                                                        </div>
+                                                        <div style={{ height: '4px', background: 'var(--md-sys-color-outline-variant)', borderRadius: '2px', overflow: 'hidden' }}>
+                                                            <div style={{
+                                                                width: `${item.val}%`,
+                                                                height: '100%',
+                                                                background: item.val > 70 ? '#4CAF50' : item.val > 40 ? '#FF9800' : '#F44336',
+                                                                borderRadius: '2px'
+                                                            }}></div>
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -679,7 +733,7 @@ export default function DashboardPage() {
                         degree: profile.degree || 'B.Tech',
                         branch: profile.branch || 'CSE',
                         skills: skills.map(s => s.name),
-                        projects: projects.map(p => ({ title: p.title, description: p.description }))
+                        projects: projects.filter(p => p.verified).map(p => ({ title: p.title, description: p.description }))
                     }}
                 />
             )}

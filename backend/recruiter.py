@@ -263,9 +263,20 @@ async def get_app_resume_data(app_id: str, current_user: User = Depends(get_curr
     user = users_collection.find_one({"_id": ObjectId(user_id)})
     profile = student_profiles_collection.find_one({"user_id": str(user_id)})
     skills_doc = student_skills_collection.find_one({"user_id": str(user_id)})
-    projects_doc = student_projects_collection.find_one({"user_id": str(user_id)})
+    projects = get_projects_by_student(str(user_id))
     
-    print(f"Data retrieved: User={'Yes' if user else 'No'}, Profile={'Yes' if profile else 'No'}, Skills={'Yes' if skills_doc else 'No'}, Projects={'Yes' if projects_doc else 'No'}")
+    # Filter projects based on approval logic
+    # approved = (ai_score >= 75) or (ai_score >= 50 and is_verified)
+    # We trust is_verified for faculty since we added gating.
+    verified_projects = []
+    for p in projects:
+        if (p.ai_score and p.ai_score >= 75) or p.is_verified:
+            verified_projects.append({
+                "title": p.title,
+                "description": p.description or ""
+            })
+    
+    print(f"Data retrieved: User={'Yes' if user else 'No'}, Profile={'Yes' if profile else 'No'}, Skills={'Yes' if skills_doc else 'No'}, Projects={len(verified_projects)}")
 
     return {
         "name": user.get("full_name", "Unknown") if user else "Unknown",
@@ -274,5 +285,5 @@ async def get_app_resume_data(app_id: str, current_user: User = Depends(get_curr
         "degree": profile.get("degree", "") if profile else "",
         "branch": profile.get("branch", "") if profile else "",
         "skills": [s.get("name") for s in skills_doc.get("skills", [])] if skills_doc else [],
-        "projects": projects_doc.get("projects", []) if projects_doc else []
+        "projects": verified_projects
     }

@@ -206,6 +206,67 @@ Respond ONLY with valid JSON (no markdown, no backticks):
         }
 
 
+# ── Project Quality Scoring ─────────────────────────────
+
+def structure_score(tree: List[dict]) -> int:
+    """Score project structure based on folder organization."""
+    score = 0
+    paths = [t["path"].lower() for t in tree]
+    if any("controllers" in p or "controller" in p for p in paths): score += 20
+    if any("services" in p or "service" in p for p in paths): score += 20
+    if any("models" in p or "model" in p for p in paths): score += 20
+    if any("components" in p or "component" in p for p in paths): score += 20
+    if any("routes" in p or "router" in p for p in paths): score += 10
+    if any("utils" in p or "helpers" in p or "lib" in p for p in paths): score += 10
+    return min(score, 100)
+
+
+def documentation_score(files: Dict[str, str], tree: List[dict]) -> int:
+    """Score documentation quality."""
+    score = 30  # base score
+    all_paths = [t["path"].lower() for t in tree]
+    if any("readme" in p for p in all_paths): score += 40
+    if any("license" in p for p in all_paths): score += 10
+    if any(".env.example" in p or ".env.sample" in p for p in all_paths): score += 10
+    # Check for code comments
+    total_comments = sum(1 for c in files.values() for line in c.splitlines() if line.strip().startswith(("#", "//", "/*", "*")))
+    if total_comments > 10: score += 10
+    return min(score, 100)
+
+
+def responsiveness_score(files: Dict[str, str]) -> int:
+    """Score frontend responsiveness patterns."""
+    score = 30  # base score
+    for content in files.values():
+        text = content.lower()
+        if "tailwind" in text: score += 20
+        if "@media" in text: score += 20
+        if "flex" in text or "grid" in text: score += 15
+        if "bootstrap" in text: score += 15
+        if "responsive" in text or "mobile" in text: score += 10
+    return min(score, 100)
+
+
+def code_quality_score(files: Dict[str, str]) -> int:
+    """Score code quality based on size, structure, and patterns."""
+    total_lines = sum(len(c.splitlines()) for c in files.values())
+    score = 30  # base score
+    # Lines of code
+    if total_lines > 1000: score += 25
+    elif total_lines > 500: score += 20
+    elif total_lines > 200: score += 15
+    # Error handling
+    if any("try" in c and ("catch" in c or "except" in c) for c in files.values()): score += 15
+    # Imports / modularity
+    if any("import" in c or "require" in c for c in files.values()): score += 10
+    # Multiple files = better modularity
+    if len(files) > 5: score += 10
+    elif len(files) > 3: score += 5
+    # Environment variables usage
+    if any("env" in c.lower() or "dotenv" in c.lower() for c in files.values()): score += 10
+    return min(score, 100)
+
+
 # ── Main Orchestrator ───────────────────────────────────
 
 def analyze_project(repo_url: str, features: List[str]) -> Dict[str, Any]:
@@ -294,11 +355,33 @@ def analyze_project(repo_url: str, features: List[str]) -> Dict[str, Any]:
                 "remarks": "Not implemented"
             })
 
-    score = round((implemented_count / len(features)) * 100, 2) if features else 0
+    func_score = round((implemented_count / len(features)) * 100, 2) if features else 0
+
+    # 5. Compute project quality breakdown
+    struct = structure_score(tree)
+    doc = documentation_score(files, tree)
+    responsive = responsiveness_score(files)
+    quality = code_quality_score(files)
+
+    # Weighted overall score
+    overall = round(
+        (0.4 * func_score) +
+        (0.2 * quality) +
+        (0.2 * struct) +
+        (0.1 * responsive) +
+        (0.1 * doc), 2
+    )
 
     return {
-        "score": score,
-        "features": results
+        "score": overall,
+        "features": results,
+        "breakdown": {
+            "functionality": func_score,
+            "code_quality": quality,
+            "project_structure": struct,
+            "responsiveness": responsive,
+            "documentation": doc
+        }
     }
 
 
