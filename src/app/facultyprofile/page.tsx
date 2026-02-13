@@ -8,26 +8,57 @@ import { Faculty } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 
 export default function FacultyProfilePage() {
-    // Mock user for display if not logged in or just for demo, satisfying the strict Faculty interface
-    const mockFaculty: Faculty = {
-        id: "fac123",
-        username: "aditiverma",
-        email: "aditi.verma@pict.edu",
-        full_name: "Dr. Aditi Verma",
-        role: "faculty",
-        is_verified: true,
-        is_active: true,
-        created_at: "2023-01-01",
-        institution: "Pune Institute of Computer Technology",
-        department: "Computer Engineering",
-        designation: "Senior Professor",
-        profileLink: "https://pict.edu/faculty/aditi-verma",
-        experience: 15
-    };
-
     const { user } = useAuth();
-    // In a real app we'd fetch the profile. For now using mock.
-    const faculty = mockFaculty; 
+    const [faculty, setFaculty] = useState<Faculty | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setIsLoading(false);
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/faculty/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setFaculty(data);
+                } else {
+                    console.error("Failed to fetch profile");
+                }
+            } catch (error) {
+                console.error("Error fetching profile:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--md-sys-color-surface)' }}>
+                <div style={{ color: 'var(--md-sys-color-primary)', fontSize: '1.2rem' }}>Loading Profile...</div>
+            </div>
+        );
+    }
+
+    if (!faculty) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column', gap: '1rem' }}>
+                <p>Failed to load profile or not logged in.</p>
+                <Button onClick={() => window.location.reload()}>Retry</Button>
+            </div>
+        );
+    }
 
     return (
         <main style={{ padding: '2rem 24px', maxWidth: '1200px', margin: '0 auto', minHeight: '100vh', paddingBottom: '4rem' }}>
@@ -74,7 +105,7 @@ export default function FacultyProfilePage() {
                             <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--md-sys-color-secondary)', marginBottom: '0.2rem' }}>Email</label>
                             <div style={{ fontWeight: 500 }}>{faculty.email}</div>
                         </div>
-                        
+
                         <div style={{ marginBottom: '1.5rem' }}>
                             <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--md-sys-color-secondary)', marginBottom: '0.2rem' }}>Experience</label>
                             <div style={{ fontWeight: 500 }}>{faculty.experience} Years</div>
