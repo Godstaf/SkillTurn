@@ -21,7 +21,7 @@ from CRUD import (
     AppliedJob,
     get_student_profile,
     get_student_skills,
-    get_student_projects,
+    get_projects_by_student,
     get_user_by_id
 )
 from login import get_current_active_user, UserPublic
