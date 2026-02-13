@@ -253,12 +253,13 @@ export default function AddProjectPage() {
                         </div>
 
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Project Link (Optional)</label>
+                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>GitHub Repository Link</label>
                             <input
                                 type="url"
-                                placeholder="https://github.com/..."
+                                placeholder="https://github.com/username/repo"
                                 value={formData.link}
                                 onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+                                required
                                 style={{
                                     width: '100%', padding: '1rem', borderRadius: '12px',
                                     border: '1px solid var(--md-sys-color-outline)',
@@ -299,7 +300,7 @@ export default function AddProjectPage() {
                             <Button
                                 type="submit"
                                 variant="filled"
-                                disabled={!formData.title || !formData.description || formData.technologies.length === 0 || loading}
+                                disabled={!formData.title || !formData.description || formData.technologies.length === 0 || !formData.link || loading}
                             >
                                 {loading ? '🤖 Analyzing & Adding...' : 'Add Project'}
                             </Button>
