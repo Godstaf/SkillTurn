@@ -25,9 +25,12 @@ from CRUD import (
     StudentProject,
     create_project,
     get_projects_by_student,
-    get_user_by_id
+    get_user_by_id,
+    update_project_ai_results,
+    get_project_by_id
 )
 from login import get_current_active_user, UserPublic
+from github_api import analyze_project, is_github_url
 
 router = APIRouter()
 
@@ -86,7 +89,46 @@ async def add_project(project: StudentProject, current_user: User = Depends(get_
     project.is_verified = False  # Always start as unverified
     
     created = create_project(project)
+    
+    # Trigger AI analysis if GitHub URL and features are provided
+    if created and created.project_link and is_github_url(created.project_link) and created.features:
+        try:
+            ai_result = analyze_project(created.project_link, created.features)
+            update_project_ai_results(
+                created.id,
+                ai_result["score"],
+                ai_result["features"]
+            )
+            # Re-fetch to return updated project
+            created = get_project_by_id(created.id)
+        except Exception as e:
+            print(f"AI analysis failed for project {created.id}: {e}")
+    
     return created
+
+@router.post("/student/projects/{project_id}/analyze")
+async def analyze_project_endpoint(project_id: str, current_user: User = Depends(get_current_active_user)):
+    """Re-trigger AI analysis for a project."""
+    if current_user.role != "student":
+        raise HTTPException(status_code=403, detail="Only students can analyze projects")
+
+    project = get_project_by_id(project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    if project.user_id != str(current_user.id):
+        raise HTTPException(status_code=403, detail="Not your project")
+    if not project.project_link or not is_github_url(project.project_link):
+        raise HTTPException(status_code=400, detail="Project must have a GitHub URL")
+    if not project.features:
+        raise HTTPException(status_code=400, detail="Project must have declared features")
+
+    ai_result = analyze_project(project.project_link, project.features)
+    updated = update_project_ai_results(
+        project_id,
+        ai_result["score"],
+        ai_result["features"]
+    )
+    return updated or project
 
 @router.get("/student/full-profile")
 async def get_full_profile(current_user: User = Depends(get_current_active_user)):
@@ -109,11 +151,16 @@ async def get_full_profile(current_user: User = Depends(get_current_active_user)
             "description": p.description or "",
             "project_link": p.project_link or "",
             "technologies": p.technologies,
+            "features": p.features,
             "is_verified": p.is_verified,
             "verification_status": "Verified" if p.is_verified else "Pending",
             "verified_by": faculty_name,
             "verified_at": p.verified_at.isoformat() if p.verified_at else None,
             "created_at": p.created_at.isoformat() if p.created_at else None,
+            # AI Verification
+            "ai_verified": p.ai_verified,
+            "ai_score": p.ai_score,
+            "ai_feature_results": p.ai_feature_results,
         })
     
     return {

@@ -149,9 +149,14 @@ class StudentProject(BaseModel):
     description: Optional[str] = None
     project_link: Optional[str] = None  # cloud URL — GitHub, GDrive, etc.
     technologies: List[str] = []
+    features: List[str] = []  # student-declared functionalities
     is_verified: bool = False
     verified_by: Optional[str] = None  # faculty user_id
     verified_at: Optional[datetime] = None
+    # AI Verification fields
+    ai_verified: bool = False
+    ai_score: Optional[float] = None  # 0-100 overall score
+    ai_feature_results: List[dict] = []  # [{feature, implemented, confidence, remarks}]
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -381,6 +386,26 @@ def get_project_by_id(project_id: str):
         return None
     if doc and "projects" not in doc:  # skip old-format embedded docs
         return StudentProject(**fix_mongo_id(doc))
+    return None
+
+def update_project_ai_results(project_id: str, ai_score: float, ai_feature_results: list):
+    """Update a project with AI verification results."""
+    from bson import ObjectId
+    update_data = {
+        "ai_verified": True,
+        "ai_score": ai_score,
+        "ai_feature_results": ai_feature_results,
+        "updated_at": datetime.utcnow()
+    }
+    result = student_projects_collection.update_one(
+        {"_id": ObjectId(project_id)},
+        {"$set": update_data}
+    )
+    if result.modified_count == 0:
+        return None
+    updated = student_projects_collection.find_one({"_id": ObjectId(project_id)})
+    if updated:
+        return StudentProject(**fix_mongo_id(updated))
     return None
 
 # 3. Faculty Panel

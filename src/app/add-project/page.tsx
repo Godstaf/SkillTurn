@@ -13,8 +13,10 @@ export default function AddProjectPage() {
         title: "",
         description: "",
         technologies: "",
-        link: ""
+        link: "",
+        features: ""
     });
+    const [analyzing, setAnalyzing] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,20 +42,27 @@ export default function AddProjectPage() {
                     project_link: formData.link || null,
                     technologies: formData.technologies
                         ? formData.technologies.split(',').map(t => t.trim()).filter(t => t)
+                        : [],
+                    features: formData.features
+                        ? formData.features.split(',').map(f => f.trim()).filter(f => f)
                         : []
                 })
             });
 
             if (res.ok) {
+                const data = await res.json();
+                if (data.ai_verified) {
+                    setAnalyzing(false);
+                }
                 router.push('/dashboard');
             } else {
                 console.error("Failed to add project");
-                // Handle error
             }
         } catch (error) {
             console.error("Error adding project:", error);
         } finally {
             setLoading(false);
+            setAnalyzing(false);
         }
     };
 
@@ -134,6 +143,25 @@ export default function AddProjectPage() {
                             />
                         </div>
 
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Key Features (comma separated)</label>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-secondary)', marginBottom: '0.5rem' }}>
+                                List features you implemented — AI will verify them against your repo.
+                            </p>
+                            <input
+                                type="text"
+                                placeholder="e.g. JWT Authentication, CRUD operations, Email notifications"
+                                value={formData.features}
+                                onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+                                style={{
+                                    width: '100%', padding: '1rem', borderRadius: '12px',
+                                    border: '1px solid var(--md-sys-color-outline)',
+                                    background: 'var(--md-sys-color-surface-container)',
+                                    color: 'var(--md-sys-color-on-surface)', outline: 'none'
+                                }}
+                            />
+                        </div>
+
                         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
                             <Button
                                 type="button"
@@ -148,7 +176,7 @@ export default function AddProjectPage() {
                                 variant="filled"
                                 disabled={!formData.title || !formData.description || loading}
                             >
-                                {loading ? 'Adding...' : 'Add Project'}
+                                {loading ? '🤖 Analyzing & Adding...' : 'Add Project'}
                             </Button>
                         </div>
                     </form>

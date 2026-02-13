@@ -24,6 +24,16 @@ interface Project {
     verified: boolean;
     verification_status?: string;
     technologies: string[];
+    project_link?: string;
+    // AI Verification
+    ai_verified?: boolean;
+    ai_score?: number;
+    ai_feature_results?: Array<{
+        feature: string;
+        implemented: boolean;
+        confidence: number;
+        remarks: string;
+    }>;
 }
 
 export default function DashboardPage() {
@@ -94,7 +104,11 @@ export default function DashboardPage() {
                             description: p.description,
                             verified: p.is_verified || p.verification_status === 'Verified' || p.verification_status === 'Approved',
                             verification_status: (p.verification_status === 'Approved' ? 'Verified' : p.verification_status) || (p.is_verified ? 'Verified' : 'Pending'),
-                            technologies: p.technologies || []
+                            technologies: p.technologies || [],
+                            project_link: p.project_link || '',
+                            ai_verified: p.ai_verified || false,
+                            ai_score: p.ai_score,
+                            ai_feature_results: p.ai_feature_results || []
                         }));
                         setProjects(mappedProjects);
                     }
@@ -309,11 +323,13 @@ export default function DashboardPage() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem' }}>
                             {projects.map(project => (
                                 <Card key={project.id} variant="elevated" style={{ padding: '1.5rem', position: 'relative' }}>
-                                    <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem' }}>
+                                    {/* Dual Verification Badges */}
+                                    <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                        {/* Faculty Badge */}
                                         <span
-                                            title={project.verification_status || "Pending"}
+                                            title={`Faculty: ${project.verification_status || 'Pending'}`}
                                             style={{
-                                                fontSize: '0.8rem',
+                                                fontSize: '0.75rem',
                                                 padding: '4px 10px',
                                                 borderRadius: '8px',
                                                 fontWeight: 600,
@@ -322,20 +338,88 @@ export default function DashboardPage() {
                                                 color: project.verification_status === 'Verified' ? '#2E7D32' : project.verification_status === 'Rejected' ? '#C62828' : '#F57F17'
                                             }}
                                         >
-                                            {project.verification_status || 'Pending'}
+                                            🎓 {project.verification_status || 'Pending'}
                                         </span>
+                                        {/* AI Badge */}
+                                        {project.ai_verified ? (
+                                            <span
+                                                title={`AI Score: ${project.ai_score}%`}
+                                                style={{
+                                                    fontSize: '0.75rem',
+                                                    padding: '4px 10px',
+                                                    borderRadius: '8px',
+                                                    fontWeight: 600,
+                                                    background: (project.ai_score || 0) >= 60 ? 'rgba(33, 150, 243, 0.1)' : 'rgba(255, 152, 0, 0.1)',
+                                                    border: `1px solid ${(project.ai_score || 0) >= 60 ? '#2196F3' : '#FF9800'}`,
+                                                    color: (project.ai_score || 0) >= 60 ? '#1565C0' : '#E65100'
+                                                }}
+                                            >
+                                                🤖 AI: {project.ai_score}%
+                                            </span>
+                                        ) : (
+                                            <span
+                                                style={{
+                                                    fontSize: '0.75rem',
+                                                    padding: '4px 10px',
+                                                    borderRadius: '8px',
+                                                    fontWeight: 600,
+                                                    background: 'rgba(158, 158, 158, 0.1)',
+                                                    border: '1px solid #9E9E9E',
+                                                    color: '#757575'
+                                                }}
+                                            >
+                                                🤖 Not Analyzed
+                                            </span>
+                                        )}
                                     </div>
-                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem', paddingRight: '5rem' }}>{project.title}</h3>
+
+                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem', paddingRight: '12rem' }}>{project.title}</h3>
                                     <p style={{ fontSize: '1rem', color: 'var(--md-sys-color-secondary)', marginBottom: '1rem', lineHeight: 1.6 }}>
                                         {project.description}
                                     </p>
-                                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
                                         {project.technologies.map(tech => (
                                             <span key={tech} style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-outline)', background: 'var(--md-sys-color-surface-variant)', padding: '4px 10px', borderRadius: '6px' }}>
                                                 {tech}
                                             </span>
                                         ))}
                                     </div>
+
+                                    {/* AI Feature Results Breakdown */}
+                                    {project.ai_feature_results && project.ai_feature_results.length > 0 && (
+                                        <div style={{ borderTop: '1px solid var(--md-sys-color-outline-variant)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
+                                            <p style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--md-sys-color-on-surface)' }}>📊 AI Feature Analysis</p>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                                {project.ai_feature_results.map((fr, idx) => (
+                                                    <div key={idx} style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.5rem',
+                                                        fontSize: '0.85rem',
+                                                        padding: '4px 8px',
+                                                        borderRadius: '6px',
+                                                        background: fr.implemented ? 'rgba(76, 175, 80, 0.05)' : 'rgba(244, 67, 54, 0.05)'
+                                                    }}>
+                                                        <span>{fr.implemented ? '✅' : '❌'}</span>
+                                                        <span style={{ fontWeight: 500 }}>{fr.feature}</span>
+                                                        <span style={{ marginLeft: 'auto', color: 'var(--md-sys-color-outline)', fontSize: '0.8rem' }}>
+                                                            {fr.confidence}% &middot; {fr.remarks}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Project Link */}
+                                    {project.project_link && (
+                                        <a href={project.project_link} target="_blank" rel="noopener noreferrer" style={{
+                                            display: 'inline-block', marginTop: '0.75rem', fontSize: '0.85rem',
+                                            color: 'var(--md-sys-color-primary)', textDecoration: 'none'
+                                        }}>
+                                            🔗 View on GitHub
+                                        </a>
+                                    )}
                                 </Card>
                             ))}
                         </div>
