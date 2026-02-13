@@ -242,7 +242,6 @@ export default function PostedJobsPage() {
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleJobSave}
                 initialData={editingJob || undefined}
-                onDelete={handleJobDelete}
             />
 
         </main>
