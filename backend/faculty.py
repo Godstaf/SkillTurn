@@ -35,6 +35,48 @@ async def create_profile(profile: FacultyProfile, current_user: User = Depends(g
     
     return new_profile
 
+    update_user_verification(current_user.username, True)
+    
+    return new_profile
+
+class FacultyProfileResponse(BaseModel):
+    id: str
+    username: str
+    email: str
+    full_name: str
+    role: str
+    is_verified: bool
+    is_active: bool
+    created_at: datetime
+    institution: Optional[str] = None
+    department: Optional[str] = None
+    designation: Optional[str] = None
+    profileLink: Optional[str] = None
+    experience: Optional[int] = None
+
+@router.get("/faculty/profile", response_model=FacultyProfileResponse)
+async def get_my_profile(current_user: User = Depends(get_current_active_user)):
+    if current_user.role != "faculty":
+        raise HTTPException(status_code=403, detail="Access forbidden")
+    
+    profile = get_faculty_profile(str(current_user.id))
+    
+    return FacultyProfileResponse(
+        id=str(current_user.id),
+        username=current_user.username,
+        email=current_user.email,
+        full_name=current_user.full_name,
+        role=current_user.role,
+        is_verified=current_user.is_verified,
+        is_active=current_user.is_active,
+        created_at=current_user.created_at,
+        institution=profile.institute if profile else None,
+        department=profile.department if profile else None,
+        designation=profile.designation if profile else None,
+        profileLink=profile.profile_link if profile else None,
+        experience=profile.years_of_experience if profile else None
+    )
+
 @router.get("/faculty/dashboard")
 async def get_dashboard(current_user: User = Depends(get_current_active_user)):
     if current_user.role != "faculty":

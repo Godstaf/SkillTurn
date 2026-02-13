@@ -560,6 +560,10 @@ def get_all_opportunities():
 def get_opportunity(opportunity_id: str):
     return retrieve_item(opportunities_collection, opportunity_id, Opportunity)
 
+def delete_opportunity(opportunity_id: str):
+    result = opportunities_collection.delete_one({"_id": ObjectId(opportunity_id)})
+    return result.deleted_count > 0
+
 def get_opportunities_by_company(company_id: str):
     items = []
     # Find opportunities where company_id matches OR organization matches name (legacy support)

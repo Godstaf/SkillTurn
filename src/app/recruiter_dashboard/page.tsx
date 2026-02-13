@@ -202,6 +202,38 @@ export default function RecruiterDashboardPage() {
         }
     };
 
+    const handleDeleteJob = async (jobId: string) => {
+        if (!confirm("Are you sure you want to delete this opportunity? This action cannot be undone.")) {
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        try {
+            const res = await fetch(`http://127.0.0.1:8000/opportunities/${jobId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (res.ok) {
+                setJobs(prev => prev.filter(j => j.id !== jobId));
+                if (selectedJobFilter === jobs.find(j => j.id === jobId)?.title) {
+                    setSelectedJobFilter(null);
+                }
+                alert("✅ Opportunity deleted successfully.");
+            } else {
+                const err = await res.json().catch(() => ({ detail: "Unknown error" }));
+                alert(`❌ Failed to delete: ${err.detail || "Server error"}`);
+            }
+        } catch (e) {
+            console.error("Error deleting job:", e);
+            alert("❌ Network error.");
+        }
+    };
+
     return (
         <main style={{ padding: '2rem 24px', maxWidth: '1400px', margin: '0 auto', minHeight: '100vh' }}>
 
@@ -300,7 +332,26 @@ export default function RecruiterDashboardPage() {
                                             </p>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: 'var(--md-sys-color-secondary)' }}>
                                                 <span>{job.applicantsCount} Applicants</span>
-                                                <span>{job.postedString}</span>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <span>{job.postedString}</span>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteJob(job.id);
+                                                        }}
+                                                        style={{
+                                                            background: 'none', border: 'none', cursor: 'pointer',
+                                                            color: 'var(--md-sys-color-error)', opacity: 0.7,
+                                                            padding: '4px', borderRadius: '4px',
+                                                            transition: 'all 0.2s', fontSize: '1rem'
+                                                        }}
+                                                        title="Delete Opportunity"
+                                                        onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                                                        onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
+                                                    >
+                                                        🗑️
+                                                    </button>
+                                                </div>
                                             </div>
                                         </GlassContainer>
                                     </motion.div>
