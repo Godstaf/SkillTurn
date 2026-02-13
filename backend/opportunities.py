@@ -5,6 +5,7 @@ from CRUD import (
     create_opportunity, 
     get_all_opportunities, 
     get_opportunity,
+    delete_opportunity,
     User
 )
 from login import get_current_active_user
@@ -32,3 +33,13 @@ async def create_new_opportunity(opportunity: Opportunity, current_user: User = 
         )
     
     return create_opportunity(opportunity)
+
+@router.delete("/opportunities/{opportunity_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_existing_opportunity(opportunity_id: str, current_user: User = Depends(get_current_active_user)):
+    if current_user.role not in ["recruiter", "faculty", "admin"]:
+        raise HTTPException(status_code=403, detail="Not authorized to delete opportunities")
+    
+    success = delete_opportunity(opportunity_id)
+    if not success:
+         raise HTTPException(status_code=404, detail="Opportunity not found")
+    return None
