@@ -1,5 +1,16 @@
+from argparse import HelpFormatter
 import asyncio
+import bdb
 from datetime import datetime
+from gc import get_referents
+from pydoc import Helper
+import re
+from socket import J1939_FILTER_MAX
+from tarfile import GNUTYPE_LONGNAME
+
+from pydantic.types import T
+from pymongo.common import RETRY_WRITES
+from backend.CRUD import get_faculty_profile
 from database import (
     users_collection, 
     student_profiles_collection, 
@@ -29,6 +40,8 @@ def init_db():
         })
     else:
         print("Admin user already exists.")
+
+    
 
     # 2. Create Sample Student
     student_user = users_collection.find_one({"username": "student_demo"})
