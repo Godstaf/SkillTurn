@@ -2,10 +2,20 @@ from pymongo import MongoClient
 import os
 import certifi
 
-# You should move this to a .env file for security
-MONGO_DETAILS = "mongodb+srv://chaurasiakanishk666_db_user:LJa6SC9xjAJARmLi@internportal.wkf9jx4.mongodb.net/" 
+from dotenv import load_dotenv
 
-client = MongoClient(MONGO_DETAILS, tlsCAFile=certifi.where(), serverSelectionTimeoutMS=10000)
+load_dotenv()
+
+MONGO_DETAILS = os.getenv(
+    "MONGO_DETAILS",
+    "mongodb+srv://chaurasiakanishk666_db_user:LJa6SC9xjAJARmLi@internportal.wkf9jx4.mongodb.net/"
+)
+
+client_kwargs = {"serverSelectionTimeoutMS": 10000}
+if "mongodb+srv://" in MONGO_DETAILS or "tls=true" in MONGO_DETAILS.lower() or "ssl=true" in MONGO_DETAILS.lower():
+    client_kwargs["tlsCAFile"] = certifi.where()
+
+client = MongoClient(MONGO_DETAILS, **client_kwargs)
 
 # --- Defining 4 Separate Databases ---
 # 1. Admin DB: Authentication, User Accounts, System Config
